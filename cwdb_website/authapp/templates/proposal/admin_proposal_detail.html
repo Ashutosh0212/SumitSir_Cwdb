@@ -1,0 +1,20 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <h1>{{ proposal.name_of_scheme }}</h1>
+    <p>Status: {{ proposal.status }}</p>
+    <p>Unique ID: {{ proposal.unique_id }}</p>
+    <p>Name and Address: {{ proposal.name_and_address }}</p>
+    <!-- Add more fields as needed -->
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="status">Change Status:</label>
+        <select name="status">
+            <option value="Pending" {% if proposal.status == 'Pending' %}selected{% endif %}>Pending</option>
+            <option value="Approved" {% if proposal.status == 'Approved' %}selected{% endif %}>Approved</option>
+            <option value="Rejected" {% if proposal.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+        </select>
+        <button type="submit">Update Status</button>
+    </form>
+{% endblock %}

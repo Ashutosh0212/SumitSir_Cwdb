@@ -1,0 +1,204 @@
+{%load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> CWDB: Revolving Fund Progress Report</title>
+  <style>
+    body {
+      font-family: Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 48px;
+      color: #2aa4fb;
+    }
+
+    #instructionsList {
+      margin-bottom: 10px;
+      padding-top: 0px;
+      padding: 5px;
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ffffff;
+      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
+      background-color: #2aa4fb;
+      line-height: 1.2; 
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+      display: block;
+      margin-bottom: 5px;
+      color: #000000;
+    }
+
+    textarea,
+    input,
+    select {
+      outline: none;
+      width: 99%;
+      padding: 10px;
+      border: 1px solid #000000;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    select {
+      margin-bottom: 10px;
+    }
+
+    #otherField {
+      display: none;
+    }
+
+    .buttons {
+      margin-left: 40%;
+      margin-right: 40%;
+      display: flex;
+      /* border: 8px solid red; */
+      align-items: center;
+    }
+
+    button{
+      /* display: block; */
+      margin: 3px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease; 
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    textarea,
+    input {
+      resize: none;
+      margin-bottom: 30px;
+      transition: border-color 0.3s ease; 
+    }
+
+    textarea:hover,
+    input:hover {
+      border-color: #007bff; 
+    }
+
+    textarea:focus,
+    input:focus {
+      border-color: #007bff; 
+      box-shadow:  0 0 4px rgba(81, 183, 255, 0.7);
+    }
+
+    .content {
+      display: flex;
+      align-items: center;
+      /* justify-content: center; */
+      margin-bottom: 50px;
+      /* border: solid #ff0000; */
+    }
+
+    .content h1{
+      align-items: center;
+      margin-left: 10%;
+      /* border: solid #ff0000; */
+    }
+
+    .content img {
+      width: 100px; 
+      height: auto;
+      margin-left: 150px;
+    }
+
+    @media (max-width: 768px) {
+        .content {
+        display: flex;
+        margin-bottom: 50px;
+      }
+
+      .content h1{
+        margin-left: 10%;
+      }
+
+      .content img {
+        width: 100px; 
+        height: auto;
+        margin-left: 10%;
+      } 
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="content">
+      <img src="{%static 'img/cwdb_logo.jpg'%}" alt="Image Description">
+      <h1>Revolving Fund Progress Report</h1>
+    </div>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div id="instructionsList">
+          <p>
+              Download the following sheets and upload it back using the <b>Upload</b> button below: <br>
+              <li><a href="https://docs.google.com/spreadsheets/d/1Up3LdHHKSeYGfa02G95OCe8g3E6an1O1dxnR6eV73do/export?format=xlsx"
+                target="_blank">Component-wise Budget Sheet</a></li>
+              <li><a href="https://docs.google.com/spreadsheets/d/1wYHv7U6EnMkltT7Zoe8bwfC3qrSnurLMRlmWX1VTVBs/export?format=xlsx"
+                target="_blank">Wool Procured Sheet</a></li>
+              <!-- <li><a href="https://docs.google.com/spreadsheets/d/1xVlatWwfy9Fg84T71d7K4F1NWhxCo_gvTQgZDqR4x-I/export?format=xlsx"
+                target="_blank">Wool Procured Sheet</a></li> -->
+              <li><a href="https://docs.google.com/spreadsheets/d/1clD7SGbNxxgHJfnZSDQ0_eu0NbEVwWzdnq0NANmYMFM/export?format=xlsx"
+                target="_blank">Wool Sold Sheet</a></li>
+              <li>Payment proofs for both Wool Procured and Wool Sold Sheet, combined for all entries in the sheets. (upload .pdf file format only)</li>
+              <li>Any other relevant documents (upload .xlsx, .pdf or .docx files format only)</li>
+
+              <ol>
+                  <li> Don't add any columns. </li>
+                  <li> Don't change column names. </li>
+                  <li> Max 1000 rows can be addedin an excel sheet. Multiple excel sheets can be uploaded. </li>
+              </ol>
+          </p>
+      </div>
+        <div class="buttons">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+  </div>
+
+  <script>
+    function handleDropdownChange() {
+      const dropdown = document.getElementById("dropdown");
+      const otherField = document.getElementById("otherField");
+      const otherInput = document.getElementById("otherInput");
+
+      if (dropdown.value === "other") {
+        otherField.style.display = "block";
+        otherInput.setAttribute("required", "true");
+      } else {
+        otherField.style.display = "none";
+        otherInput.removeAttribute("required");
+      }
+    }
+  </script>
+</body>
+
+</html>

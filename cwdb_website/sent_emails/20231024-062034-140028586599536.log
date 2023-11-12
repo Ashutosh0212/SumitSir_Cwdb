@@ -1,0 +1,13 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Password reset on 127.0.0.1:8000
+From: webmaster@localhost
+To: Ishita8334@gmail.com
+Date: Tue, 24 Oct 2023 00:50:34 -0000
+Message-ID: <169810863438.14408.11505563863277085231@pop-os.localdomain>
+
+Someone asked for password reset for email Ishita8334@gmail.com.Follow the Link below
+http://127.0.0.1:8000{% url "authapp:password_reset_confirm"
+uidb64=uid token=token %}
+-------------------------------------------------------------------------------

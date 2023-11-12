@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Proposal Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #007BFF; /* Changed from green to blue */
+            color: #ffffff;
+            text-align: center;
+            padding: 1em 0;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #007BFF; /* Changed from green to blue */
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #007BFF; /* Changed from green to blue */
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Proposal Status</h1>
+    </header>
+
+    <table>
+        <tr>
+            <th>Proposal ID</th>
+            <th>Scheme</th>
+            <th>Component</th>
+            <th>Status</th>
+        </tr>
+        {% for proposal in proposals %}
+            <tr>
+                <td>{{ proposal.unique_id }}</td>
+                <td>{{ proposal.project_scheme }}</td>
+                <td>{{proposal.scheme_component}}</td>
+                <td>{{ proposal.status }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

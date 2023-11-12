@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Submit Progress Report
+    </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #007BFF;
+            color: #ffffff;
+            text-align: center;
+            padding: 1em 0;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #007BFF;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Submit Progress</h1>
+    </header>
+
+    <table>
+        <tr>
+            <th>Proposal ID</th>
+            <th>Scheme</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        {% for proposal in proposals %}
+            <tr>
+                <td>{{ proposal.unique_id }}</td>
+                <td>{{ proposal.project_scheme }}</td>
+                <td>{{ proposal.status }}</td>
+                <td>
+                    {% if proposal.status == 'Approved' %}
+                        {% if proposal.scheme_component == '1.Creation of Revolving Fund for Marketing of Raw Wool' %}
+                            <a href="{% url 'authapp:revolving_fund_progress_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '2.E-Portal for Marketing Auction of Wool and Development of MIS' %}
+                            <a href="{% url 'authapp:eportal_progress_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '3.Financial Assistance for Formation of Wool Producers Societies/Self Help Group(SHGs)' %}
+                            <a href="{% url 'authapp:selfhelpgroup_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '4.Organizing Buyers Sellers Meets' %}
+                            <a href="{% url 'authapp:buyersellerexpo_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '5.Financial Assistance to Strengthening Infrastructure Required for Wool Marketing' %}
+                            <a href="{% url 'authapp:infrastructuredevelopment_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '6.Organization of Domestic Independent Woolen Expo' %}
+                            <a href="{% url 'authapp:woolen_expo' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '7.Organizing Domestic Expo on Hiring Stall Basis' %}
+                            <a href="{% url 'authapp:woolen_expo_hiring' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '1.Establishing Common Facility Centres (CFCs) for Wool Processing Machines/Facilities' %}
+                            <a href="{% url 'authapp:cfc_progress_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '2.Financial Assistance for Sheep Shearing Machines' %}
+                            <a href="{% url 'authapp:sheep_shearing_machining' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '3.Financial Assistance for Other Machines and Equipments' %}
+                            <a href="{% url 'authapp:equipment' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '4.Financial Assistance for Distribution of Small Tools for Manufacturing of Woolen Items' %}
+                            <a href="{% url 'authapp:small_tools_distribution' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '1.Short Term Training Program for Manufacturing and Weaving of Woolen Items' %}
+                            <a href="{% url 'authapp:short_term_programme' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '2.On-Site Training for Industrial Workers' %}
+                            <a href="{% url 'authapp:onsite_training_progress_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '3.Training on Machine Sheep Shearing' %}
+                            <a href="{% url 'authapp:shearing_machine_training_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '4.Research and Development Projects' %}
+                            <a href="{% url 'authapp:rd_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '5.International/Domestic Corporations Stakeholders Meeting/Conference' %}
+                            <a href="{% url 'authapp:domestic_meeting_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '6.Organizing Seminars, Workshops, Sheep Mela, Fare, Meet' %}
+                            <a href="{% url 'authapp:organising_seminar_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '7.Wool Survey and Study on Wool Sector' %}
+                            <a href="{% url 'authapp:wool_survey_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '8.Operating Existing Wool Testing Lab at Bikaner Including Upgradation and WDTC/ISC at Kullu' %}
+                            <a href="{% url 'authapp:wool_testing_lab_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '9.Publicity of Scheme, Monitoring of Projects, Common Visits, Evaluation of Projects/Schemes, and Awareness Program for Swachhta, etc.' %}
+                            <a href="{% url 'authapp:publicity_monitoring_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '1.Revolving fund for pashmina wool marketing (For UT of J&K & UT of Ladakh)' %}
+                            <a href="{% url 'authapp:pashmina_revolving_fund_progress_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '2.Setting of machines for pashmina wool processing' %}
+                            <a href="{% url 'authapp:pashmina_cfc_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '3.Construction of shelter shed with guard rooms for pashmina goat' %}
+                            <a href="{% url 'authapp:shelter_shed_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '4.Distribution of portable tents with accessories' %}
+                            <a href="{% url 'authapp:portable_tent_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '5.Distribution of predator-proof corral with LED lights' %}
+                            <a href="{% url 'authapp:predator_proof_lights_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '6.Testing equipment, including DNA analyzer for identification/testing of pashmina products' %}
+                            <a href="{% url 'authapp:testing_equipment_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '7.Development of showroom at Dehairing Plant premises at Leh' %}
+                            <a href="{% url 'authapp:showroom_development_report' proposal.unique_id %}">Submit Report</a>
+                        {% elif proposal.scheme_component == '8.Development of fodder land/Govt. farms for pashmina goats' %}
+                            <a href="{% url 'authapp:fodder_land_development_report' proposal.unique_id %}">Submit Report</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+</body>
+</html>

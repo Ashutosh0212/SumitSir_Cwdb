@@ -1,0 +1,9 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <h1>{{ proposal.name_of_scheme }}</h1>
+    <p>Status: {{ proposal.status }}</p>
+    <p>Unique ID: {{ proposal.unique_id }}</p>
+    <p>Name and Address: {{ proposal.name_and_address }}</p>
+    <!-- Add more fields as needed -->
+{% endblock %}

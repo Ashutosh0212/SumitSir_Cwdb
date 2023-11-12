@@ -1,0 +1,10 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <h1>Your Proposals</h1>
+    <ul>
+        {% for proposal in proposals %}
+            <li><a href="{% url 'proposal_detail' proposal.id %}">{{ proposal.name_of_scheme }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
