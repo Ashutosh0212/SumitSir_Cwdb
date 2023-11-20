@@ -1,0 +1,13 @@
+<!-- templates/email/notification_template.html -->
+<!DOCTYPE html>
+<html>
+<body>
+    <p>Your proposal Status with ID {{ project_id }} has been updated. New status: {{ new_status }}.</p>
+    
+    {% if new_status == "Approved" %}
+        <br>
+        <p>You can download your sanction letter from Email.</p>
+        
+    {% endif %}
+</body>
+</html>

@@ -5,13 +5,31 @@ from .models import CustomUser
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ("email", "agency_name", "agency_nature", "registration_number", "address", "pincode", "contact_person_name", "contact_person_designation", "contact_person_mobile")
+        fields = ["email", "agency_name", "agency_nature", "registration_number", "address", "pincode", "contact_person_name", "contact_person_designation", "contact_person_mobile"]
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ("email", "agency_name", "agency_nature", "registration_number", "address", "pincode", "contact_person_name", "contact_person_designation", "contact_person_mobile")
+        fields = ['agency_name', 'address', 'pincode', 'contact_person_name', 'contact_person_designation', 'contact_person_mobile']
 
+from django import forms
+from .models import Proposal
+
+class ProposalApprovalForm(forms.ModelForm):
+    class Meta:
+        model = Proposal
+        fields = ['status', 'fund_allocated', 'sanction_letter']
+
+    sanction_letter = forms.FileField(required=False)  # Ensure the FileField is present in the form
+
+    def clean_sanction_letter(self):
+        # You can add additional validation for the file if needed
+        sanction_letter = self.cleaned_data.get('sanction_letter')
+        if sanction_letter:
+            # Ensure the file size is acceptable, add more validations if needed
+            if sanction_letter.size > 10 * 1024 * 1024:  # 10 MB
+                raise forms.ValidationError("File size must be less than 10 MB.")
+        return sanction_letter
 
 
 from django import forms

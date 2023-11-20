@@ -1,3 +1,6 @@
+
+
+
 from .forms import CustomUserCreationForm
 
 
@@ -47,6 +50,11 @@ def signup(request):
         form = CustomUserCreationForm()  
     return render(request, 'registration/signup.html', {'form': form})  
 
+from django.contrib.auth.views import LoginView
+from django.shortcuts import redirect
+
+
+
 from django.contrib.auth import get_user_model
 
 def activate(request, uidb64, token):  
@@ -63,8 +71,135 @@ def activate(request, uidb64, token):
     else:  
         return HttpResponse('Activation link is invalid!')  
     
+# views.py
 
 
+#profile
+from django.shortcuts import render, redirect
+from django.views import View
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from .models import CustomUser
+from .forms import CustomUserChangeForm
+
+@method_decorator(login_required, name='dispatch')
+class UserProfileView(View):
+    template_name = 'registration/user_profile.html'
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        return render(request, self.template_name, {'user': user})
+
+@method_decorator(login_required, name='dispatch')
+class EditProfileView(View):
+    template_name = 'registration/edit_profile.html'
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        form = CustomUserChangeForm(instance=user)
+        return render(request, self.template_name, {'user': user, 'form': form})
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        form = CustomUserChangeForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('authapp:user_profile')  # Redirect to the user profile page after a successful update
+        return render(request, self.template_name, {'user': user, 'form': form})
+
+
+
+
+
+#admin
+# views.py
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.contrib.auth.decorators import user_passes_test
+from .forms import ProposalApprovalForm
+from .models import Proposal
+
+@user_passes_test(lambda u: u.is_staff or u.is_superuser)
+def submit_approval(request, proposal_id):
+    proposal = get_object_or_404(Proposal, unique_id=proposal_id)
+
+    if request.method == 'POST':
+        form = ProposalApprovalForm(request.POST, request.FILES,instance=proposal)
+        if form.is_valid():
+            # Save the form to update the model
+            form.save()
+
+            # Notify the user about the status change
+            send_status_change_notification(proposal.user, proposal.unique_id, proposal.status,proposal.sanction_letter)
+
+            messages.success(request, 'Proposal status changed successfully.')
+            return redirect('admin:authapp_proposal_changelist')  # Replace 'proposal_list' with your actual URL name
+    else:
+        form = ProposalApprovalForm(instance=proposal)
+
+    return render(request, 'admin/submit_approval.html', {'form': form, 'proposal': proposal})
+
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from .models import Notification
+from django.utils import timezone
+
+def send_status_change_notification(user_email, project_id, new_status, sanction_letter=None):
+    attachment_name = None
+    subject = 'Your Proposal Status has Changed'
+    context = {'project_id': project_id, 'new_status': new_status}
+    message_html = render_to_string('email/notification_template.html', context)
+    message_plain = strip_tags(message_html)
+    
+    notification_message_html=render_to_string('email/notification_template_dashboard.html', context)
+    notification_message_plain=strip_tags(notification_message_html)
+    # Save the notification to the model
+    notification = Notification.objects.create(
+        user=user_email,  # Assuming user_email is a User object
+        message=notification_message_plain,  # You can customize this based on your needs
+        created_at=timezone.now(),
+    )
+    
+    email = EmailMessage(subject, message_plain, from_email=EMAIL_HOST_USER, to=[user_email])
+    email.content_subtype = 'html'  # Set the content type to HTML
+
+    if new_status == "Approved" and sanction_letter:
+        attachment_name = 'sanction_letter.pdf'
+        email.attach(attachment_name, sanction_letter.read(), 'application/pdf')
+    
+    # Save the attachment to the notification model
+   
+    notification.save()
+
+    email.send()
+
+
+#show notifications view
+# views.py
+from django.shortcuts import render
+from .models import Notification
+from django.contrib.auth.decorators import login_required
+
+# @login_required
+# def show_notifications(request):
+#     # Retrieve all notifications for the logged-in user
+#     notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
+#     first_three_notifications = notifications[:3]
+
+#     # # Mark all new notifications as read
+#     # first_three_notifications = notifications.filter(is_read=False)
+#     # first_three_notifications.update(is_read=True)
+#     # print(first_three_notifications)
+#     return render(request, 'main/dashboard.html', {'new_notifications': first_three_notifications})
+
+@login_required
+def show_all_notifications(request):
+    # Retrieve all notifications for the logged-in user
+    all_notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
+
+    return render(request, 'all_notifications.html', {'all_notifications': all_notifications})
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -73,7 +208,24 @@ from django.utils.crypto import get_random_string
 
 @login_required
 def dashboard(request):
-    return render(request, 'main/dashboard.html')
+    #top three notificatons
+    notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
+    first_three_notifications = notifications[:3]
+     # Count of all proposals submitted by the logged-in user
+    submitted_proposals_count = Proposal.objects.filter(user=request.user).count()
+    # Count of pending proposals
+    pending_proposals_count = Proposal.objects.filter(user=request.user, status='Pending').count()
+     # Count of approved proposals
+    approved_proposals_count = Proposal.objects.filter(user=request.user, status='Approved').count()
+ # Count of proposals to be resubmitted
+    resubmit_proposals_count = Proposal.objects.filter(user=request.user, status='Resubmitted').count()
+    #count proposals rejected
+    rejected_proposals_count=Proposal.objects.filter(user=request.user, status='Rejected').count()
+
+    return render(request, 'main/dashboard.html',{'submitted_proposals_count': submitted_proposals_count,
+        'pending_proposals_count': pending_proposals_count,
+        'approved_proposals_count': approved_proposals_count,
+        'rejected_proposals_count': rejected_proposals_count,'new_notifications': first_three_notifications})
 
 def index(request):
     return render(request,'main/index.html')
@@ -847,3 +999,21 @@ def fodder_land_development_report(request, proposal_unique_id):
     
     context = {'form': form}
     return render(request, 'FodderLandDevelopment/8.FodderLandDevelopment.html', context)
+
+
+#staff view
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
+
+class CustomLoginView(LoginView):
+    def get_success_url(self):
+        user = self.request.user
+
+        if user.is_superuser or user.is_staff:
+            return reverse_lazy('authapp:staff_dashboard')  # Use reverse_lazy to avoid URL resolution issues
+        return reverse_lazy('authapp:dashboard') 
+    
+@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='/login/')
+def staff_dashboard(request):
+    # Your view logic goes here
+    return render(request, 'staff_template/staff_dashboard.html')

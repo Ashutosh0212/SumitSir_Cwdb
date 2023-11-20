@@ -1,10 +1,20 @@
-from django.urls import path
+from django.urls import path,reverse_lazy
 
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
+from .views import UserProfileView,EditProfileView,CustomLoginView
 app_name = 'authapp'
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView,LogoutView
+from django.contrib.auth.views import (
+    LoginView,
+    LogoutView,
+    PasswordChangeView,
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView,
+)
 
 urlpatterns = [
     path('',views.index,name='index'),
@@ -18,22 +28,17 @@ urlpatterns = [
     path('dashboard/admin_proposal_list/', views.admin_proposal_list, name='admin_proposal_list'),
     path('dashboard/admin_proposal_detail/<int:proposal_id>/', views.admin_proposal_detail, name='admin_proposal_detail'),
     path('dashboard/proposal_status/', views.proposal_status, name='proposal_status'),
-    path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
-    # path('password_change/', PasswordChangeView.as_view(
-    #     template_name='authapp/password_change_form.html'), name='password_change'),
-    # path('password_change/done/', PasswordChangeDoneView.as_view(template_name='authapp/password_change_done.html'),
-    #      name='password_change_done'),
-    # path('password_reset/', PasswordResetView.as_view(
-    #     template_name='authapp/password_reset_form.html',
-    #     email_template_name='authapp/password_reset_email.html',
-    #     success_url=reverse_lazy('authapp:password_reset_done')), name='password_reset'),
-    # path('password_reset/done/', PasswordResetDoneView.as_view(
-    #     template_name='authapp/password_reset_done.html'), name='password_reset_done'),
-    # path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(
-    #     template_name='authapp/password_reset_confirm.html',
-    #     success_url=reverse_lazy('authapp:login')), name='password_reset_confirm'),
-    # path('reset/done/', PasswordResetCompleteView.as_view(
-    #     template_name='authapp/password_reset_complete.html'), name='password_reset_complete'),
+    # path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('login/', CustomLoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout/', LogoutView.as_view(next_page='authapp:index'), name='logout'),
+     path('dashboard/change-password/', PasswordChangeView.as_view(), name='change_password'),
+    
+    # Password Reset URLs
+    path('dashboard/forgot-password/', PasswordResetView.as_view(), name='forgot_password'),
+    path('dashboard/5/password/', PasswordResetView.as_view(), name='forgot_password'),
+    path('dashboard/forgot-password/done/', PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('dashboard/reset-password/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('dashboard/reset-password/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     # #progress report urls 
     path('dashboard/progress_report/', views.progress_report, name='progress_report'),
     #wms subcomponents
@@ -68,6 +73,18 @@ urlpatterns = [
     path('dashboard/testing_equipment_report/<str:proposal_unique_id>/', views.testing_equipment_report, name='testing_equipment_report'),
     path('dashboard/showroom_development_report/<str:proposal_unique_id>/', views.showroom_development_report, name='showroom_development_report'),
     path('dashboard/fodder_land_development_report/<str:proposal_unique_id>/', views.fodder_land_development_report, name='fodder_land_development_report'),
+    #admin
+    # urls.py
+path('admin/submit_approval/<str:proposal_id>/', views.submit_approval, name='submit_approval'),
+#notifications
+# path('dashboard/show-notifications/', views.show_notifications, name='show_notifications'),
+path('dashboard/show-all-notifications/', views.show_all_notifications, name='show_all_notifications'),
+path('dashboard/profile/', UserProfileView.as_view(), name='user_profile'),
+path('dashboard/profile/edit/', EditProfileView.as_view(), name='edit_profile'),
+# path('dashboard/updated', views.show_notifications, name='show_new_notifications'),
+#staff dashboard
+path('staff_dashboard/', views.staff_dashboard, name='staff_dashboard'),
+
 ]
 
 if settings.DEBUG:

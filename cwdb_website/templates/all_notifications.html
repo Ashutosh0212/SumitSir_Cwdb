@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>All Notifications</h2>
+    {% for notification in all_notifications %}
+      <div class="alert alert-info" role="alert">
+        <strong>{{ notification.created_at|date:"F d, Y" }}</strong>: {{ notification.message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

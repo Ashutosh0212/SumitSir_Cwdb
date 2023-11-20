@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>All Proposals</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>User</th>
+        <!-- Add other fields as needed -->
+        <th>Sanction Letter</th>
+        <th>Fund Allocated</th>
+        <th>Status</th>
+        {% if request.user.is_staff or request.user.is_superuser %}
+          <th>Actions</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for proposal in proposals %}
+        <tr>
+          <td>{{ proposal.id }}</td>
+          <td>{{ proposal.user }}</td>
+          <!-- Display other fields as needed -->
+          <td>{{ proposal.sanction_letter.url }}</td>
+          <td>{{ proposal.fund_allocated }}</td>
+          <td>{{ proposal.status }}</td>
+          {% if request.user.is_staff or request.user.is_superuser %}
+            <td>
+              <form method="post" action="{% url 'edit_proposal' %}">
+                {% csrf_token %}
+                <input type="hidden" name="proposal_id" value="{{ proposal.id }}">
+                <input type="file" name="sanction_letter">
+                <input type="text" name="fund_allocated">
+                <select name="status">
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="Resubmit">Resubmit</option>
+                </select>
+                <button type="submit">Update</button>
+              </form>
+            </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if request.user.is_staff or request.user.is_superuser %}
+    <h3>Staff/Superuser Actions</h3>
+    <form method="post" action="{% url 'all_proposals' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Submit</button>
+    </form>
+  {% endif %}
+{% endblock %}

@@ -68,10 +68,17 @@ from django.db import models
 
 
 class Proposal(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Completed', 'Completed'),
+        ('Rejected', 'Rejected'),
+        ('Resubmit','Resubmit')
+    ]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name_and_address = models.TextField()
     project_scheme = models.CharField(max_length=20)
-    scheme_component = models.CharField(max_length=20)
+    scheme_component = models.CharField(max_length=100)
     nature_of_applicant = models.CharField(max_length=50)
     other_nature = models.CharField(max_length=50, blank=True, null=True)
     # name_of_scheme = models.CharField(max_length=100)
@@ -91,12 +98,31 @@ class Proposal(models.Model):
     bank_details = models.TextField()
     nodal_officer_details = models.TextField()
     other_info = models.TextField()
-    status = models.CharField(max_length=20, default='Pending')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    fund_allocated = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
+    sanction_letter = models.FileField(upload_to='sanction_letters/', blank=True, null=True)
     unique_id = models.CharField(max_length=8, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.unique_id
+
+#add notification model
+# models.py
+
+class Notification(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL ,on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+    # attachment_name = models.CharField(max_length=255, null=True, blank=True)
+    # attachment_content = models.FileField(upload_to='notification_attachments/', null=True, blank=True)
+
+    def __str__(self):
+        return f'Notification for {self.user} - {self.created_at}'
+
+
+
 
 class WMS_RevolvingFund(models.Model):
     proposal_unique_id = models.ForeignKey(Proposal, to_field='unique_id', on_delete=models.CASCADE)

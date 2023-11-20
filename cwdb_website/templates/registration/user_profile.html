@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card mx-auto text-center">
+          <div class="card-body">
+            <h2 class="card-title">User Profile</h2>
+            <p class="card-text">Welcome, {{ user.email }}!</p>
+
+            {% comment %} <h3>User Details</h3> {% endcomment %}
+            <ul class="list-group text-left">
+              <li class="list-group-item">Agency name: {{ user.agency_name }}</li>
+              <li class="list-group-item">Agency nature: {{ user.agency_nature }}</li>
+              <li class="list-group-item">Address: {{ user.address }}</li>
+              <li class="list-group-item">Pincode: {{ user.pincode }}</li>
+              <li class="list-group-item">Contact person name: {{ user.contact_person_name }}</li>
+              <li class="list-group-item">Contact person designation: {{ user.contact_person_designation }}</li>
+              <li class="list-group-item">Contact person mobile: {{ user.contact_person_mobile }}</li>
+              <!-- Uncomment the line below if you want to display contact_person_mobile -->
+              {% comment %} <li class="list-group-item">Contact person mobile: {{ user.c }}</li> {% endcomment %}
+            </ul>
+
+            {% comment %} <p class="mt-3">Password:</p>
+            <p>No password set. Raw passwords are not stored, so there is no way to see this user’s password, but you can change the password using this form.</p> {% endcomment %}
+            <br>
+            <a class="btn btn-primary" href="{% url 'authapp:edit_profile' %}">Edit Profile</a>
+            <a class="btn btn-danger" href="{% url 'authapp:logout' %}">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

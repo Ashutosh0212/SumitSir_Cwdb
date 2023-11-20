@@ -149,8 +149,8 @@ AUTH_USER_MODEL = 'authapp.CustomUser'
 
 
 LOGIN_REDIRECT_URL = 'authapp:dashboard'
-LOGIN_URL = 'login'
-LOGOUT_URL = 'logout'
+LOGIN_URL = 'authapp:login'
+LOGOUT_URL = 'authapp:logout'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

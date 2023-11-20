@@ -25,19 +25,38 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(CustomUser, CustomUserAdmin)
 
+from django.contrib import admin
+from django.urls import reverse
+from django.utils.html import format_html
+from django.http import HttpResponseRedirect
+from .models import Proposal
+from .forms import ProposalApprovalForm
 
 class ProposalAdmin(admin.ModelAdmin):
-    list_display = ('project_id', 'project_scheme', 'status', 'user', 'created_at')
+    list_display = ('project_id', 'project_scheme', 'user', 'created_at','status_change')
     list_filter = ('status', 'user')
     search_fields = ('project_scheme', 'user__username')
-    list_editable = ('status',)
+    # list_editable = ('status',)
+    readonly_fields = ('fund_allocated', 'sanction_letter')
 
     def project_id(self, obj):
         return obj.unique_id
 
     project_id.short_description = 'Project ID'
+    
+    def status_change(self, obj):
+        return format_html(
+            '<a class="button" href="{}">Change Status and Submit Sanction letter</a>',
+            reverse('authapp:submit_approval', args=[obj.unique_id])
+        )
+
+    status_change.short_description = 'Change Status'
+
 
 admin.site.register(Proposal, ProposalAdmin)
+
+from .models import Notification
+admin.site.register(Notification)
 
 from django.contrib import admin
 from .models import (WMS_RevolvingFund, EPortal, WMS_SelfHelpGroup, WMS_BuyerSellerExpo, 
