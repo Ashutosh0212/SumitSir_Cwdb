@@ -48,13 +48,16 @@
         <tr>
             <th>Proposal ID</th>
             <th>Scheme</th>
+            <th>SubComponent</th>
             <th>Status</th>
+
             <th>Action</th>
         </tr>
         {% for proposal in proposals %}
             <tr>
                 <td>{{ proposal.unique_id }}</td>
                 <td>{{ proposal.project_scheme }}</td>
+                <td>{{proposal.scheme_component}}</td>
                 <td>{{ proposal.status }}</td>
                 <td>
                     {% if proposal.status == 'Approved' %}

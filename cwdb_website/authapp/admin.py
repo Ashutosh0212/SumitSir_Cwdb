@@ -239,3 +239,14 @@ admin.site.register(PredatorProofLightsDist, PredatorProofLightsDistAdmin)
 admin.site.register(TestingEquipment, TestingEquipmentAdmin)
 admin.site.register(ShowroomDevelopment, ShowroomDevelopmentAdmin)
 admin.site.register(FodderLandDevelopment, FodderLandDevelopmentAdmin)
+
+from django.contrib import admin
+from .models import ProgressReportDocument
+
+class ProgressReportDocumentAdmin(admin.ModelAdmin):
+    list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'created_at')
+    search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
+    list_filter = ('quarter', 'financial_year', 'created_at')
+    date_hierarchy = 'created_at'
+
+admin.site.register(ProgressReportDocument, ProgressReportDocumentAdmin)

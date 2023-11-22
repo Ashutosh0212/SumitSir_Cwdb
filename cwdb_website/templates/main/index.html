@@ -31,19 +31,20 @@
         // Add more scheme data for other schemes
       };
     </script>
-    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 position-absolute bg-gradient-dark loopple-fixed-start" id="sidenav-main">
-        <div class="sidenav-header">
-            <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-            <a class="navbar-brand m-0" href="javascript:;" target="_blank">
-                
-                <span class="ms-1 font-weight-bold text-white">Central Wool Development Board</span>
-            </a>
-        </div>
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-1 fixed-start ms-2 position-absolute bg-gradient-dark loopple-fixed-start" id="sidenav-main">
+        <div>
+            <div class="sidenav-header text-center bg-gradient-primary py-3 d-flex align-items-center justify-content-center">
+                <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+                <a class="navbar-brand m-0" href="#" target="_blank">
+                    <h4 class="font-weight-bold text-white mb-0">MIS Portal</h4>
+                </a>
+            </div>
+            
         <hr class="horizontal light mt-0 mb-2">
         <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link text-white active bg-gradient-primary" href="javascript:;">
+                    <a class="nav-link text-white active " href="{%url 'authapp:index' %}">
                         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="material-icons opacity-10">dashboard</i>
                         </div>
@@ -78,13 +79,14 @@
                
             </ul>
         </div>
-       
+
     </aside>
     <div class="main-content position-relative max-height-vh-100 h-100 border-radius-lg" id="panel">
-        <img src="{%static 'img/img1.png'%}" >
+        <img src="{%static 'img/img1.png'%}" class="img-fluid" alt="CWDB Image" >
         <div class="container-fluid pt-3">
             
             {% comment %} //first chart distribution between schemes {% endcomment %}
+            
             <div class="row removable">
                 <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
                     <div class="card mb-4">
@@ -93,7 +95,7 @@
 								<img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
                             </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">Wool marketing Scheme<br></p>
+                                <h3 class="text-sm mb-0 text-capitalize">IWDP<br></h3>
                                 <h4 class="mb-0">700k</h4>
                             </div>
                         </div>
@@ -110,7 +112,7 @@
                             <img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
                           </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">Wool Processing Scheme<br></p>
+                                <h3 class="text-sm mb-0 text-capitalize">WMS<br></h3>
                                 <h4 class="mb-0">230k</h4>
                             </div>
                         </div>
@@ -127,7 +129,7 @@
 							<img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
                           </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">Human Resource Development <br> & Promotional Activities</p>
+                                <h3 class="text-sm mb-0 text-capitalize">WPS</h3>
                                 <h4 class="mb-0">346k</h4>
                             </div>
                         </div>
@@ -144,7 +146,7 @@
                             <img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
                           </div>
                             <div class="text-end pt-1">
-                                <p class="text-sm mb-0 text-capitalize">Pashmina Wool Development <br> Scheme</p>
+                                <h3 class="text-sm mb-0 text-capitalize">PWDS</h3>
                                 <h4 class="mb-0">103k</h4>
                             </div>
                         </div>
@@ -155,6 +157,41 @@
                     </div>
                 </div>
             </div>
+            <div class="row removable">
+                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                    <div class="card mb-4">
+                        <div class="card-header p-3 pt-2">
+                            <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+								<img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
+                            </div>
+                            <div class="text-end pt-1">
+                                <h3 class="text-sm mb-0 text-capitalize">HRD & PA<br></h3>
+                                <h4 class="mb-0">700k</h4>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal my-0">
+                        <div class="card-footer p-3">
+                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder"> </span> 2023-24</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                    <div class="card mb-4">
+                        <div class="card-header p-3 pt-2">
+                          <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+							<img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
+                          </div>
+                            <div class="text-end pt-1">
+                                <h3 class="text-sm mb-0 text-capitalize">Administrative Expenses</h3>
+                                <h4 class="mb-0">346k</h4>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal my-0">
+                        <div class="card-footer p-3">
+                            <p class="mb-0"><span class="text-danger text-sm font-weight-bolder"></span>  2023-24</p>
+                        </div>
+                    </div>
+                </div>
             <div class="row mt-4 removable">
                 {% comment %} all the other graphs will be in it  {% endcomment %}
                 
@@ -405,6 +442,7 @@
             
 
         </div>
+    
 
     </div>
     <script src="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/material-dashboard-2-builder/v3.0.4/assets/js/core/popper.min.js"></script>

@@ -53,7 +53,7 @@
 
 <!-- Main Link -->
 <li class="nav-item active">
-    <a class="nav-link" href="{% url 'authapp:submit_proposal' %}">
+    <a class="nav-link" href="{% url 'authapp:all_proposal_details' %}">
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Projects details</span>
     </a>
@@ -98,14 +98,14 @@
              <li class="nav-item active">
                 <a class="nav-link" href="{% url 'authapp:proposal_status' %}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Application Status</span></a>
+                    <span>Check Progress Report</span></a>
             </li>
-            <hr class="sidebar-divider my-0">
+            {% comment %} <hr class="sidebar-divider my-0">
              <li class="nav-item active">
                 <a class="nav-link" href="{% url 'authapp:progress_report' %}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Submit progress</span></a>
-            </li>
+            </li> {% endcomment %}
              {% comment %} <hr class="sidebar-divider my-0">
              <li class="nav-item active">
                 <a class="nav-link" href="index.html">
@@ -243,8 +243,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Proposal Submitted</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{submitted_proposals_count}}</div>
+                                                Approval Pending Projects</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{pending_count}}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -261,8 +261,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Proposal Approved</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{approved_proposals_count}}</div>
+                                                Ongoing Projects</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{approved_count}}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -279,8 +279,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                                Proposal Pending</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{pending_proposals_count}}</div>
+                                                Completed Projects</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{completed_count}}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -296,11 +296,11 @@
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Proposal Reject
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Rejected Projects
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">0</div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{rejected_count}}</div>
                                                 </div>
                                                  <div class="col-auto">
                                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -323,7 +323,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 Proposal Rejected</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{rejected_proposals_count}}</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{rejected_count}}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>

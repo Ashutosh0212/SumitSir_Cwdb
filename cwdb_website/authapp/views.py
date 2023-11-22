@@ -120,25 +120,7 @@ from django.contrib.auth.decorators import user_passes_test
 from .forms import ProposalApprovalForm
 from .models import Proposal
 
-@user_passes_test(lambda u: u.is_staff or u.is_superuser)
-def submit_approval(request, proposal_id):
-    proposal = get_object_or_404(Proposal, unique_id=proposal_id)
 
-    if request.method == 'POST':
-        form = ProposalApprovalForm(request.POST, request.FILES,instance=proposal)
-        if form.is_valid():
-            # Save the form to update the model
-            form.save()
-
-            # Notify the user about the status change
-            send_status_change_notification(proposal.user, proposal.unique_id, proposal.status,proposal.sanction_letter)
-
-            messages.success(request, 'Proposal status changed successfully.')
-            return redirect('admin:authapp_proposal_changelist')  # Replace 'proposal_list' with your actual URL name
-    else:
-        form = ProposalApprovalForm(instance=proposal)
-
-    return render(request, 'admin/submit_approval.html', {'form': form, 'proposal': proposal})
 
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -258,31 +240,40 @@ from django.contrib.auth.decorators import login_required
 import uuid
 
 @login_required
+@login_required
 def submit_proposal(request):
     if request.method == 'POST':
+        # Handle text fields
         agency_address = request.POST.get('agencyAddress')
         project_scheme = request.POST.get('projectScheme')
         scheme_component = request.POST.get('schemeComponent')
         applicant_nature = request.POST.get('applicantNature')
         other_nature = request.POST.get('otherNature')
-        project_name = request.POST.get('projectName')
         brief_of_agency = request.POST.get('agencyActivities')
-        objectives_of_project =request.POST.get('Objectives')
-        brief_of_project =request.POST.get('Brief')
-        justification_of_project =request.POST.get('justification')
-        methodology_of_project =request.POST.get('Methodology')
-        expected_outcome =request.POST.get('Outcome')
-        scenario_change =request.POST.get('change-scenario')
-        beneficiaries = request.POST.get('beneficiaries')
-        mode_of_selection =request.POST.get('mode')
-        component_wise_cost =request.POST.get('project Cost')
-        total_duration =request.POST.get('Total duration')
+        objectives_of_project = request.POST.get('Objectives')
+        brief_of_project = request.POST.get('Brief')
+        justification_of_project = request.POST.get('justification')
+        methodology_of_project = request.POST.get('Methodology')
+        # expected_outcome = request.POST.get('Outcome')
+        scenario_change = request.POST.get('change-scenario')
+        # beneficiaries = request.POST.get('beneficiaries')
+        mode_of_selection = request.POST.get('mode')
+        # component_wise_cost = request.POST.get('project Cost')
+        # total_duration = request.POST.get('Total duration')
         location_of_project = request.POST.get('projectLocation')
-        associated_agency =request.POST.get('associatedAgency')
+        associated_agency = request.POST.get('associatedAgency')
         bank_details = request.POST.get('bankAccountDetails')
-        nodal_officer_details =request.POST.get('nodalOfficerInfo')
-        other_info =request.POST.get('otherInfo')
-        
+        nodal_officer_details = request.POST.get('nodalOfficerInfo')
+        other_info = request.POST.get('otherInfo')
+
+        # Handle file uploads
+        expected_outcome_file = request.FILES.get('outcomeFile')
+        beneficiaries_file = request.FILES.get('beneficiariesFile')
+        component_wise_cost_file = request.FILES.get('projectCostFile')
+        total_duration_file = request.FILES.get('durationFile')
+        project_report_file = request.FILES.get('projectReport')
+        covering_letter_file = request.FILES.get('coveringLetter')
+
         # Create and save the Proposal object
         proposal = Proposal(
             user=request.user,
@@ -292,22 +283,27 @@ def submit_proposal(request):
             nature_of_applicant=applicant_nature,
             other_nature=other_nature,
             brief_of_agency=brief_of_agency,
-            objectives_of_project= objectives_of_project,
-            brief_of_project =brief_of_project ,
+            objectives_of_project=objectives_of_project,
+            brief_of_project=brief_of_project,
             justification_of_project=justification_of_project,
             methodology_of_project=methodology_of_project,
-            expected_outcome=expected_outcome,
-            scenario_change =scenario_change ,
-            beneficiaries=beneficiaries,
-            mode_of_selection= mode_of_selection,
-            component_wise_cost=component_wise_cost,
-            total_duration=total_duration,
+            # expected_outcome=expected_outcome,
+            scenario_change=scenario_change,
+            # beneficiaries=beneficiaries,
+            mode_of_selection=mode_of_selection,
+            # component_wise_cost=component_wise_cost,
+            # total_duration=total_duration,
             location_of_project=location_of_project,
             associated_agency=associated_agency,
             bank_details=bank_details,
             nodal_officer_details=nodal_officer_details,
-            other_info=other_info
-         
+            other_info=other_info,
+            expected_outcome=expected_outcome_file,
+            beneficiaries=beneficiaries_file,
+            component_wise_cost=component_wise_cost_file,
+            total_duration=total_duration_file,
+            project_report=project_report_file,
+            covering_letter=covering_letter_file
         )
 
         # Generate a unique proposal_id
@@ -315,6 +311,7 @@ def submit_proposal(request):
         proposal.save()
 
         return redirect('authapp:proposal_status')
+
     return render(request, 'proposal/submit_proposal.html')
 
 def generate_unique_id():
@@ -370,6 +367,69 @@ def get_financial_year():
     else:
         return f'{today.year - 1}-{today.year}'
 
+#generate progress report 
+from io import BytesIO
+from django.http import HttpResponse
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+from django.shortcuts import render
+from django import forms
+from .models import ProgressReportDocument, Proposal
+from docx import Document
+from django.conf import settings
+from urllib.parse import quote
+
+def generate_progress_report_document(proposal_unique_id, form_data):
+    proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+    document = Document()
+    document.add_heading(f'Revolving Fund Progress Report - Proposal ID: {proposal}', level=1)
+
+    # # Add form data to the document
+    # for field_name, field_value in form_data.items():
+    #     document.add_paragraph(f"{field_name}: {field_value}")
+    
+    # Add form data to the document
+    # Add form data to the document
+    for field_name, field_value in form_data.items():
+        if hasattr(field_value, 'file') and callable(getattr(field_value, 'file', None)):
+            document_path = quote(f'media/documents/{field_name}')
+            document_url = f'{settings.MEDIA_URL}{document_path}'
+
+        # Add the clickable link to the document
+            document.add_paragraph(f"{field_name}: <a href='{document_url}'>{field_name}</a>", style='Hyperlink')
+        else:
+            document.add_paragraph(f"{field_name}: {field_value}")
+    
+    
+
+    # Save the document content to a BytesIO object
+    temp_file = BytesIO()
+    document.save(temp_file)
+
+    # Create a ContentFile from the BytesIO content
+    content_file = ContentFile(temp_file.getvalue())
+
+    # Save the document to the database
+    report_document = ProgressReportDocument(
+        proposal_unique_id=proposal,
+        quarter=form_data['quarter'],
+        financial_year=form_data['financial_year'],
+    )
+    report_document.document.save(f'{proposal_unique_id}_progress_report.docx', content_file)
+    report_document.save()
+
+    # Clean up the BytesIO object
+    temp_file.close()
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    response['Content-Disposition'] = f'attachment; filename=revolving_fund_progress_report_{proposal_unique_id}.docx'
+    document.save(response)
+
+    return response
+
+
+
+
 def revolving_fund_progress_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = WMSRevolvingFundForm(request.POST, request.FILES)
@@ -377,6 +437,8 @@ def revolving_fund_progress_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
+            # Generate and save progress report document
+            generate_progress_report_document(proposal_unique_id, form.cleaned_data)
             return HttpResponse('Form submitted successfully!')
     else:
         initial_data = {
@@ -404,6 +466,7 @@ def eportal_progress_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()
+            generate_progress_report_document(proposal_unique_id, form.cleaned_data)
             return HttpResponse('Form submitted successfully!')
     else:
         initial_data = {
@@ -1015,5 +1078,44 @@ class CustomLoginView(LoginView):
     
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='/login/')
 def staff_dashboard(request):
+    # Count the number of proposals for each status
+    pending_count = Proposal.objects.filter(status='Pending').count()
+    approved_count = Proposal.objects.filter(status='Approved').count()
+    completed_count = Proposal.objects.filter(status='Completed').count()
+    rejected_count = Proposal.objects.filter(status='Rejected').count()
+
     # Your view logic goes here
-    return render(request, 'staff_template/staff_dashboard.html')
+
+    return render(request, 'staff_template/staff_dashboard.html', {
+        'pending_count': pending_count,
+        'approved_count': approved_count,
+        'completed_count': completed_count,
+        'rejected_count': rejected_count,
+    })
+
+
+@user_passes_test(lambda u: u.is_staff or u.is_superuser)
+def all_proposal_details(request):
+    proposals = Proposal.objects.all()
+    return render(request, 'staff_template/admin_proposal_list.html', {'proposals': proposals})
+
+@user_passes_test(lambda u: u.is_staff or u.is_superuser)
+def submit_approval(request, proposal_id):
+    proposal = get_object_or_404(Proposal, unique_id=proposal_id)
+
+    if request.method == 'POST':
+        form = ProposalApprovalForm(request.POST, request.FILES,instance=proposal)
+        if form.is_valid():
+            # Save the form to update the model
+            form.save()
+
+            # Notify the user about the status change
+            send_status_change_notification(proposal.user, proposal.unique_id, proposal.status,proposal.sanction_letter)
+
+            messages.success(request, 'Proposal status changed successfully.')
+            # return redirect('admin:authapp_proposal_changelist')  # Replace 'proposal_list' with your actual URL name
+            return redirect('authapp:all_proposal_details')
+    else:
+        form = ProposalApprovalForm(instance=proposal)
+
+    return render(request, 'admin/submit_approval.html', {'form': form, 'proposal': proposal})

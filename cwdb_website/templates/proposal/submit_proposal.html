@@ -212,9 +212,10 @@
               <textarea id="textarea2" name="Methodology" class="fixed-height-textarea" rows="6"></textarea>
           </div>
           <div class="form-group">
-              <label for="textarea2">Expected Outcome of the project (in Quantifiable terms)</label>
-              <textarea id="textarea2" name="Outcome" class="fixed-height-textarea" rows="6"></textarea>
-          </div>
+            <label for="outcomeFile">Upload Expected Outcome (Excel)</label>
+            <input type="file" id="outcomeFile" name="outcomeFile" accept=".xls, .xlsx">
+        </div>
+        
           <div class="form-group">
             <label for="textarea2" >How the scenario will change due to implementation of the project. Please give
                 data of present scenario (Mortality Rate of animals, Wool Production per animal, No. of
@@ -223,23 +224,24 @@
             <textarea id="textarea2" name="change-scenario" class="fixed-height-textarea" rows="6"></textarea>
         </div>
         <div class="form-group">
-            <label for="textarea2" >Beneficiaries of the project and how benefit will acrrue to them
-                with the project.</label>
-            <textarea id="textarea2" name="beneficiaries" class="fixed-height-textarea" rows="3"></textarea>
-        </div>
+          <label for="beneficiariesFile">Upload Beneficiaries Information (Excel)</label>
+          <input type="file" id="beneficiariesFile" name="beneficiariesFile" accept=".xls, .xlsx">
+      </div>
+      
         <div class="form-group">
             <label for="textarea2" >Mode of selection of the beneficiaries.</label>
             <textarea id="textarea2" name="mode" class="fixed-height-textarea" rows="3"></textarea>
         </div>
         <div class="form-group">
-            <label for="textarea2" >Componenent Wise Project Cost</label>
-            <textarea id="textarea2" name="project Cost" class="fixed-height-textarea" rows="3"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="textarea2" >Total duration of the project along component wise duration of the
-                project.</label>
-            <textarea id="textarea2" name="Total duration" class="fixed-height-textarea" rows="3"></textarea>
-        </div>
+          <label for="projectCostFile">Upload Component Wise Project Cost (Excel)</label>
+          <input type="file" id="projectCostFile" name="projectCostFile" accept=".xls, .xlsx">
+      </div>
+      
+      <div class="form-group">
+        <label for="durationFile">Upload Total Project Duration (Excel)</label>
+        <input type="file" id="durationFile" name="durationFile" accept=".xls, .xlsx">
+    </div>
+    
             <div class="form-group">
                 <label for="singleLineInput">Location of the Project</label>
                 <input type="text" id="singleLineInput" name="projectLocation">
@@ -260,6 +262,15 @@
                 <label for="textarea2">Other info, if any</label>
                 <textarea id="textarea2" name="otherInfo" class="fixed-height-textarea" rows="3"></textarea>
             </div>
+            <div class="form-group">
+              <label for="projectReport">Upload Detailed Project Report (PDF)</label>
+              <input type="file" id="projectReport" name="projectReport" accept=".pdf">
+          </div>
+      
+          <div class="form-group">
+              <label for="coveringLetter">Upload Covering Letter (PDF)</label>
+              <input type="file" id="coveringLetter" name="coveringLetter" accept=".pdf">
+          </div>
             <button type="submit">Submit</button>
       </form>
     

@@ -87,12 +87,12 @@ class Proposal(models.Model):
     brief_of_project = models.TextField()
     justification_of_project = models.TextField()
     methodology_of_project = models.TextField()
-    expected_outcome = models.TextField()
+    expected_outcome = models.FileField(upload_to='excel_files/', blank=True, null=True)
     scenario_change = models.TextField()
-    beneficiaries = models.TextField()
+    beneficiaries = models.FileField(upload_to='excel_files/', blank=True, null=True)
     mode_of_selection = models.TextField()
-    component_wise_cost = models.TextField()
-    total_duration = models.TextField()
+    component_wise_cost = models.FileField(upload_to='excel_files/', blank=True, null=True)
+    total_duration = models.FileField(upload_to='excel_files/', blank=True, null=True)
     location_of_project = models.CharField(max_length=100)
     associated_agency = models.TextField()
     bank_details = models.TextField()
@@ -101,6 +101,8 @@ class Proposal(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     fund_allocated = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
     sanction_letter = models.FileField(upload_to='sanction_letters/', blank=True, null=True)
+    project_report = models.FileField(upload_to='pdf_files/', blank=True, null=True)
+    covering_letter = models.FileField(upload_to='pdf_files/', blank=True, null=True)
     unique_id = models.CharField(max_length=8, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -893,3 +895,23 @@ class FodderLandDevelopment(models.Model):
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
 
+#document store
+from django.db import models
+
+class ProgressReportDocument(models.Model):
+    proposal_unique_id = models.ForeignKey(Proposal, to_field='unique_id', on_delete=models.CASCADE)
+    quarter = models.CharField(
+        max_length=10,
+        choices=[
+            ('Q1', 'Quarter 1 (April-June)'),
+            ('Q2', 'Quarter 2 (July-September)'),
+            ('Q3', 'Quarter 3 (October-December)'),
+            ('Q4', 'Quarter 4 (January-March)'),
+        ],
+    )
+    financial_year = models.CharField(max_length=9)
+    document = models.FileField(upload_to='progress_report_documents/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
