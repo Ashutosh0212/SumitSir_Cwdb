@@ -1,11 +1,10 @@
+{% extends 'base_dashboard.html' %}
 {%load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
+{% block title %}CWDB: Establishing CFC Progress Report{% endblock %}
+{% block content %}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> CWDB: Establishing CFC Progress Report</title>
+   
     <style>
         body {
           font-family: Helvetica, sans-serif;
@@ -182,6 +181,4 @@
       </div>
     </form>
   </div>
-</body>
-
-</html>
+{% endblock %}

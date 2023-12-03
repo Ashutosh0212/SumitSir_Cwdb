@@ -1,11 +1,10 @@
+{% extends 'base_dashboard.html' %}
 {%load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
+{% block title %}CWDB: Sheep Shearing Machines Progress Report{% endblock %}
+{% block content %}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> CWDB: Sheep Shearing Machines Progress Report</title>
+    
   <style>
     body {
       font-family: Helvetica, sans-serif;
@@ -144,10 +143,7 @@
         margin-left: 10%;
       } 
     }
-  </style>
-</head>
-
-<body>
+  
   <div class="container">
     <div class="content">
       <img src="{%static 'img/cwdb_logo.jpg'%}" alt="Image Description">
@@ -184,6 +180,4 @@
     </form>
   </div>
     </script>
-</body>
-
-</html>
+{% endblock %} 

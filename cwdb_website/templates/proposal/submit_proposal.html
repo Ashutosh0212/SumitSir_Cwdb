@@ -1,11 +1,9 @@
+{% extends 'base_dashboard.html' %}
 {%load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% block title %}CWDB Project Proposal Application{%endblock%}
+{% block content%}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CWDB Project Proposal Application</title>
+    {% comment %} <title>CWDB Project Proposal Application</title> {% endcomment %}
     <style>
         body {
           font-family: Helvetica, sans-serif;
@@ -118,8 +116,8 @@
     
         .content h1{
           align-items: center;
-          margin-left: 10%;
-          /* border: solid #ff0000; */
+          margin-left: 25%;
+          
         }
     
         .content img {
@@ -145,13 +143,11 @@
           } 
         }
       </style>
-</head>
 
-<body>
     <div class="container">
         <div class="content">
-            <img src="{%static 'img/cwdb_logo.jpg'%}" alt="Image Description">
-            <h1>CWDB Project Proposal Application</h1>
+            {% comment %} <img src="{%static 'img/cwdb_logo.jpg'%}" alt="Image Description"> {% endcomment %}
+            <h1 >CWDB Project Proposal Application</h1>
           </div>
 
         
@@ -160,11 +156,11 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="textarea1">Name & Full Address of Agency with Telephone No. & Email Address</label>
-                <textarea id="textarea1" name="agencyAddress" class="fixed-height-textarea" rows="3"></textarea>
+                <textarea id="textarea1" name="agencyAddress" class="fixed-height-textarea" rows="3" required></textarea>
             </div>
             <div class="form-group">
                 <label for="folderSelect">Project Scheme:</label>
-                <select id="folderSelect" name="projectScheme" onchange="showSubfiles()">
+                <select id="folderSelect" name="projectScheme" onchange="showSubfiles()" required>
                     <option value="WMS" selected>WMS</option>
                     <option value="WPS">WPS</option>
                     <option value="HRD">HRD</option>
@@ -173,12 +169,12 @@
             </div>
             <div class="form-group">
                 <label for="subfileSelect">Scheme Component:</label>
-                <select id="subfileSelect" name="schemeComponent">
+                <select id="subfileSelect" name="schemeComponent" required>
                 </select>
             </div>
             <div class="form-group">
                 <label for="dropdown">Nature of Applicant</label>
-                <select id="dropdown" name="applicantNature" onchange="handleDropdownChange()">
+                <select id="dropdown" name="applicantNature" onchange="handleDropdownChange()" required>
                     <option value="State Govt. Sheep & Wool Board">State Govt. Sheep & Wool Board</option>
                     <option value="UT Govt. Sheep & Wool Board">UT Govt. Sheep & Wool Board</option>
                     <option value="State Govt. Corporation/Federation">State Govt. Corporation/Federation</option>
@@ -188,32 +184,32 @@
             </div>
             <div class="form-group" id="otherField" style="display: none;">
                 <label for="otherInput" name="otherNature">Mention Other Nature:</label>
-                <input type="text" id="otherInput" name="otherNature">
+                <input type="text" id="otherInput" name="otherNature" required>
             </div>
             <div class="form-group">
                 <label for="textarea2">Brief of the Agency and its activities in the last 3 years in the related field and facilities available with it (Manpower, machines etc.)</label>
-                <textarea id="textarea2" name="agencyActivities" class="fixed-height-textarea" rows="6"></textarea>
+                <textarea id="textarea2" name="agencyActivities" class="fixed-height-textarea" rows="6" required></textarea>
             </div>
             <div class="form-group">
               <label for="textarea2">Objectives of the project</label>
-              <textarea id="textarea2" name="Objectives" class="fixed-height-textarea" rows="6"></textarea>
+              <textarea id="textarea2" name="Objectives" class="fixed-height-textarea" rows="6" required></textarea>
           </div>
 
           <div class="form-group">
               <label for="textarea2">Brief of the project</label>
-              <textarea id="textarea2" name="Brief"  class="fixed-height-textarea" rows="6"></textarea>
+              <textarea id="textarea2" name="Brief"  class="fixed-height-textarea" rows="6" required></textarea>
           </div>
           <div class="form-group">
               <label for="textarea2">Brief justification of the project</label>
-              <textarea id="textarea2" name="justification" class="fixed-height-textarea" rows="6"></textarea>
+              <textarea id="textarea2" name="justification" class="fixed-height-textarea" rows="6" required></textarea>
           </div>
           <div class="form-group">
               <label for="textarea2">Methodology for the Implementation of the project</label>
-              <textarea id="textarea2" name="Methodology" class="fixed-height-textarea" rows="6"></textarea>
+              <textarea id="textarea2" name="Methodology" class="fixed-height-textarea" rows="6" required></textarea>
           </div>
           <div class="form-group">
             <label for="outcomeFile">Upload Expected Outcome (Excel)</label>
-            <input type="file" id="outcomeFile" name="outcomeFile" accept=".xls, .xlsx">
+            <input type="file" id="outcomeFile" name="outcomeFile" accept=".xls, .xlsx" required>
         </div>
         
           <div class="form-group">
@@ -221,55 +217,55 @@
                 data of present scenario (Mortality Rate of animals, Wool Production per animal, No. of
                 beneficiaries, Wool quantity, Employment etc.) and improvement after implementation of project in
                 quantifiable term in tabular form.</label>
-            <textarea id="textarea2" name="change-scenario" class="fixed-height-textarea" rows="6"></textarea>
+            <textarea id="textarea2" name="change-scenario" class="fixed-height-textarea" rows="6" required></textarea>
         </div>
         <div class="form-group">
           <label for="beneficiariesFile">Upload Beneficiaries Information (Excel)</label>
-          <input type="file" id="beneficiariesFile" name="beneficiariesFile" accept=".xls, .xlsx">
+          <input type="file" id="beneficiariesFile" name="beneficiariesFile" accept=".xls, .xlsx" required>
       </div>
       
         <div class="form-group">
             <label for="textarea2" >Mode of selection of the beneficiaries.</label>
-            <textarea id="textarea2" name="mode" class="fixed-height-textarea" rows="3"></textarea>
+            <textarea id="textarea2" name="mode" class="fixed-height-textarea" rows="3" required></textarea>
         </div>
         <div class="form-group">
           <label for="projectCostFile">Upload Component Wise Project Cost (Excel)</label>
-          <input type="file" id="projectCostFile" name="projectCostFile" accept=".xls, .xlsx">
+          <input type="file" id="projectCostFile" name="projectCostFile" accept=".xls, .xlsx" required>
       </div>
       
       <div class="form-group">
         <label for="durationFile">Upload Total Project Duration (Excel)</label>
-        <input type="file" id="durationFile" name="durationFile" accept=".xls, .xlsx">
+        <input type="file" id="durationFile" name="durationFile" accept=".xls, .xlsx" required>
     </div>
     
             <div class="form-group">
                 <label for="singleLineInput">Location of the Project</label>
-                <input type="text" id="singleLineInput" name="projectLocation">
+                <input type="text" id="singleLineInput" name="projectLocation" required>
             </div>
             <div class="form-group">
                 <label for="textarea2">Name of associated agency who will be part of the implementation of the project, if any</label>
-                <textarea id="textarea2" name="associatedAgency" class="fixed-height-textarea" rows="3"></textarea>
+                <textarea id="textarea2" name="associatedAgency" class="fixed-height-textarea" rows="3" required></textarea>
             </div>
             <div class="form-group">
                 <label for="textarea2">Details of Bank Account of Agency</label>
-                <textarea id="textarea2" name="bankAccountDetails" class="fixed-height-textarea" rows="3"></textarea>
+                <textarea id="textarea2" name="bankAccountDetails" class="fixed-height-textarea" rows="3" required></textarea>
             </div>
             <div class="form-group">
                 <label for="textarea2">Name, Address, and Email ID of Nodal Officer</label>
-                <textarea id="textarea2" name="nodalOfficerInfo" class="fixed-height-textarea" rows="3"></textarea>
+                <textarea id="textarea2" name="nodalOfficerInfo" class="fixed-height-textarea" rows="3" required></textarea>
             </div>
             <div class="form-group">
                 <label for="textarea2">Other info, if any</label>
-                <textarea id="textarea2" name="otherInfo" class="fixed-height-textarea" rows="3"></textarea>
+                <textarea id="textarea2" name="otherInfo" class="fixed-height-textarea" rows="3" ></textarea>
             </div>
             <div class="form-group">
               <label for="projectReport">Upload Detailed Project Report (PDF)</label>
-              <input type="file" id="projectReport" name="projectReport" accept=".pdf">
+              <input type="file" id="projectReport" name="projectReport" accept=".pdf" required>
           </div>
       
           <div class="form-group">
               <label for="coveringLetter">Upload Covering Letter (PDF)</label>
-              <input type="file" id="coveringLetter" name="coveringLetter" accept=".pdf">
+              <input type="file" id="coveringLetter" name="coveringLetter" accept=".pdf" required>
           </div>
             <button type="submit">Submit</button>
       </form>
@@ -352,6 +348,5 @@
 
         showSubfiles();
     </script>
-</body>
 
-</html>
+{% endblock %}

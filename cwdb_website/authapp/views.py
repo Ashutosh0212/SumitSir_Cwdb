@@ -1067,13 +1067,12 @@ def fodder_land_development_report(request, proposal_unique_id):
 #staff view
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
-
 class CustomLoginView(LoginView):
     def get_success_url(self):
         user = self.request.user
 
         if user.is_superuser or user.is_staff:
-            return reverse_lazy('authapp:staff_dashboard')  # Use reverse_lazy to avoid URL resolution issues
+            return reverse_lazy('admin:index')  # Use reverse_lazy to avoid URL resolution issues
         return reverse_lazy('authapp:dashboard') 
     
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='/login/')

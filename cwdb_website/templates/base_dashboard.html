@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>{%block title%}Principal Investigator Dashboard{%endblock%}</title>
+    <title>{%block title%}{%endblock%}</title>
 
     <!-- Custom fonts for this template-->
     <link href="{%static 'css/user_dashboard/all.min.css'%}" rel="stylesheet" type="text/css">
@@ -99,26 +99,7 @@
             <div id="content">
 
                 <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <!-- <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button> -->
-
-                    <!-- Topbar Search -->
-                    <!-- <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form> -->
+                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow ">  
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -191,43 +172,23 @@
 
                     </ul>
 
-                </nav>
+</nav>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                  { {% block content %}{% endblock %}}
+                   {% block content %}{% endblock %}
 
                     <!-- Content Row -->
                  
 
-                        
-
-
-
-                     
-                    
-
-                    
-                  
-
-                   
                 </div>
                 <!-- /.container-fluid -->
 
            
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <!-- <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
-                    </div>
-                </div>
-            </footer> --> 
+          
             <!-- End of Footer -->
 
         </div>
@@ -260,12 +221,9 @@
             </div>
         </div>
     </div>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-
-   
 
 </body>
 

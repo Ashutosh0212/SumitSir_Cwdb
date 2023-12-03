@@ -24,7 +24,7 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     PasswordResetCompleteView,
 )
-
+from authapp.views import index
 urlpatterns = [
     path('', include('authapp.urls', namespace='authapp')),
     path('admin/', admin.site.urls),

@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Submit Progress Report
-    </title>
+{% extends 'base_dashboard.html' %}
+
+{% block title %}Submit Progress Report {% endblock %}
+
+{% block content%}
+
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,8 +13,8 @@
             background-color: #f4f4f4;
         }
         header {
-            background-color: #007BFF;
-            color: #ffffff;
+            
+            color: #2aa4fb;
             text-align: center;
             padding: 1em 0;
         }
@@ -25,6 +27,7 @@
             border: 1px solid #007BFF;
             padding: 8px;
             text-align: left;
+            color:black;
         }
         th {
             background-color: #007BFF;
@@ -38,8 +41,7 @@
             color: #007BFF;
         }
     </style>
-</head>
-<body>
+
     <header>
         <h1>Submit Progress</h1>
     </header>
@@ -124,5 +126,6 @@
         {% endfor %}
     </table>
     
-</body>
-</html>
+
+{% endblock %}
+

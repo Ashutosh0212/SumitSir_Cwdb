@@ -1,11 +1,10 @@
+{% extends 'base_dashboard.html' %}
 {%load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
+{% block title %}CWDB: Financial Assistance for Other Equipement/Machines Report{% endblock %}
+{% block content%}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> CWDB: Financial Assistance for Other Equipement/Machines Report</title>
+    
     <style>
         body {
           font-family: Helvetica, sans-serif;
@@ -145,9 +144,7 @@
           } 
         }
       </style>
-</head>
 
-<body>
   <div class="container">
     <div class="content">
       <img src="{%static 'img/cwdb_logo.jpg'%}" alt="Image Description">
@@ -182,6 +179,5 @@
       </div>
     </form>
   </div>
-</body>
 
-</html>
+{% endblock %}
