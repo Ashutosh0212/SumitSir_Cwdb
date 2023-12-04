@@ -29,9 +29,9 @@ STATIC_DIR = BASE_DIR / 'static'
 SECRET_KEY = 'pxz!5e7vki$4%fx2+xb-z6v_85b)0j)nwontigspp#!+fpxu*2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["0.0.0.0"]
+ALLOWED_HOSTS = ["*"]
 
 AUTH_USER_MODEL='authapp.UserRegistrationModel'
 # Application definition
