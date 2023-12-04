@@ -29,7 +29,7 @@ STATIC_DIR = BASE_DIR / 'static'
 SECRET_KEY = 'pxz!5e7vki$4%fx2+xb-z6v_85b)0j)nwontigspp#!+fpxu*2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -126,21 +126,13 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-# STATIC_URL = '/static/'
-# # STATICFILES_DIRS = [STATIC_DIR, ]
-# STATICFILES_DIRS = [
-#     # STATIC_DIR,
-#     os.path.join(BASE_DIR, 'authenication/authapp/static'),
-# ]
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     STATIC_DIR,
-    os.path.join(BASE_DIR, 'authenication/static'),
+
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
