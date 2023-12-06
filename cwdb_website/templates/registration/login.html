@@ -140,12 +140,14 @@
               <h2>Login</h2>
             </div>
             <div class="card-body">
-              <form method="post">
+              <form method="post" class="form-horizontal">
                 {% csrf_token %}
                 {% for field in form %}
-                <div class="form-group">
-                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                  {{ field }}
+                <div class="form-group row">
+                  <label for="{{ field.id_for_label }}" class="col-sm-5">{{ field.label }}:</label>
+                  <div class="col-sm-16">
+                    {{ field }}
+                  </div>
                 </div>
                 {% endfor %}
                 <button type="submit" class="btn btn-primary">Login</button>

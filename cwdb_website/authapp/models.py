@@ -46,7 +46,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     agency_name = models.CharField(max_length=100,blank=False,null=False,default="")
     agency_nature = models.CharField(
-        max_length=100, choices=AGENCY_NATURE_CHOICES, default='Central Federations')
+        max_length=56, choices=AGENCY_NATURE_CHOICES, default='Central Federations')
     registration_number = models.CharField(max_length=255, blank=True, null=True)
     address = models.TextField(default="",blank=False,null=False)
     pincode = models.CharField(max_length=10,blank=False,null=False,default="")
