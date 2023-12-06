@@ -148,7 +148,7 @@
           padding: 20px;
           border: 1px solid #ddd;
         }
-        .modal {
+        .modal1 {
           display: none;
           position: fixed;
           z-index: 1;
@@ -162,7 +162,7 @@
           padding-top: 60px;
         }
       
-        .modal-content {
+        .modal1-content {
           margin: 5% auto;
           padding: 20px;
           border: 1px solid #888;
@@ -172,8 +172,8 @@
       
         .close {
           color: #aaa;
-          float: right;
-          font-size: 28px;
+          float: left;
+          font-size: 24px;
           font-weight: bold;
         }
       
@@ -339,142 +339,136 @@
             <button type="submit">Submit</button>
       </form>
 
-    <script>
-      function previewEntries() {
-        // Retrieve form data
-        var formData = new FormData(document.getElementById('proposalForm'));
+  
+      <script>
+        function previewEntries() {
+            // Retrieve form data
+            var formData = new FormData(document.getElementById('proposalForm'));
     
-        // Create an object to store form values
-        var formValues = {};
-        formData.forEach(function (value, key) {
-            formValues[key] = value;
-        });
+            // Create an object to store form values
+            var formValues = {};
+            formData.forEach(function (value, key) {
+                formValues[key] = value;
+            });
     
-        // Build HTML for the preview section
-        var previewHTML = '<div class="preview-container">';
-        previewHTML += '<h2>Review Your Entries</h2>';
-        previewHTML += '<div class="preview-content">';
+            // Build HTML for the preview section
+            var previewHTML = '<div class="preview-container">';
+            previewHTML += '<h2>Review Your Entries</h2>';
+            previewHTML += '<div class="preview-content">';
     
-        for (var key in formValues) {
-            if (formValues.hasOwnProperty(key)) {
-                if (key !== 'csrfmiddlewaretoken') {  // Skip csrfmiddlewaretoken
-                    previewHTML += '<div class="preview-item">';
-                    previewHTML += '<span class="preview-label"><strong>' + key + ':</strong></span>';
+            for (var key in formValues) {
+                if (formValues.hasOwnProperty(key)) {
+                    if (key !== 'csrfmiddlewaretoken') {  // Skip csrfmiddlewaretoken
+                        previewHTML += '<div class="preview-item">';
+                        previewHTML += '<span class="preview-label"><strong>' + key + ':</strong></span>';
     
-                    if (formValues[key] instanceof File) {
-                        // Display file names for file inputs
-                        previewHTML += '<span class="preview-value">' + formValues[key].name + '</span>';
-                    } else {
-                        // Display other form values
-                        previewHTML += '<span class="preview-value">' + formValues[key] + '</span>';
+                        if (formValues[key] instanceof File) {
+                            // Display file names for file inputs
+                            previewHTML += '<span class="preview-value">' + formValues[key].name + '</span>';
+                        } else {
+                            // Display other form values
+                            previewHTML += '<span class="preview-value">' + formValues[key] + '</span>';
+                        }
+    
+                        previewHTML += '</div>';
                     }
-    
-                    previewHTML += '</div>';
                 }
+            }
+    
+            previewHTML += '</div></div>';
+    
+            // Create a modal1 and append the preview content
+            var modal1 = document.createElement('div');
+            modal1.className = 'modal1';
+            modal1.innerHTML = '<div class="modal1-content">' + previewHTML + '<span class="close" onclick="closemodal1()">&times;</span></div>';
+            document.body.appendChild(modal1);
+    
+            // Display the modal1
+            modal1.style.display = 'block';
+        }
+    
+        // Close the modal1
+        function closemodal1() {
+            var modal1 = document.querySelector('.modal1');
+            modal1.style.display = 'none';
+            modal1.parentNode.removeChild(modal1); // Remove the modal1 from the DOM
+        }
+    
+        function handleDropdownChange() {
+            const dropdown = document.getElementById('dropdown');
+            const otherField = document.getElementById('otherField');
+            const otherInput = document.getElementById('otherInput');
+    
+            if (dropdown.value === 'other') {
+                otherField.style.display = 'block';
+                otherInput.setAttribute('required', 'true');
+            } else {
+                otherField.style.display = 'none';
+                otherInput.removeAttribute('required');
             }
         }
     
-        previewHTML += '</div></div>';
-    
-        // Create a modal and append the preview content
-        var modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.innerHTML = '<div class="modal-content">' + previewHTML + '<span class="close" onclick="closeModal()">&times;</span></div>';
-        document.body.appendChild(modal);
-    
-        // Display the modal
-        modal.style.display = 'block';
-    }
-    
-    // Close the modal
-    function closeModal() {
-        var modal = document.querySelector('.modal');
-        modal.style.display = 'none';
-        modal.parentNode.removeChild(modal); // Remove the modal from the DOM
-    }
-    
-    
-    // Close the modal
-    function closeModal() {
-        var modal = document.querySelector('.modal');
-        modal.style.display = 'none';
-        modal.parentNode.removeChild(modal); // Remove the modal from the DOM
-    }
-    
-    function handleDropdownChange() {
-        const dropdown = document.getElementById('dropdown');
-        const otherField = document.getElementById('otherField');
-        const otherInput = document.getElementById('otherInput');
-    
-        if (dropdown.value === 'other') {
-            otherField.style.display = 'block';
-            otherInput.setAttribute('required', 'true');
-        } else {
-            otherField.style.display = 'none';
-            otherInput.removeAttribute('required');
-        }
-    }
-    
         var subfileData = {
-      WMS: [
-        "1.Creation of Revolving Fund for Marketing of Raw Wool",
-        "2.E-Portal for Marketing Auction of Wool and Development of MIS",
-        "3.Financial Assistance for Formation of Wool Producers Societies/Self Help Group(SHGs)",
-        "4.Organizing Buyers Sellers Meets",
-        "5.Financial Assistance to Strengthening Infrastructure Required for Wool Marketing",
-        "6.Organization of Domestic Independent Woolen Expo",
-        "7.Organizing Domestic Expo on Hiring Stall Basis"
-      ],
-      WPS: [
-        "1.Establishing Common Facility Centres (CFCs) for Wool Processing Machines/Facilities",
-        "2.Financial Assistance for Sheep Shearing Machines",
-        "3.Financial Assistance for Other Machines and Equipments",
-        "4.Financial Assistance for Distribution of Small Tools for Manufacturing of Woolen Items"
-      ],
-      HRD: [
-        "1.Short Term Training Program for Manufacturing and Weaving of Woolen Items",
-        "2.On-Site Training for Industrial Workers",
-        "3.Training on Machine Sheep Shearing",
-        "4.Research and Development Projects",
-        "5.International/Domestic Corporations Stakeholders Meeting/Conference",
-        "6.Organizing Seminars, Workshops, Sheep Mela, Fare, Meet",
-        "7.Wool Survey and Study on Wool Sector",
-        "8.Operating Existing Wool Testing Lab at Bikaner Including Upgradation and WDTC/ISC at Kullu",
-        "9.Publicity of Scheme, Monitoring of Projects, Common Visits, Evaluation of Projects/Schemes, and Awareness Program for Swachhta, etc."
-      ],
-      PWDS: [
-        "1.Revolving fund for pashmina wool marketing (For UT of J&K & UT of Ladakh)",
-        "2.Setting of machines for pashmina wool processing",
-        "3.Construction of shelter shed with guard rooms for pashmina goat",
-        "4.Distribution of portable tents with accessories",
-        "5.Distribution of predator-proof corral with LED lights",
-        "6.Testing equipment, including DNA analyzer for identification/testing of pashmina products",
-        "7.Development of showroom at Dehairing Plant premises at Leh",
-        "8.Development of fodder land/Govt. farms for pashmina goats",
-      ]
-    };
-
+            WMS: [
+                "1.Creation of Revolving Fund for Marketing of Raw Wool",
+                "2.E-Portal for Marketing Auction of Wool and Development of MIS",
+                "3.Financial Assistance for Formation of Wool Producers Societies/Self Help Group(SHGs)",
+                "4.Organizing Buyers Sellers Meets",
+                "5.Financial Assistance to Strengthening Infrastructure Required for Wool Marketing",
+                "6.Organization of Domestic Independent Woolen Expo",
+                "7.Organizing Domestic Expo on Hiring Stall Basis"
+            ],
+            WPS: [
+                "1.Establishing Common Facility Centres (CFCs) for Wool Processing Machines/Facilities",
+                "2.Financial Assistance for Sheep Shearing Machines",
+                "3.Financial Assistance for Other Machines and Equipments",
+                "4.Financial Assistance for Distribution of Small Tools for Manufacturing of Woolen Items"
+            ],
+            HRD: [
+                "1.Short Term Training Program for Manufacturing and Weaving of Woolen Items",
+                "2.On-Site Training for Industrial Workers",
+                "3.Training on Machine Sheep Shearing",
+                "4.Research and Development Projects",
+                "5.International/Domestic Corporations Stakeholders Meeting/Conference",
+                "6.Organizing Seminars, Workshops, Sheep Mela, Fare, Meet",
+                "7.Wool Survey and Study on Wool Sector",
+                "8.Operating Existing Wool Testing Lab at Bikaner Including Upgradation and WDTC/ISC at Kullu",
+                "9.Publicity of Scheme, Monitoring of Projects, Common Visits, Evaluation of Projects/Schemes, and Awareness Program for Swachhta, etc."
+            ],
+            PWDS: [
+                "1.Revolving fund for pashmina wool marketing (For UT of J&K & UT of Ladakh)",
+                "2.Setting of machines for pashmina wool processing",
+                "3.Construction of shelter shed with guard rooms for pashmina goat",
+                "4.Distribution of portable tents with accessories",
+                "5.Distribution of predator-proof corral with LED lights",
+                "6.Testing equipment, including DNA analyzer for identification/testing of pashmina products",
+                "7.Development of showroom at Dehairing Plant premises at Leh",
+                "8.Development of fodder land/Govt. farms for pashmina goats",
+            ]
+        };
+    
         function showSubfiles() {
             var folderSelect = document.getElementById("folderSelect");
             var subfileSelect = document.getElementById("subfileSelect");
             var selectedFolder = folderSelect.value;
             var subfiles = subfileData[selectedFolder];
-
+    
             // Clear the current subfile list
             subfileSelect.innerHTML = '<option value="none">Select a Component:</option>';
-
+    
             if (selectedFolder !== "none") {
                 for (var i = 0; i < subfiles.length; i++) {
-                var subfile = subfiles[i];
-                var option = document.createElement("option");
-                option.value = subfile;
-                option.textContent = subfile;
-                subfileSelect.appendChild(option);
+                    var subfile = subfiles[i];
+                    var option = document.createElement("option");
+                    option.value = subfile;
+                    option.textContent = subfile;
+                    subfileSelect.appendChild(option);
                 }
             }
         }
-
+    
         showSubfiles();
     </script>
+    
 
 {% endblock %}
