@@ -27,6 +27,7 @@ from django.contrib.auth.views import (
 from authapp.views import index
 urlpatterns = [
     path('', include('authapp.urls', namespace='authapp')),
+    #  (r'^admin/', include(admin.site.urls) ),
     path('admin/', admin.site.urls),
      # Password Reset URLs
     path('dashboard/forgot-password/', PasswordResetView.as_view(template_name='registration/password_reset_form.html'), name='forgot_password'),

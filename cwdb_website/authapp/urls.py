@@ -3,6 +3,7 @@ from django.urls import path,reverse_lazy
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
+
 from .views import UserProfileView,EditProfileView,CustomLoginView
 app_name = 'authapp'
 from django.contrib.auth.views import LoginView,LogoutView
@@ -17,6 +18,7 @@ from django.contrib.auth.views import (
 )
 
 urlpatterns = [
+   
     path('',views.index,name='index'),
     path('signup/', views.signup, name='register'),
     path('activate/<str:uidb64>/<str:token>/', views.activate, name='activate'),
@@ -77,6 +79,8 @@ urlpatterns = [
     #admin
     # urls.py
 path('admin/submit_approval/<str:proposal_id>/', views.submit_approval, name='submit_approval'),
+# path('admin/view_progress_report/<str:proposal_id>/', views.view_progress_report, name='view_progress_report'),
+    
 #notifications
 # path('dashboard/show-notifications/', views.show_notifications, name='show_notifications'),
 path('dashboard/show-all-notifications/', views.show_all_notifications, name='show_all_notifications'),

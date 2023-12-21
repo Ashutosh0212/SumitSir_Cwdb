@@ -915,3 +915,31 @@ class ProgressReportDocument(models.Model):
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+
+# models.py
+from django.db import models
+
+class BeneficiaryData(models.Model):
+    proposal_unique_id = models.ForeignKey(Proposal, to_field='unique_id', on_delete=models.CASCADE)
+    num_beneficiaries = models.PositiveIntegerField()
+    num_general_beneficiaries = models.PositiveIntegerField()
+    num_obc_beneficiaries = models.PositiveIntegerField()
+    num_sc_st_beneficiaries = models.PositiveIntegerField()
+    state_of_beneficiaries = models.CharField(max_length=100)
+    num_males = models.PositiveIntegerField()
+    num_females = models.PositiveIntegerField()
+    num_other_gender = models.PositiveIntegerField()
+    quarter = models.CharField(
+        max_length=10,
+        choices=[
+            ('Q1', 'Quarter 1 (April-June)'),
+            ('Q2', 'Quarter 2 (July-September)'),
+            ('Q3', 'Quarter 3 (October-December)'),
+            ('Q4', 'Quarter 4 (January-March)'),
+        ],
+    )
+    year = models.CharField(max_length=4)
+    scheme = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.proposal_unique_id} - {self.year} - {self.quarter}'
