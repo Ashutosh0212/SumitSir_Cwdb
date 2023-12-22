@@ -942,4 +942,4 @@ class BeneficiaryData(models.Model):
     scheme = models.CharField(max_length=100)
 
     def __str__(self):
-        return f'{self.proposal_unique_id} - {self.year} - {self.quarter}'
+        return f'{self.proposal_unique_id} - {self.year} - {self.quarter} - {self.state_of_beneficiaries}'

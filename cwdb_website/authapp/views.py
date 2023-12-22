@@ -427,7 +427,34 @@ def generate_progress_report_document(proposal_unique_id, form_data):
 
     return response
 
+def process(df, gender=0, category=0, state=0, beneficiaries=0):
+    """takes all xlsx data and flags of data required
+    to analyze and return as just 1 row"""
 
+    analysis = {"state": {}}
+
+    if state:
+        all_states_and_ut = ['Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal', 'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Lakshadweep', 'Delhi', 'Puducherry']
+        
+        for state_name in all_states_and_ut:
+            state_df = df[df['State/UT (no abbreviations, proper capitalization, max 30 characters)'] == state_name]
+            state_analysis = {}
+
+            if gender:
+                gender_counts = state_df['Gender (Male/Female/Other)'].value_counts()
+                state_analysis['gender'] = [gender_counts.get('Male', 0), gender_counts.get('Female', 0), gender_counts.get('Other', 0)]
+
+            if category:
+                category_counts = state_df['Category (General/SC/ST/BPL/OBC)'].value_counts()
+                state_analysis['category'] = [category_counts.get('General', 0), category_counts.get('SC', 0), category_counts.get('ST', 0), 
+                                              category_counts.get('BPL', 0), category_counts.get('OBC', 0)]
+
+            if beneficiaries:
+                state_analysis['beneficiaries'] = len(state_df)
+
+            analysis['state'][state_name] = state_analysis
+
+    return analysis
 
 
 def revolving_fund_progress_report(request, proposal_unique_id):
@@ -457,12 +484,47 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import EPortalForm
-from .models import EPortal
+from .models import EPortal,BeneficiaryData
+import pandas as pd 
 
 def eportal_progress_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = EPortalForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            df = pd.read_excel(form.cleaned_data['component_wise_budget_sheet'])
+            analysis = process(df, 1, 1, 1, 1)
+            print(analysis)
+            
+            # print(form.cleaned_data['proposal_unique_id'], len(df), form.cleaned_data['quarter'], form.cleaned_data['financial_year']) 
+            # # #scheme bhi bhejo idhar
+            # print(form.cleaned_data['total_quarterly_budget_spent'])
+            
+            # Iterate through the state-wise analysis data
+            for state_name, state_data in analysis['state'].items():
+                # Check if beneficiaries count for the state is greater than 0
+                if state_data.get('beneficiaries', 0) > 0:
+                    # Create a new instance of BeneficiaryData model
+                    beneficiary_data_instance = BeneficiaryData(
+                        proposal_unique_id=proposal,
+                        num_beneficiaries=state_data.get('beneficiaries', 0),
+                        num_general_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[0],
+                        num_obc_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[4],
+                        num_sc_st_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[1] + state_data.get('category', [0, 0, 0, 0, 0])[2],
+                        state_of_beneficiaries=state_name,
+                        num_males=state_data.get('gender', [0, 0, 0])[0],
+                        num_females=state_data.get('gender', [0, 0, 0])[1],
+                        num_other_gender=state_data.get('gender', [0, 0, 0])[2],
+                        quarter=form.cleaned_data['quarter'],
+                        year=form.cleaned_data['financial_year'],
+                        scheme=scheme,
+                    )
+
+                    # Save the instance to the database
+                    beneficiary_data_instance.save()
+            
+            
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()

@@ -11,4 +11,5 @@ sqlparse==0.4.4
 typing_extensions==4.8.0
 python-docx==0.8.11
 django-jazzmin==2.6.0
-
+pandas==2.1.4
+openpyxl==3.1.2
