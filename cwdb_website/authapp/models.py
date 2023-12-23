@@ -945,3 +945,4 @@ class BeneficiaryData(models.Model):
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.year} - {self.quarter} - {self.state_of_beneficiaries}'
+

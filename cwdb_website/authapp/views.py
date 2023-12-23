@@ -240,7 +240,6 @@ from django.contrib.auth.decorators import login_required
 import uuid
 
 @login_required
-@login_required
 def submit_proposal(request):
     if request.method == 'POST':
         # Handle text fields
@@ -308,6 +307,7 @@ def submit_proposal(request):
 
         # Generate a unique proposal_id
         proposal.unique_id = generate_unique_id()
+        # print(proposal)
         proposal.save()
 
         return redirect('authapp:proposal_status')
