@@ -921,14 +921,16 @@ from django.db import models
 
 class BeneficiaryData(models.Model):
     proposal_unique_id = models.ForeignKey(Proposal, to_field='unique_id', on_delete=models.CASCADE)
-    num_beneficiaries = models.PositiveIntegerField()
-    num_general_beneficiaries = models.PositiveIntegerField()
-    num_obc_beneficiaries = models.PositiveIntegerField()
-    num_sc_st_beneficiaries = models.PositiveIntegerField()
+    num_beneficiaries = models.PositiveIntegerField(default=0)
+    num_general_beneficiaries = models.PositiveIntegerField(default=0)
+    num_obc_beneficiaries = models.PositiveIntegerField(default=0)
+    num_sc_beneficiaries = models.PositiveIntegerField(default=0)
+    num_st_beneficiaries=models.PositiveIntegerField(default=0)
+    num_bpl_beneficiaries=models.PositiveIntegerField(default=0)
     state_of_beneficiaries = models.CharField(max_length=100)
-    num_males = models.PositiveIntegerField()
-    num_females = models.PositiveIntegerField()
-    num_other_gender = models.PositiveIntegerField()
+    num_males = models.PositiveIntegerField(default=0)
+    num_females = models.PositiveIntegerField(default=0)
+    num_other_gender = models.PositiveIntegerField(default=0)
     quarter = models.CharField(
         max_length=10,
         choices=[

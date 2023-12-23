@@ -276,6 +276,6 @@ from .models import BeneficiaryData
 @admin.register(BeneficiaryData)
 class BeneficiaryDataAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'num_beneficiaries', 'num_general_beneficiaries',
-                    'num_obc_beneficiaries', 'num_sc_st_beneficiaries', 'state_of_beneficiaries',
+                    'num_obc_beneficiaries', 'num_sc_beneficiaries','num_st_beneficiaries','num_bpl_beneficiaries', 'state_of_beneficiaries',
                     'num_males', 'num_females', 'num_other_gender', 'quarter', 'year', 'scheme')
-    search_fields = ['proposal_unique_id__unique_id', 'quarter', 'year', 'scheme']
+    search_fields = ['proposal_unique_id', 'quarter', 'year', 'scheme','state_of_beneficiaries']
