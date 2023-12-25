@@ -456,44 +456,16 @@ def process(df, gender=0, category=0, state=0, beneficiaries=0):
 
     return analysis
 
+from .models import BeneficiaryData, ExpenditureData
 
 def revolving_fund_progress_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = WMSRevolvingFundForm(request.POST, request.FILES)
-        if form.is_valid():
-            form_instance = form.save(commit=False)
-            form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
-            form_instance.save()
-            # Generate and save progress report document
-            generate_progress_report_document(proposal_unique_id, form.cleaned_data)
-            return HttpResponse('Form submitted successfully!')
-    else:
-        initial_data = {
-            'proposal_unique_id': proposal_unique_id,
-            'financial_year': get_financial_year(),  # Set the initial value for financial_year
-        }
-        form = WMSRevolvingFundForm(initial=initial_data)
-    
-    context = {'form': form}
-    return render(request, 'progressReports/WMS/1.RevolvingFund.html', context)
-
-from .models import EPortal
-from .forms import EPortalForm
-from django.http import HttpResponse
-
-from django.shortcuts import render
-from django.http import HttpResponse
-from .forms import EPortalForm
-from .models import EPortal,BeneficiaryData
-import pandas as pd 
-
-def eportal_progress_report(request, proposal_unique_id):
-    if request.method == 'POST':
-        form = EPortalForm(request.POST, request.FILES)
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
-            df = pd.read_excel(form.cleaned_data['component_wise_budget_sheet'])
+            print(form.cleaned_data)
+            df = pd.read_excel(form.cleaned_data['wool_procured_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
             
@@ -525,7 +497,64 @@ def eportal_progress_report(request, proposal_unique_id):
 
                     # Save the instance to the database
                     beneficiary_data_instance.save()
-            
+
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()    
+
+            form_instance = form.save(commit=False)
+            form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
+            form_instance.save()
+            # Generate and save progress report document
+            generate_progress_report_document(proposal_unique_id, form.cleaned_data)
+            return HttpResponse('Form submitted successfully!')
+    else:
+        initial_data = {
+            'proposal_unique_id': proposal_unique_id,
+            'financial_year': get_financial_year(),  # Set the initial value for financial_year
+        }
+        form = WMSRevolvingFundForm(initial=initial_data)
+    
+    context = {'form': form}
+    return render(request, 'progressReports/WMS/1.RevolvingFund.html', context)
+
+from .models import EPortal
+from .forms import EPortalForm
+from django.http import HttpResponse
+
+from django.shortcuts import render
+from django.http import HttpResponse
+from .forms import EPortalForm
+from .models import EPortal,ExpenditureData
+import pandas as pd 
+
+def eportal_progress_report(request, proposal_unique_id):
+    if request.method == 'POST':
+        form = EPortalForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
+        if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()            
             
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
@@ -549,14 +578,63 @@ def progress_report(request):
     return render(request, 'progressReports/progressreport.html', {'proposals': proposals})
 
 from django.shortcuts import render, redirect
-from .models import WMS_SelfHelpGroup
+from .models import WMS_SelfHelpGroup, BeneficiaryData, ExpenditureData
 from .forms import WMSSelfHelpGroupForm
 from django.http import HttpResponse
 
 def selfhelpgroup_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = WMSSelfHelpGroupForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            print(form.cleaned_data['quarterly_allocated_budget'], form.cleaned_data['total_quarterly_budget_spent'])
+            df = pd.read_excel(form.cleaned_data['shg_members_sheet'])
+            analysis = process(df, 1, 1, 1, 1)
+            print(analysis)
+            
+            # print(form.cleaned_data['proposal_unique_id'], len(df), form.cleaned_data['quarter'], form.cleaned_data['financial_year']) 
+            # # #scheme bhi bhejo idhar
+            # print(form.cleaned_data['total_quarterly_budget_spent'])
+            
+            # Iterate through the state-wise analysis data
+            for state_name, state_data in analysis['state'].items():
+                # Check if beneficiaries count for the state is greater than 0
+                if state_data.get('beneficiaries', 0) > 0:
+                    # Create a new instance of BeneficiaryData model
+                    beneficiary_data_instance = BeneficiaryData(
+                        proposal_unique_id=proposal,
+                        num_beneficiaries=state_data.get('beneficiaries', 0),
+                        num_general_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[0],
+                        num_obc_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[4],
+                        num_sc_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[1] ,
+                        num_st_beneficiaries= state_data.get('category', [0, 0, 0, 0, 0])[2],
+                        num_bpl_beneficiaries= state_data.get('category', [0, 0, 0, 0, 0])[3],
+                        state_of_beneficiaries=state_name,
+                        num_males=state_data.get('gender', [0, 0, 0])[0],
+                        num_females=state_data.get('gender', [0, 0, 0])[1],
+                        num_other_gender=state_data.get('gender', [0, 0, 0])[2],
+                        quarter=form.cleaned_data['quarter'],
+                        year=form.cleaned_data['financial_year'],
+                        scheme=scheme,
+                    )
+
+                    # Save the instance to the database
+                    beneficiary_data_instance.save()
+
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -572,14 +650,30 @@ def selfhelpgroup_report(request, proposal_unique_id):
     return render(request, 'progressReports/WMS/3.SelfHelpGroup.html', context)
 
 from django.shortcuts import render, redirect
-from .models import WMS_BuyerSellerExpo
+from .models import WMS_BuyerSellerExpo, ExpenditureData
 from .forms import WMSBuyerSellerExpoForm
 from django.http import HttpResponse
 
 def buyersellerexpo_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = WMSBuyerSellerExpoForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -595,14 +689,29 @@ def buyersellerexpo_report(request, proposal_unique_id):
     return render(request, 'progressReports/WMS/4.BuyerSellerExpo.html', context)
 
 from django.shortcuts import render, redirect
-from .models import WMS_InfrastructureDevelopment
+from .models import WMS_InfrastructureDevelopment, ExpenditureData
 from .forms import WMSInfrastructureDevelopmentForm
 from django.http import HttpResponse
 
 def infrastructuredevelopment_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = WMSInfrastructureDevelopmentForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -617,13 +726,28 @@ def infrastructuredevelopment_report(request, proposal_unique_id):
     context = {'form': form}
     return render(request, 'progressReports/WMS/5.infrastructureDevelopment.html', context)
 
-from .models import WoolenExpo, WoolenExpoHiring
+from .models import WoolenExpo, WoolenExpoHiring, ExpenditureData
 from .forms import WoolenExpoForm, WoolenExpoHiringForm
 
 def woolen_expo(request,proposal_unique_id):
     if request.method == 'POST':
         form = WoolenExpoForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -641,6 +765,8 @@ def woolen_expo(request,proposal_unique_id):
 def woolen_expo_hiring(request,proposal_unique_id):
     if request.method == 'POST':
         form = WoolenExpoHiringForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
@@ -658,14 +784,29 @@ def woolen_expo_hiring(request,proposal_unique_id):
 
 # views.py
 from django.shortcuts import render, redirect
-from .models import WPS_CFC
+from .models import WPS_CFC, ExpenditureData
 from .forms import WPSCFCForm
 from django.http import HttpResponse
 
 def cfc_progress_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = WPSCFCForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -681,10 +822,26 @@ def cfc_progress_report(request, proposal_unique_id):
     return render(request, 'progressReports/WPS/1.CFC.html', context)
 
 from .forms import WPSSheepShearingMachingForm
+from .models import ExpenditureData
 def sheep_shearing_machining(request, proposal_unique_id):
     if request.method == 'POST':
         form = WPSSheepShearingMachingForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -700,10 +857,26 @@ def sheep_shearing_machining(request, proposal_unique_id):
     return render(request, 'progressReports/WPS/2.SheepShearingMaching.html', context)
 
 from .forms import WPSEquipmentForm
+from .models import ExpenditureData
 def equipment(request, proposal_unique_id):
     if request.method == 'POST':
         form = WPSEquipmentForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -721,11 +894,27 @@ def equipment(request, proposal_unique_id):
 from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import WPSSmallToolsDistributionForm
+from .models import ExpenditureData
 
 def small_tools_distribution(request, proposal_unique_id):
     if request.method == 'POST':
         form = WPSSmallToolsDistributionForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -740,13 +929,28 @@ def small_tools_distribution(request, proposal_unique_id):
     context = {'form': form}
     return render(request, 'progressReports/WPS/4.SmallToolsDistribution.html', context)
 
-from .models import HRD_ShortTermProgramme
+from .models import HRD_ShortTermProgramme, ExpenditureData
 from .forms import HRDShortTermProgrammeForm
 
 def short_term_programme(request, proposal_unique_id):
     if request.method == 'POST':
         form = HRDShortTermProgrammeForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+            
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -761,13 +965,28 @@ def short_term_programme(request, proposal_unique_id):
     context = {'form': form}
     return render(request, 'progressReports/HRD/1.ShortTermProgramme.html', context)
 
-from .models import HRD_OnsiteTraining
+from .models import HRD_OnsiteTraining, ExpenditureData
 from .forms import HRDOnsiteTrainingForm
 
 def onsite_training_progress_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = HRDOnsiteTrainingForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()    
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -790,7 +1009,22 @@ from django.http import HttpResponse
 def shearing_machine_training_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = HRDShearingMachineTrainingForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -827,14 +1061,29 @@ def rd_report(request, proposal_unique_id):
     return render(request, 'progressReports/HRD/4.R&D.html', context)
 
 from django.shortcuts import render, redirect
-from .models import DomesticMeeting
+from .models import DomesticMeeting, ExpenditureData
 from .forms import DomesticMeetingForm
 from django.http import HttpResponse
 
 def domestic_meeting_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = DomesticMeetingForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -857,7 +1106,22 @@ from django.http import HttpResponse
 def organising_seminar_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = OrganisingSeminarForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -873,14 +1137,29 @@ def organising_seminar_report(request, proposal_unique_id):
     return render(request, 'progressReports/HRD/6.OrganisingSeminar.html', context)
 
 from django.shortcuts import render, redirect
-from .models import WoolSurvey
+from .models import WoolSurvey, ExpenditureData
 from .forms import WoolSurveyForm
 from django.http import HttpResponse
 
 def wool_survey_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = WoolSurveyForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -896,14 +1175,29 @@ def wool_survey_report(request, proposal_unique_id):
     return render(request, 'progressReports/HRD/7.WoolSurvey.html', context)
 
 from django.shortcuts import render, redirect
-from .models import WoolTestingLab
+from .models import WoolTestingLab, ExpenditureData
 from .forms import WoolTestingLabForm
 from django.http import HttpResponse
 
 def wool_testing_lab_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = WoolTestingLabForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -919,14 +1213,29 @@ def wool_testing_lab_report(request, proposal_unique_id):
     return render(request, 'progressReports/HRD/8.WoolTestingLab.html', context)
 
 from django.shortcuts import render, redirect
-from .models import PublicityMonitoring
+from .models import PublicityMonitoring, ExpenditureData
 from .forms import PublicityMonitoringForm
 from django.http import HttpResponse
 
 def publicity_monitoring_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = PublicityMonitoringForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -943,7 +1252,7 @@ def publicity_monitoring_report(request, proposal_unique_id):
 
 # pwds
 from django.shortcuts import render, redirect
-from .models import PWDS_PashminaRevolvingFund
+from .models import PWDS_PashminaRevolvingFund, BeneficiaryData, ExpenditureData
 from .forms import PWDS_PashminaRevolvingFundForm
 from django.http import HttpResponse
 
@@ -951,7 +1260,55 @@ from django.http import HttpResponse
 def pashmina_revolving_fund_progress_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = PWDS_PashminaRevolvingFundForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            df = pd.read_excel(form.cleaned_data['wool_procured_sheet'])
+            analysis = process(df, 1, 1, 1, 1)
+            print(analysis)
+            
+            # print(form.cleaned_data['proposal_unique_id'], len(df), form.cleaned_data['quarter'], form.cleaned_data['financial_year']) 
+            # # #scheme bhi bhejo idhar
+            # print(form.cleaned_data['total_quarterly_budget_spent'])
+            
+            # Iterate through the state-wise analysis data
+            for state_name, state_data in analysis['state'].items():
+                # Check if beneficiaries count for the state is greater than 0
+                if state_data.get('beneficiaries', 0) > 0:
+                    # Create a new instance of BeneficiaryData model
+                    beneficiary_data_instance = BeneficiaryData(
+                        proposal_unique_id=proposal,
+                        num_beneficiaries=state_data.get('beneficiaries', 0),
+                        num_general_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[0],
+                        num_obc_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[4],
+                        num_sc_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[1] ,
+                        num_st_beneficiaries= state_data.get('category', [0, 0, 0, 0, 0])[2],
+                        num_bpl_beneficiaries= state_data.get('category', [0, 0, 0, 0, 0])[3],
+                        state_of_beneficiaries=state_name,
+                        num_males=state_data.get('gender', [0, 0, 0])[0],
+                        num_females=state_data.get('gender', [0, 0, 0])[1],
+                        num_other_gender=state_data.get('gender', [0, 0, 0])[2],
+                        quarter=form.cleaned_data['quarter'],
+                        year=form.cleaned_data['financial_year'],
+                        scheme=scheme,
+                    )
+
+                    # Save the instance to the database
+                    beneficiary_data_instance.save()
+
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()    
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -967,14 +1324,29 @@ def pashmina_revolving_fund_progress_report(request, proposal_unique_id):
     return render(request, 'progressReports/PWDS/1.PashminaRevolvingFund.html', context)
 
 from django.shortcuts import render, redirect
-from .models import PWDS_PashminaCFC
+from .models import PWDS_PashminaCFC, ExpenditureData
 from .forms import PWDS_PashminaCFCForm
 from django.http import HttpResponse
 
 def pashmina_cfc_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = PWDS_PashminaCFCForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Assuming get_financial_year is defined elsewhere
             form_instance.save()
@@ -990,14 +1362,29 @@ def pashmina_cfc_report(request, proposal_unique_id):
     return render(request, 'PWDS/2.PashminaCFC.html', context)
 
 from django.shortcuts import render, redirect
-from .models import ShelterShedConstruction
+from .models import ShelterShedConstruction, ExpenditureData
 from .forms import ShelterShedConstructionForm
 from django.http import HttpResponse
 
 def shelter_shed_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = ShelterShedConstructionForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()
@@ -1013,14 +1400,29 @@ def shelter_shed_report(request, proposal_unique_id):
     return render(request, 'ShelterShedConstruction/3.ShelterShedConstruction.html', context)
 
 from django.shortcuts import render, redirect
-from .models import PortableTentDist
+from .models import PortableTentDist, ExpenditureData
 from .forms import PortableTentDistForm
 from django.http import HttpResponse
 
 def portable_tent_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = PortableTentDistForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()
@@ -1036,14 +1438,29 @@ def portable_tent_report(request, proposal_unique_id):
     return render(request, 'PortableTentDist/4.PortableTentDist.html', context)
 
 from django.shortcuts import render, redirect
-from .models import PredatorProofLightsDist
+from .models import PredatorProofLightsDist, ExpenditureData
 from .forms import PredatorProofLightsDistForm
 from django.http import HttpResponse
 
 def predator_proof_lights_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = PredatorProofLightsDistForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()
@@ -1059,14 +1476,29 @@ def predator_proof_lights_report(request, proposal_unique_id):
     return render(request, 'PredatorProofLightsDist/5.PredatorProofLightsDist.html', context)
 
 from django.shortcuts import render, redirect
-from .models import TestingEquipment
+from .models import TestingEquipment, ExpenditureData
 from .forms import TestingEquipmentForm
 from django.http import HttpResponse
 
 def testing_equipment_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = TestingEquipmentForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()
@@ -1082,14 +1514,29 @@ def testing_equipment_report(request, proposal_unique_id):
     return render(request, 'TestingEquipment/6.TestingEquipment.html', context)
 
 from django.shortcuts import render, redirect
-from .models import ShowroomDevelopment
+from .models import ShowroomDevelopment, ExpenditureData
 from .forms import ShowroomDevelopmentForm
 from django.http import HttpResponse
 
 def showroom_development_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = ShowroomDevelopmentForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()
@@ -1105,14 +1552,29 @@ def showroom_development_report(request, proposal_unique_id):
     return render(request, 'ShowroomDevelopment/7.ShowroomDevelopment.html', context)
 
 from django.shortcuts import render, redirect
-from .models import FodderLandDevelopment
+from .models import FodderLandDevelopment, ExpenditureData
 from .forms import FodderLandDevelopmentForm
 from django.http import HttpResponse
 
 def fodder_land_development_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = FodderLandDevelopmentForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
+            expenditure_data_instance = ExpenditureData(
+                proposal_unique_id=proposal,
+                                #added allotted and spent here 
+               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
+                quarter=form.cleaned_data['quarter'],
+                year=form.cleaned_data['financial_year'],
+                scheme=scheme,
+            )
+
+            # Save the instance to the database
+            expenditure_data_instance.save()   
+
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()
@@ -1177,7 +1639,7 @@ def submit_approval(request, proposal_id):
 
             messages.success(request, 'Proposal status changed successfully.')
             
-            return redirect('authapp:all_proposal_details')
+            return redirect('admin:index')
     else:
         form = ProposalApprovalForm(instance=proposal)
     return render(request, 'admin/submit_approval.html', {'form': form, 'proposal': proposal})

@@ -167,6 +167,7 @@ class EPortal(models.Model):
     )
     financial_year = models.CharField(max_length=9, blank=True, null=True)
     current_progress = models.TextField()
+    quarterly_allocated_budget = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     total_profit_and_budget_spent = models.TextField()
     total_quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
     component_wise_budget_sheet = models.FileField(upload_to='documents/')
@@ -190,6 +191,7 @@ class WMS_SelfHelpGroup(models.Model):
     )
     financial_year = models.CharField(max_length=9)
     description_shg = models.TextField()
+    quarterly_allocated_budget = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     total_profit_interest = models.TextField()
     total_quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
     shg_members_sheet = models.FileField(upload_to='documents/')
@@ -946,3 +948,21 @@ class BeneficiaryData(models.Model):
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.year} - {self.quarter} - {self.state_of_beneficiaries}'
 
+class ExpenditureData(models.Model):
+    proposal_unique_id = models.ForeignKey(Proposal, to_field='unique_id', on_delete=models.CASCADE)
+    quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
+    quarterly_budget_allocated = models.DecimalField(max_digits=10, decimal_places=2)
+    quarter = models.CharField(
+        max_length=10,
+        choices=[
+            ('Q1', 'Quarter 1 (April-June)'),
+            ('Q2', 'Quarter 2 (July-September)'),
+            ('Q3', 'Quarter 3 (October-December)'),
+            ('Q4', 'Quarter 4 (January-March)'),
+        ],
+    )
+    year = models.CharField(max_length=4)
+    scheme = models.CharField(max_length=100)
+
+    def _str_(self):
+        return f'{self.proposal_unique_id} - {self.year} - {self.quarter}'

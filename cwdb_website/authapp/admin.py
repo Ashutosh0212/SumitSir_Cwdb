@@ -64,8 +64,63 @@ class ProposalAdmin(admin.ModelAdmin):
         # Add your logic to determine the component model based on the proposal
         # For example, you can check obj.scheme_component and return the corresponding model name
         # Replace the logic below with your actual implementation
-        if obj.scheme_component == "2.E-Portal for Marketing Auction of Wool and Development of MIS":
+        if obj.scheme_component=="1.Creation of Revolving Fund for Marketing of Raw Wool":
+            return 'wms_revolvingfund'
+        elif obj.scheme_component == "2.E-Portal for Marketing Auction of Wool and Development of MIS":
             return 'eportal'
+        elif obj.scheme_component=="3.Financial Assistance for Formation of Wool Producers Societies/Self Help Group(SHGs)":
+            return 'wms_selfhelpgroup'
+        elif obj.scheme_component=="4.Organizing Buyers Sellers Meets":
+            return 'wms_buyersellerexpo'
+        elif obj.scheme_component=="5.Financial Assistance to Strengthening Infrastructure Required for Wool Marketing":
+            return 'wms_infrastructuredevelopment'
+        elif obj.scheme_component=="6.Organization of Domestic Independent Woolen Expo":
+            return 'woolenexpo'
+        elif obj.scheme_component== "7.Organizing Domestic Expo on Hiring Stall Basis":
+            return 'woolenexpohiring'
+        elif obj.scheme_component== "1.Establishing Common Facility Centres (CFCs) for Wool Processing Machines/Facilities":
+            return 'wps_cfc'
+        elif obj.scheme_component== "2.Financial Assistance for Sheep Shearing Machines":
+            return 'wps_sheepshearingmaching'
+        elif obj.scheme_component== "3.Financial Assistance for Other Machines and Equipments":
+            return 'wps_equipment'
+        elif obj.scheme_component=="4.Financial Assistance for Distribution of Small Tools for Manufacturing of Woolen Items":
+            return 'wpssmalltoolsdistribution'
+        elif obj.scheme_component=="1.Short Term Training Program for Manufacturing and Weaving of Woolen Items":
+            return 'hrd_shorttermprogramme'
+        elif obj.scheme_component=="2.On-Site Training for Industrial Workers":
+            return 'hrd_onsitetraining'
+        elif obj.scheme_component== "3.Training on Machine Sheep Shearing":
+            return 'hrd_shearingmachinetraining'
+        elif obj.scheme_component=="4.Research and Development Projects":
+            return 'rd'
+        elif obj.scheme_component== "5.International/Domestic Corporations Stakeholders Meeting/Conference":
+            return 'domesticmeeting'
+        elif obj.scheme_component=="6.Organizing Seminars, Workshops, Sheep Mela, Fare, Meet":
+            return 'organisingseminar'
+        elif obj.scheme_component=="7.Wool Survey and Study on Wool Sector":
+            return 'woolsurvey'
+        elif obj.scheme_component=="8.Operating Existing Wool Testing Lab at Bikaner Including Upgradation and WDTC/ISC at Kullu":
+            return 'wooltestinglab'
+        elif obj.scheme_component=="9.Publicity of Scheme, Monitoring of Projects, Common Visits, Evaluation of Projects/Schemes, and Awareness Program for Swachhta, etc.":
+            return 'publicitymonitoring'
+        elif obj.scheme_component=="1.Revolving fund for pashmina wool marketing (For UT of J&K & UT of Ladakh)":
+            return 'pwds_pashminarevolvingfund'
+        elif obj.scheme_component== "2.Setting of machines for pashmina wool processing":
+            return 'pwds_pashminacfc'
+        elif obj.scheme_component=="3.Construction of shelter shed with guard rooms for pashmina goat":
+            return 'sheltershedconstruction'
+        elif obj.scheme_component== "4.Distribution of portable tents with accessories":
+            return 'portabletentdist'
+        elif obj.scheme_component== "5.Distribution of predator-proof corral with LED lights":
+            return 'predatorprooflightsdist'
+        elif obj.scheme_component=="6.Testing equipment, including DNA analyzer for identification/testing of pashmina products":
+            return 'testingequipment'
+        elif obj.scheme_component=="7.Development of showroom at Dehairing Plant premises at Leh":
+            return 'showroomdevelopment'
+        elif obj.scheme_component=="8.Development of fodder land/Govt. farms for pashmina goats":
+            return 'fodderlanddevelopment'
+    
         # Add more conditions for other components as needed
         return None
 
@@ -107,7 +162,7 @@ class EPortalAdmin(admin.ModelAdmin):
         form.base_fields['proposal_unique_id'].queryset = form.base_fields['proposal_unique_id'].queryset.order_by('unique_id')
         return form
 
-
+@admin.register(WMS_SelfHelpGroup)
 class WMSSelfHelpGroupAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'description_shg', 'total_profit_interest', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
@@ -219,19 +274,19 @@ from .models import (PWDS_PashminaRevolvingFund, PWDS_PashminaCFC,
 
 class PWDS_PashminaRevolvingFundAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
-    search_fields = ('proposal_unique_id', 'financial_year', 'quarter')
+    search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
 
 class PWDS_PashminaCFCAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
-    search_fields = ('proposal_unique_id', 'financial_year', 'quarter')
+    search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
 
 class ShelterShedConstructionAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
-    search_fields = ('proposal_unique_id', 'financial_year', 'quarter')
+    search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
 
 class PortableTentDistAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
-    search_fields = ('proposal_unique_id', 'financial_year', 'quarter')
+    search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
 
 class PredatorProofLightsDistAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
@@ -247,7 +302,7 @@ class ShowroomDevelopmentAdmin(admin.ModelAdmin):
 
 class FodderLandDevelopmentAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
-    search_fields = ('proposal_unique_id', 'financial_year', 'quarter')
+    search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
 
 admin.site.register(PWDS_PashminaRevolvingFund, PWDS_PashminaRevolvingFundAdmin)
 admin.site.register(PWDS_PashminaCFC, PWDS_PashminaCFCAdmin)
@@ -271,11 +326,16 @@ admin.site.register(ProgressReportDocument, ProgressReportDocumentAdmin)
 
 # admin.py
 from django.contrib import admin
-from .models import BeneficiaryData
+from .models import BeneficiaryData,ExpenditureData
 
 @admin.register(BeneficiaryData)
 class BeneficiaryDataAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'num_beneficiaries', 'num_general_beneficiaries',
                     'num_obc_beneficiaries', 'num_sc_beneficiaries','num_st_beneficiaries','num_bpl_beneficiaries', 'state_of_beneficiaries',
                     'num_males', 'num_females', 'num_other_gender', 'quarter', 'year', 'scheme')
+    search_fields = ['proposal_unique_id', 'quarter', 'year', 'scheme','state_of_beneficiaries']
+
+@admin.register(ExpenditureData)
+class ExpenditureDataAdmin(admin.ModelAdmin):
+    list_display = ('proposal_unique_id',  'quarter', 'year', 'scheme', 'quarterly_budget_spent', 'quarterly_budget_allocated')
     search_fields = ['proposal_unique_id', 'quarter', 'year', 'scheme','state_of_beneficiaries']
