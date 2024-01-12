@@ -5,6 +5,18 @@ from django.utils.translation import gettext_lazy as _
 
 from .managers import CustomUserManager
 
+from datetime import datetime
+def generate_financial_year_choices():
+    current_year = datetime.now().year
+    financial_year_choices = []
+
+    for year in range(2000, current_year + 1):
+        fiscal_year = f"{year}-{year + 1}"
+        financial_year_choices.append((fiscal_year, fiscal_year))
+
+    return financial_year_choices
+    
+    
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     AGENCY_NATURE_CHOICES = [
@@ -46,14 +58,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     agency_name = models.CharField(max_length=100,blank=False,null=False,default="")
     agency_nature = models.CharField(
-        max_length=56, choices=AGENCY_NATURE_CHOICES, default='Central Federations')
-    registration_number = models.CharField(max_length=255, blank=True, null=True)
+        max_length=100, choices=AGENCY_NATURE_CHOICES, default='Central Federations')
+    registration_number = models.CharField(max_length=100, blank=True, null=True)
     address = models.TextField(default="",blank=False,null=False)
     pincode = models.CharField(max_length=10,blank=False,null=False,default="")
-    contact_person_name = models.CharField(max_length=255,blank=False,null=False,default="")
-    contact_person_designation = models.CharField(max_length=255,blank=False,null=False,default="")
+    contact_person_name = models.CharField(max_length=100,blank=False,null=False,default="")
+    contact_person_designation = models.CharField(max_length=100,blank=False,null=False,default="")
     email = models.EmailField(_("email address"), unique=True,default="")
-    contact_person_mobile = models.CharField(max_length=15,blank=False,null=False,default="")
+    contact_person_mobile = models.CharField(max_length=12,blank=False,null=False,default="")
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
@@ -966,3 +978,23 @@ class ExpenditureData(models.Model):
 
     def _str_(self):
         return f'{self.proposal_unique_id} - {self.year} - {self.quarter}'
+    
+from django.db import models
+
+
+
+class FundDistribution(models.Model):
+    wms = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="WMS (in lakhs)", default=0)
+    wps = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="WPS (in lakhs)", default=0)
+    pwds = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="PWDS (in lakhs)", default=0)
+    hrdpa = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="HRDPA (in lakhs)", default=0)
+    admin_exp = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Admin Exp (in lakhs)", default=0)
+    financial_year = models.CharField(max_length=9, choices=generate_financial_year_choices())
+
+    @property
+    def iwdp(self):
+        return (self.wms + self.wps + self.pwds + self.hrdpa + self.admin_exp) 
+
+    def __str__(self):
+        return f'{self.financial_year}'
+

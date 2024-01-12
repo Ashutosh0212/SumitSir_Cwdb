@@ -339,3 +339,13 @@ class BeneficiaryDataAdmin(admin.ModelAdmin):
 class ExpenditureDataAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id',  'quarter', 'year', 'scheme', 'quarterly_budget_spent', 'quarterly_budget_allocated')
     search_fields = ['proposal_unique_id', 'quarter', 'year', 'scheme','state_of_beneficiaries']
+    
+from django.contrib import admin
+from .models import FundDistribution
+
+class FundDistributionAdmin(admin.ModelAdmin):
+    list_display = ('financial_year', 'wms', 'wps', 'pwds', 'hrdpa', 'admin_exp', 'iwdp')
+    list_filter = ('financial_year',)
+    search_fields = ('financial_year',)
+
+admin.site.register(FundDistribution, FundDistributionAdmin)

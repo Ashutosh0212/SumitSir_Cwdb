@@ -1,4 +1,7 @@
 
+from django import forms
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Div, Field, Submit
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser
 
@@ -7,10 +10,65 @@ class CustomUserCreationForm(UserCreationForm):
         model = CustomUser
         fields = ["email", "agency_name", "agency_nature", "registration_number", "address", "pincode", "contact_person_name", "contact_person_designation", "contact_person_mobile"]
 
+    def __init__(self, *args, **kwargs):
+        super(CustomUserCreationForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_class = 'row g-3'
+        self.helper.label_class = 'col-md-3 col-form-label'
+        self.helper.field_class = 'col-md-9'
+        self.helper.layout = Layout(
+            Div(
+                Field('email', css_class='form-control'),
+                Field('agency_name', css_class='form-control'),
+                Field('agency_nature', css_class='form-select'),  # 'form-select' for Bootstrap 5
+                Field('registration_number', css_class='form-control'),
+                Field('address', css_class='form-control'),
+                Field('pincode', css_class='form-control'),
+                Field('contact_person_name', css_class='form-control'),
+                Field('contact_person_designation', css_class='form-control'),
+                Field('contact_person_mobile', css_class='form-control'),
+                css_class='row'
+            ),
+            Div(
+                Div(css_class='col-md-3'),  # Offset for the submit button
+                Div(
+                    Submit('submit', 'Sign up', css_class='btn btn-primary'),
+                    css_class='col-md-9'
+                ),
+                css_class='row'
+            )
+        )
+
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = ['agency_name', 'address', 'pincode', 'contact_person_name', 'contact_person_designation', 'contact_person_mobile']
+
+    def __init__(self, *args, **kwargs):
+        super(CustomUserChangeForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_class = 'row g-3'
+        self.helper.label_class = 'col-md-3 col-form-label'
+        self.helper.field_class = 'col-md-9'
+        self.helper.layout = Layout(
+            Div(
+                Field('agency_name', css_class='form-control'),
+                Field('address', css_class='form-control'),
+                Field('pincode', css_class='form-control'),
+                Field('contact_person_name', css_class='form-control'),
+                Field('contact_person_designation', css_class='form-control'),
+                Field('contact_person_mobile', css_class='form-control'),
+                css_class='row'
+            ),
+            Div(
+                Div(css_class='col-md-3'),  # Offset for the submit button
+                Div(
+                    Submit('submit', 'Update', css_class='btn btn-primary'),
+                    css_class='col-md-9'
+                ),
+                css_class='row'
+            )
+        )
 
 from django import forms
 from .models import Proposal
@@ -821,3 +879,11 @@ class FodderLandDevelopmentForm(forms.ModelForm):
             raise forms.ValidationError('A form for this quarter already exists.')
         
         return cleaned_data
+
+
+class SummaryReportForm(forms.Form):
+    project_id = forms.CharField(widget=forms.SelectMultiple)
+    scheme = forms.CharField(widget=forms.SelectMultiple)
+    subcomponent = forms.CharField(widget=forms.SelectMultiple)
+    quarter = forms.CharField(widget=forms.SelectMultiple)
+    financial_year = forms.CharField(widget=forms.SelectMultiple)
