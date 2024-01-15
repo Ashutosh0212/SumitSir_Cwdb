@@ -933,14 +933,15 @@ class ProgressReportDocument(models.Model):
 # models.py
 from django.db import models
 
+from django.db import models
+
 class BeneficiaryData(models.Model):
     proposal_unique_id = models.ForeignKey(Proposal, to_field='unique_id', on_delete=models.CASCADE)
-    num_beneficiaries = models.PositiveIntegerField(default=0)
     num_general_beneficiaries = models.PositiveIntegerField(default=0)
     num_obc_beneficiaries = models.PositiveIntegerField(default=0)
     num_sc_beneficiaries = models.PositiveIntegerField(default=0)
-    num_st_beneficiaries=models.PositiveIntegerField(default=0)
-    num_bpl_beneficiaries=models.PositiveIntegerField(default=0)
+    num_st_beneficiaries = models.PositiveIntegerField(default=0)
+    num_bpl_beneficiaries = models.PositiveIntegerField(default=0)
     state_of_beneficiaries = models.CharField(max_length=100)
     num_males = models.PositiveIntegerField(default=0)
     num_females = models.PositiveIntegerField(default=0)
@@ -956,6 +957,22 @@ class BeneficiaryData(models.Model):
     )
     year = models.CharField(max_length=4)
     scheme = models.CharField(max_length=100)
+    num_beneficiaries = models.PositiveIntegerField(default=0, editable=False)  # Set editable to False
+    def save(self, *args, **kwargs):
+        # Calculate the sum of beneficiary fields
+        sum_beneficiaries = sum([
+            self.num_general_beneficiaries,
+            self.num_obc_beneficiaries,
+            self.num_sc_beneficiaries,
+            self.num_st_beneficiaries,
+            self.num_bpl_beneficiaries,
+        ])
+
+        # Set the value of num_beneficiaries
+        self.num_beneficiaries = sum_beneficiaries
+
+        # Call the original save method
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.year} - {self.quarter} - {self.state_of_beneficiaries}'

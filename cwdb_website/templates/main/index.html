@@ -22,6 +22,12 @@
      <link rel="stylesheet" href="{% static 'css/index_style.css' %}">
 	 <link rel="stylesheet" href="{%static 'css/theme.css'%}">
     <link rel="stylesheet" href="{%static 'css/loopple/loopple.css'%}">  
+    <style>
+      /* Apply hand cursor to links and buttons */
+      a, button {
+        cursor: pointer;
+      }
+    </style>
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -107,172 +113,290 @@
           <h6 class="font-weight-bolder mb-0">Dashboard</h6>
         </nav>
         
-          {% comment %} <ul class="navbar-nav  justify-content-end">
-            {% endcomment %}
-          
-            {% comment %} <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-                <div class="sidenav-toggler-inner">
-                  <i class="sidenav-toggler-line"></i>
-                  <i class="sidenav-toggler-line"></i>
-                  <i class="sidenav-toggler-line"></i>
-                </div>
-              </a>
-            </li> {% endcomment %}
-            {% comment %} <li class="nav-item px-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body p-0">
-                <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
-              </a>
-            </li> {% endcomment %}
-            
+        <ul class="navbar-nav  justify-content-end">
+   
+          <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+              <div class="sidenav-toggler-inner">
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+              </div>
+            </a>
+          </li>
+          <li class="nav-item px-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0">
+              <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+            </a>
+          </li>
+          <li class="nav-item dropdown pe-2 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa fa-bell cursor-pointer"></i>
+            </a>
+      
+           
+          </li>
+          <li class="nav-item d-flex align-items-center">
+            <a href="./pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+              <i class="fa fa-user me-sm-1"></i>
               
-          {% comment %} </ul> {% endcomment %}
+              <span class="d-sm-inline d-none">Sign In</span>
+              
+            </a>
+          </li>
+        </ul>
         </div>
       </div>
     </nav>
     <!-- End Navbar -->
      <div class="container-fluid py-4">
        
-            
-            <div class="row removable">
-                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                    <div class="card mb-4">
-                        <div class="card-header p-3 pt-2">
-                            <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-								<img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
-                            </div>
-                            <div class="text-end pt-1">
-                                <h3 class="text-sm mb-0 text-capitalize">IWDP<br></h3>
-                                <h4 class="mb-0">700k</h4>
-                            </div>
-                        </div>
-                        <hr class="dark horizontal my-0">
-                        <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder"> </span> 2023-24</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                    <div class="card mb-4">
-                        <div class="card-header p-3 pt-2">
-                          <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-                            <img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
-                          </div>
-                            <div class="text-end pt-1">
-                                <h3 class="text-sm mb-0 text-capitalize">WMS<br></h3>
-                                <h4 class="mb-0">230k</h4>
-                            </div>
-                        </div>
-                        <hr class="dark horizontal my-0">
-                        <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder"></span> 2023-24</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                    <div class="card mb-4">
-                        <div class="card-header p-3 pt-2">
-                          <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-							<img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
-                          </div>
-                            <div class="text-end pt-1">
-                                <h3 class="text-sm mb-0 text-capitalize">WPS</h3>
-                                <h4 class="mb-0">346k</h4>
-                            </div>
-                        </div>
-                        <hr class="dark horizontal my-0">
-                        <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-danger text-sm font-weight-bolder"></span>  2023-24</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6">
-                    <div class="card mb-4">
-                        <div class="card-header p-3 pt-2">
-                          <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-                            <img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
-                          </div>
-                            <div class="text-end pt-1">
-                                <h3 class="text-sm mb-0 text-capitalize">PWDS</h3>
-                                <h4 class="mb-0">103k</h4>
-                            </div>
-                        </div>
-                        <hr class="dark horizontal my-0">
-                        <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder"></span> 2023-24</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row removable">
-                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                    <div class="card mb-4">
-                        <div class="card-header p-3 pt-2">
-                            <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-								<img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
-                            </div>
-                            <div class="text-end pt-1">
-                                <h3 class="text-sm mb-0 text-capitalize">HRD & PA<br></h3>
-                                <h4 class="mb-0">700k</h4>
-                            </div>
-                        </div>
-                        <hr class="dark horizontal my-0">
-                        <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder"> </span> 2023-24</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                    <div class="card mb-4">
-                        <div class="card-header p-3 pt-2">
-                          <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-							<img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
-                          </div>
-                            <div class="text-end pt-1">
-                                <h3 class="text-sm mb-0 text-capitalize">Administrative Expenses</h3>
-                                <h4 class="mb-0">346k</h4>
-                            </div>
-                        </div>
-                        <hr class="dark horizontal my-0">
-                        <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-danger text-sm font-weight-bolder"></span>  2023-24</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                  <div class="card mb-4">
-                      <div class="card-header p-3 pt-2">
-                        <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-            <img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
-                        </div>
-                          <div class="text-end pt-1">
-                              <h3 class="text-sm mb-0 text-capitalize">Total Projects</h3>
-                              <h4 class="mb-0">60</h4>
-                          </div>
-                      </div>
-                      <hr class="dark horizontal my-0">
-                      <div class="card-footer p-3">
-                          <p class="mb-0"><span class="text-danger text-sm font-weight-bolder"></span>  2023-24</p>
-                      </div>
+      <div class="row">
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card mb-4">
+              <div class="card-header p-3 pt-2">
+                  <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                      <img src="{% static 'img/logo1.jpeg' %}" alt="wms">
+                  </div>
+                  <div class="text-end pt-1">
+                      <h3 class="text-sm mb-0 text-capitalize">IWDP<br></h3>
+                      <h6 class="mb-0">
+                          {% if fund_distribution_data %}
+                              {{ fund_distribution_data.iwdp }}
+                          {% else %}
+                              No data available.
+                          {% endif %}
+                      </h6>
                   </div>
               </div>
+              <hr class="dark horizontal my-0">
+              <div class="card-footer p-3 d-flex justify-content-between align-items-center">
+                  <p class="mb-0">
+                      <span class="text-success text-sm font-weight-bolder">Financial Year:</span>
+                      <span id="financialYear" class="fw-bold">{{ current_financial_year }}</span>
+                  </p>
+                  <button class="btn btn-sm btn-primary">
+                      See More <i class="fas fa-arrow-right"></i>
+                  </button>
+              </div>
+          </div>
+      </div>
+      
+     
+      
+      
+  
+  
+            
+            
+            
+            
+      <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="card mb-4">
+            <div class="card-header p-3 pt-2">
+                <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                    <img src="{% static 'img/logo1.jpeg' %}" alt="wms">
+                </div>
+                <div class="text-end pt-1">
+                    <h3 class="text-sm mb-0 text-capitalize">WMS<br></h3>
+                    <h6 class="mb-0">
+                        {% if fund_distribution_data %}
+                            {{ fund_distribution_data.wms }}
+                        {% else %}
+                            No data available.
+                        {% endif %}
+                    </h6>
+                </div>
+            </div>
+            <hr class="dark horizontal my-0">
+            <div class="card-footer p-3 d-flex justify-content-between align-items-center">
+                <p class="mb-0">
+                    <span class="text-success text-sm font-weight-bolder">Financial Year:</span>
+                    <span id="financialYear" class="fw-bold">{{ current_financial_year }}</span>
+                </p>
+                <button class="btn btn-sm btn-primary">
+                    See More <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+      <div class="card mb-4">
+          <div class="card-header p-3 pt-2">
+              <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                  <img src="{% static 'img/logo1.jpeg' %}" alt="wps">
+              </div>
+              <div class="text-end pt-1">
+                  <h3 class="text-sm mb-0 text-capitalize">WPS<br></h3>
+                  <h6 class="mb-0">
+                      {% if fund_distribution_data %}
+                          {{ fund_distribution_data.wps }}
+                      {% else %}
+                          No data available.
+                      {% endif %}
+                  </h6>
+              </div>
+          </div>
+          <hr class="dark horizontal my-0">
+          <div class="card-footer p-3 d-flex justify-content-between align-items-center">
+              <p class="mb-0">
+                  <span class="text-success text-sm font-weight-bolder">Financial Year:</span>
+                  <span id="financialYear" class="fw-bold">{{ current_financial_year }}</span>
+              </p>
+              <button class="btn btn-sm btn-primary">
+                  See More <i class="fas fa-arrow-right"></i>
+              </button>
+          </div>
+      </div>
+  </div>
+  <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+    <div class="card mb-4">
+        <div class="card-header p-3 pt-2">
+            <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                <img src="{% static 'img/logo1.jpeg' %}" alt="pwds">
+            </div>
+            <div class="text-end pt-1">
+                <h3 class="text-sm mb-0 text-capitalize">PWDS<br></h3>
+                <h6 class="mb-0">
+                    {% if fund_distribution_data %}
+                        {{ fund_distribution_data.pwds }}
+                    {% else %}
+                        No data available.
+                    {% endif %}
+                </h6>
+            </div>
+        </div>
+        <hr class="dark horizontal my-0">
+        <div class="card-footer p-3 d-flex justify-content-between align-items-center">
+            <p class="mb-0">
+                <span class="text-success text-sm font-weight-bolder">Financial Year:</span>
+                <span id="financialYear" class="fw-bold">{{ current_financial_year }}</span>
+            </p>
+            <button class="btn btn-sm btn-primary">
+                See More <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+            <div class="row removable">
               <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
                 <div class="card mb-4">
                     <div class="card-header p-3 pt-2">
-                      <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-          <img src="{% static 'img/logo1.jpeg' %}" alt="wms" >
-                      </div>
+                        <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                            <img src="{% static 'img/logo1.jpeg' %}" alt="HRDPA">
+                        </div>
                         <div class="text-end pt-1">
-                            <h3 class="text-sm mb-0 text-capitalize">Total Beneficiaries</h3>
-                            <h4 class="mb-0">1000</h4>
+                            <h3 class="text-sm mb-0 text-capitalize">HRD & PA<br></h3>
+                            <h6 class="mb-0">
+                                {% if fund_distribution_data %}
+                                    {{ fund_distribution_data.hrdpa }}
+                                {% else %}
+                                    No data available.
+                                {% endif %}
+                            </h6>
                         </div>
                     </div>
                     <hr class="dark horizontal my-0">
-                    <div class="card-footer p-3">
-                        <p class="mb-0"><span class="text-danger text-sm font-weight-bolder"></span>  2023-24</p>
+                    <div class="card-footer p-3 d-flex justify-content-between align-items-center">
+                        <p class="mb-0">
+                            <span class="text-success text-sm font-weight-bolder">Financial Year:</span>
+                            <span id="financialYear" class="fw-bold">{{ current_financial_year }}</span>
+                        </p>
+                        <button class="btn btn-sm btn-primary">
+                            See More <i class="fas fa-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>
+            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+              <div class="card mb-4">
+                  <div class="card-header p-3 pt-2">
+                      <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                          <img src="{% static 'img/logo1.jpeg' %}" alt="admin_ep">
+                      </div>
+                      <div class="text-end pt-1">
+                          <h3 class="text-sm mb-0 text-capitalize">Administrative Expenses<br></h3>
+                          <h6 class="mb-0">
+                              {% if fund_distribution_data %}
+                                  {{ fund_distribution_data.admin_exp }}
+                              {% else %}
+                                  No data available.
+                              {% endif %}
+                          </h6>
+                      </div>
+                  </div>
+                  <hr class="dark horizontal my-0">
+                  <div class="card-footer p-3 d-flex justify-content-between align-items-center">
+                      <p class="mb-0">
+                          <span class="text-success text-sm font-weight-bolder">Financial Year:</span>
+                          <span id="financialYear" class="fw-bold">{{ current_financial_year }}</span>
+                      </p>
+                      <button class="btn btn-sm btn-primary">
+                          See More <i class="fas fa-arrow-right"></i>
+                      </button>
+                  </div>
+              </div>
+          </div>
+          <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card mb-4">
+                <div class="card-header p-3 pt-2">
+                    <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                        <img src="{% static 'img/logo1.jpeg' %}" alt="total_projects">
+                    </div>
+                    <div class="text-end pt-1">
+                        <h3 class="text-sm mb-0 text-capitalize">Total Projects<br></h3>
+                        <h6 class="mb-0">
+                            {% if total_projects_count %}
+                                {{ total_projects_count }}
+                            {% else %}
+                                0
+                            {% endif %}
+                        </h6>
+                    </div>
+                </div>
+                <hr class="dark horizontal my-0">
+                <div class="card-footer p-3 d-flex justify-content-between align-items-center">
+                    <p class="mb-0">
+                        <span class="text-success text-sm font-weight-bolder">Financial Year:</span>
+                        <span id="financialYear" class="fw-bold">{{ current_financial_year }}</span>
+                    </p>
+                    <button class="btn btn-sm btn-primary">
+                        See More <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card mb-4">
+              <div class="card-header p-3 pt-2">
+                  <div class="icon icon-lg icon-shape bg-gradient-white shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                      <img src="{% static 'img/logo1.jpeg' %}"  alt="total_beneficiaries">
+                  </div>
+                  <div class="text-end pt-1">
+                      <h3 class="text-sm mb-0 text-capitalize">Total Beneficiaries<br></h3>
+                      <h6 class="mb-0">
+                        {% if total_beneficiaries %}
+                        {{ total_beneficiaries }}
+                    {% else %}
+                        0
+                    {% endif %}
+                      </h6>
+                  </div>
+              </div>
+              <hr class="dark horizontal my-0">
+              <div class="card-footer p-3 d-flex justify-content-between align-items-center">
+                  <p class="mb-0">
+                      <span class="text-success text-sm font-weight-bolder">Financial Year:</span>
+                      <span id="financialYear" class="fw-bold">{{ current_financial_year }}</span>
+                  </p>
+                  <button class="btn btn-sm btn-primary">
+                      See More <i class="fas fa-arrow-right"></i>
+                  </button>
+              </div>
+          </div>
+      </div>
+      
             <div class="row mt-4 removable">
                 {% comment %} all the other graphs will be in it  {% endcomment %}
                 
@@ -449,7 +573,6 @@
                                                   <span class="text-xs font-weight-bold">22.5</span>
                                               </div>
                                           </div>
-                                         
                                       </div>
                                   </td>
                                   <td class="align-middle text-center text-sm">
@@ -523,12 +646,80 @@
                                         <canvas id="fundDistributionChart" class="chart-canvas chart-pie" height="400" style="display: block; box-sizing: border-box; height: 400px; width: 191.8px;" width="191"></canvas>
                                     </div>
                                 </div>
-                                
                             </div>
-                       
+                        </div>
                     </div>
-                </div>
-                </div>
+                    
+                    {% comment %} <div class="card mb-4">
+                      <div class="card-header pb-0 p-3">
+                        <div class="d-flex justify-content-between">
+                          <h6 class="mb-0">Beneficiaries Data</h6>
+                          <button type="button" class="btn btn-icon-only btn-rounded btn-outline-secondary mb-0 ms-2 btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Distribution of funds given to CWDB">
+                              <i class="material-icons text-sm">priority_high</i>
+                          </button>
+                        </div>                        
+                      </div>
+                      <div class="card-body pb-0 p-3 mt-4">
+                        <div class="row">
+                          <div class="pb-2 text-start">
+                            <div class="d-flex flex-wrap justify-content-between">
+                              <!-- Dropdowns -->
+                              <div class="dropdown">
+                                <label for="genderDropdown" class="form-label">Gender:</label>
+                                <select id="genderDropdown" class="form-select ps-2">
+                                  <option value="all">All</option>
+                                  <option value="male">Male</option>
+                                  <option value="female">Female</option>
+                                  <option value="others">Others</option>
+                                </select>
+                              </div>
+                              <div class="dropdown">
+                                <label for="casteDropdown" class="form-label">Caste:</label>
+                                <select id="casteDropdown" class="form-select ps-2">
+                                  <option value="all">All</option>
+                                  <option value="SC">SC</option>
+                                  <option value="ST">ST</option>
+                                </select>
+                              </div>
+                              <div class="dropdown">
+                                <label for="quarterDropdown" class="form-label">Quarter:</label>
+                                <select id="quarterDropdown" class="form-select ps-2">
+                                  <option value="all">All</option>
+                                  <option value="Q1">Q1</option>
+                                  <option value="Q2">Q2</option>
+                                  <option value="Q3">Q3</option>
+                                </select>
+                              </div>
+                              <div class="dropdown">
+                                <label for="fromDropdown" class="form-label">From:</label>
+                                <select id="fromDropdown" class="form-select ps-2">
+                                  <option value="all">All</option>
+                                  <option value="2016">2016</option>
+                                  <option value="2017">2017</option>
+                                  <option value="2018">2018</option>
+                                  <option value="2019">2019</option>
+                                </select>
+                              </div>
+                              <div class="dropdown">
+                                <label for="toDropdown" class="form-label">To:</label>
+                                <select id="toDropdown" class="form-select ps-2">
+                                  <option value="all">All</option>
+                                  <option value="2016">2016</option>
+                                  <option value="2017">2017</option>
+                                  <option value="2018">2018</option>
+                                  <option value="2019">2019</option>
+                                </select>
+                              </div>
+                            </div>
+                            <button>Search</button>
+                              <div class="chart">
+                                  <canvas id="fundDistributionChart2" class="chart-canvas chart-pie" height="400" style="display: block; box-sizing: border-box; height: 400px; width: 191.8px;" width="191"></canvas>
+                              </div>
+                          </div>
+                        </div>                        
+                      </div>
+                    </div> {% endcomment %}
+                </div>              
             </div>
             
 
@@ -632,6 +823,31 @@
               legend: {
                 display: true, // You can choose whether to display the legend
                 position: 'top', // Adjust the legend position
+              },
+            },
+          },
+        });
+      }
+
+      if (document.querySelector('#fundDistributionChart2')) {
+        // Create the fund distribution pie chart (as shown in the previous answer)
+        var ctx = document.querySelector("#fundDistributionChart2").getContext("2d");
+        new Chart(ctx, {
+          type: "pie",
+          data: {
+            labels: fundData.schemeNames,
+            datasets: [{
+              data: fundData.fundAllocations,
+              backgroundColor: ['#17c1e8', '#e91e63', '#3A416F', '#a8b8d8'],
+            }],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false, // You can choose whether to display the legend
+                // position: 'top', // Adjust the legend position
               },
             },
           },

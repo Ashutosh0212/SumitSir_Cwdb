@@ -209,8 +209,27 @@ def dashboard(request):
         'approved_proposals_count': approved_proposals_count,
         'rejected_proposals_count': rejected_proposals_count,'new_notifications': first_three_notifications})
 
+from django.shortcuts import render
+from .models import FundDistribution,Proposal,BeneficiaryData
+from django.db.models import Sum 
+
 def index(request):
-    return render(request,'main/index.html')
+    current_financial_year = get_financial_year()
+
+    # Fetch data for the current financial year
+    try:
+        fund_distribution_data = FundDistribution.objects.get(financial_year=current_financial_year)
+    except FundDistribution.DoesNotExist:
+        fund_distribution_data = None  # Handle the case where data for the current year does not exist
+        
+      # Count the number of approved and completed projects
+    approved_projects_count = Proposal.objects.filter(status='Approved').count()
+    completed_projects_count = Proposal.objects.filter(status='Completed').count()
+    total_projects_count = approved_projects_count + completed_projects_count
+ # Sum up the num_beneficiaries of every row in the BeneficiaryData table
+    total_beneficiaries = BeneficiaryData.objects.aggregate(Sum('num_beneficiaries'))['num_beneficiaries__sum']
+
+    return render(request, 'main/index.html', {'fund_distribution_data': fund_distribution_data, 'current_financial_year': current_financial_year, 'total_projects_count': total_projects_count, 'total_beneficiaries': total_beneficiaries})
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
