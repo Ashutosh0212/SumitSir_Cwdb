@@ -210,7 +210,7 @@ def dashboard(request):
         'rejected_proposals_count': rejected_proposals_count,'new_notifications': first_three_notifications})
 
 from django.shortcuts import render
-from .models import FundDistribution,Proposal,BeneficiaryData
+from .models import FundDistribution,Proposal,BeneficiaryData,ExpenditureData
 from django.db.models import Sum 
 
 def index(request):
@@ -228,7 +228,8 @@ def index(request):
     total_projects_count = approved_projects_count + completed_projects_count
  # Sum up the num_beneficiaries of every row in the BeneficiaryData table
     total_beneficiaries = BeneficiaryData.objects.aggregate(Sum('num_beneficiaries'))['num_beneficiaries__sum']
-
+    
+    
     return render(request, 'main/index.html', {'fund_distribution_data': fund_distribution_data, 'current_financial_year': current_financial_year, 'total_projects_count': total_projects_count, 'total_beneficiaries': total_beneficiaries})
 
 from django.shortcuts import render, redirect
@@ -1893,3 +1894,28 @@ def submit_approval(request, proposal_id):
 #         return redirect(reverse('admin:authapp_wms_selfhelpgroup_changelist') + f'?q={proposal_id}')
 
 #     return render(request, 'error_template.html', {'error_message': 'Invalid scheme component'})
+
+from django.shortcuts import render
+from .models import Proposal
+from .forms import ProposalFilterForm
+
+def proposal_list(request):
+    form = ProposalFilterForm(request.GET)
+    
+    if form.is_valid():
+        proposals = Proposal.objects.all()
+
+    # Filter proposals with status 'Approved' or 'Completed'
+        proposals = proposals.filter(status__in=['Approved', 'Completed'])
+        scheme = form.cleaned_data['scheme']
+   
+        if scheme:
+            proposals = proposals.filter(project_scheme=scheme)
+
+        context = {
+        'proposals': proposals,
+        'form': form,
+       
+    }
+
+        return render(request, 'main/HomePage/Projects.html', context)

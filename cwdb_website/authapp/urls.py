@@ -18,8 +18,9 @@ from django.contrib.auth.views import (
 )
 
 urlpatterns = [
-   
+    #HomePage
     path('',views.index,name='index'),
+    path('proposal/list/', views.proposal_list, name='proposal_list'),
     path('signup/', views.signup, name='register'),
     path('activate/<str:uidb64>/<str:token>/', views.activate, name='activate'),
     # path('login/',user_login,name='login'),

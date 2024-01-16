@@ -33,8 +33,8 @@
 <body class="g-sidenav-show  bg-gray-200">
     <script>
         var fundData = {
-          schemeNames: ['Wool Marketing Scheme', 'Wool Processing Scheme', 'HRDPA', 'PWDS'],
-          fundAllocations: [53000, 2300, 3462, 103000],
+          schemeNames: ['Wool Marketing Scheme', 'Wool Processing Scheme', 'HRDPA', 'PWDS','Administrative Expenses'],
+          fundAllocations: [{{fund_distribution_data.wms}},{{fund_distribution_data.wps}},{{fund_distribution_data.hrdpa}},{{fund_distribution_data.pwds}},{{fund_distribution_data.admin_exp}}],
           // Add more data as needed
         };
     
@@ -349,7 +349,7 @@
                             {% if total_projects_count %}
                                 {{ total_projects_count }}
                             {% else %}
-                                0
+                                No data available.
                             {% endif %}
                         </h6>
                     </div>
@@ -360,9 +360,10 @@
                         <span class="text-success text-sm font-weight-bolder">Financial Year:</span>
                         <span id="financialYear" class="fw-bold">{{ current_financial_year }}</span>
                     </p>
-                    <button class="btn btn-sm btn-primary">
-                        See More <i class="fas fa-arrow-right"></i>
-                    </button>
+                    <button class="btn btn-sm btn-primary" onclick="window.location.href='{% url "authapp:proposal_list" %}'">
+                      See More <i class="fas fa-arrow-right"></i>
+                  </button>
+                  
                 </div>
             </div>
         </div>
@@ -379,7 +380,7 @@
                         {% if total_beneficiaries %}
                         {{ total_beneficiaries }}
                     {% else %}
-                        0
+                        No data available.
                     {% endif %}
                       </h6>
                   </div>
@@ -414,7 +415,7 @@
                         </div>
                         <div class="card-body p-3">
                             <div class="chart">
-                                <canvas id="quarterlyFundsChart" class="chart-canvas chart-line" height="600" style="display: block; box-sizing: border-box; height: 600px; width: 770.3px;" width="770"></canvas>
+                                <canvas id="quarterlyFundsChart" class="chart-canvas chart-line" height="600" style="display: block; box-sizing: border-box; height: 500px; width: 770.3px;" width="770"></canvas>
                             </div>
                         </div>
                         
@@ -650,75 +651,7 @@
                         </div>
                     </div>
                     
-                    {% comment %} <div class="card mb-4">
-                      <div class="card-header pb-0 p-3">
-                        <div class="d-flex justify-content-between">
-                          <h6 class="mb-0">Beneficiaries Data</h6>
-                          <button type="button" class="btn btn-icon-only btn-rounded btn-outline-secondary mb-0 ms-2 btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Distribution of funds given to CWDB">
-                              <i class="material-icons text-sm">priority_high</i>
-                          </button>
-                        </div>                        
-                      </div>
-                      <div class="card-body pb-0 p-3 mt-4">
-                        <div class="row">
-                          <div class="pb-2 text-start">
-                            <div class="d-flex flex-wrap justify-content-between">
-                              <!-- Dropdowns -->
-                              <div class="dropdown">
-                                <label for="genderDropdown" class="form-label">Gender:</label>
-                                <select id="genderDropdown" class="form-select ps-2">
-                                  <option value="all">All</option>
-                                  <option value="male">Male</option>
-                                  <option value="female">Female</option>
-                                  <option value="others">Others</option>
-                                </select>
-                              </div>
-                              <div class="dropdown">
-                                <label for="casteDropdown" class="form-label">Caste:</label>
-                                <select id="casteDropdown" class="form-select ps-2">
-                                  <option value="all">All</option>
-                                  <option value="SC">SC</option>
-                                  <option value="ST">ST</option>
-                                </select>
-                              </div>
-                              <div class="dropdown">
-                                <label for="quarterDropdown" class="form-label">Quarter:</label>
-                                <select id="quarterDropdown" class="form-select ps-2">
-                                  <option value="all">All</option>
-                                  <option value="Q1">Q1</option>
-                                  <option value="Q2">Q2</option>
-                                  <option value="Q3">Q3</option>
-                                </select>
-                              </div>
-                              <div class="dropdown">
-                                <label for="fromDropdown" class="form-label">From:</label>
-                                <select id="fromDropdown" class="form-select ps-2">
-                                  <option value="all">All</option>
-                                  <option value="2016">2016</option>
-                                  <option value="2017">2017</option>
-                                  <option value="2018">2018</option>
-                                  <option value="2019">2019</option>
-                                </select>
-                              </div>
-                              <div class="dropdown">
-                                <label for="toDropdown" class="form-label">To:</label>
-                                <select id="toDropdown" class="form-select ps-2">
-                                  <option value="all">All</option>
-                                  <option value="2016">2016</option>
-                                  <option value="2017">2017</option>
-                                  <option value="2018">2018</option>
-                                  <option value="2019">2019</option>
-                                </select>
-                              </div>
-                            </div>
-                            <button>Search</button>
-                              <div class="chart">
-                                  <canvas id="fundDistributionChart2" class="chart-canvas chart-pie" height="400" style="display: block; box-sizing: border-box; height: 400px; width: 191.8px;" width="191"></canvas>
-                              </div>
-                          </div>
-                        </div>                        
-                      </div>
-                    </div> {% endcomment %}
+                  
                 </div>              
             </div>
             
@@ -797,11 +730,7 @@
   <script src="{%static 'javascript/indexjs/plugins/smooth-scrollbar.min.js'%}"></script>
   <script src="{%static 'javascript/index/js/plugins/chartjs.min.js'%}"></script>
   <script src="{%static 'javascript/index/js/material-dashboard.min.js' %}"></script>
-   {% comment %} <script src="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/material-dashboard-2-builder/v3.0.4/assets/js/core/popper.min.js"></script> {% endcomment %}
-    {% comment %} <script src="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/material-dashboard-2-builder/v3.0.4/assets/js/core/bootstrap.min.js"></script> {% endcomment %}
-    {% comment %} <script src="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/material-dashboard-2-builder/v3.0.4/assets/js/plugins/chartjs.min.js"></script> {% endcomment %}
-    {% comment %} <script src="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/material-dashboard-2-builder/v3.0.4/assets/js/material-dashboard.min.js"></script>   {% endcomment %}
-     
+   
   <script>
     document.addEventListener("DOMContentLoaded", function(event) {
       if (document.querySelector('#fundDistributionChart')) {
@@ -813,7 +742,7 @@
             labels: fundData.schemeNames,
             datasets: [{
               data: fundData.fundAllocations,
-              backgroundColor: ['#17c1e8', '#e91e63', '#3A416F', '#a8b8d8'],
+              backgroundColor: ['#17c1e8', '#e91e63', '#3A416F', '#a8b8d8','#ffc107'],
             }],
           },
           options: {
@@ -822,41 +751,20 @@
             plugins: {
               legend: {
                 display: true, // You can choose whether to display the legend
-                position: 'top', // Adjust the legend position
+                position: 'bottom', // Adjust the legend position
               },
             },
           },
+          
         });
       }
 
-      if (document.querySelector('#fundDistributionChart2')) {
-        // Create the fund distribution pie chart (as shown in the previous answer)
-        var ctx = document.querySelector("#fundDistributionChart2").getContext("2d");
-        new Chart(ctx, {
-          type: "pie",
-          data: {
-            labels: fundData.schemeNames,
-            datasets: [{
-              data: fundData.fundAllocations,
-              backgroundColor: ['#17c1e8', '#e91e63', '#3A416F', '#a8b8d8'],
-            }],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: false, // You can choose whether to display the legend
-                // position: 'top', // Adjust the legend position
-              },
-            },
-          },
-        });
-      }
+   
 
       if (document.querySelector('#quarterlyFundsChart')) {
         // Create the quarterly funds allocation line chart
         var ctx = document.querySelector("#quarterlyFundsChart").getContext("2d");
+        
         new Chart(ctx, {
           type: "line",
           data: {
