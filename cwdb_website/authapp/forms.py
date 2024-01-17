@@ -190,6 +190,14 @@ class WMSRevolvingFundForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
+        labels = {
+            'quarterly_allocated_budget': "Quarterly allocated budget (in ₹):",
+            'organization_name': "Organization Name which approved the purchase price:",
+            'description_sheep_breeders': "Description of Sheep Breeders and their respective society/SHG/Group.",
+            'fixed_purchase_price': 'Fixed Purchase Price of raw wool (Mention grade-wise prices if required, in ₹):',
+            'total_profit': 'Total Profit, Percentage of budget spent, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB:',
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in ₹):',
+        }
     
     def __init__(self, *args, **kwargs):
         super(WMSRevolvingFundForm, self).__init__(*args, **kwargs)
@@ -249,6 +257,12 @@ class WMSSelfHelpGroupForm(forms.ModelForm):
                 ('Q3', 'Quarter 3 (October-December)'),
                 ('Q4', 'Quarter 4 (January-March)'),
             ]),
+        }
+        labels = {
+            'total_profit_interest': "Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB, Percentage of Budget Spent (Monthly & total allocation):",
+            'description_shg': "Description of SHG made, Group Registration number, Total Members Count:",
+            'quarterly_allocated_budget': "Quarterly allocated budget (in ₹):",
+            "total_quarterly_budget_spent": "Total Quarterly Budget Spent (in ₹):"
         }
     
     def __init__(self, *args, **kwargs):

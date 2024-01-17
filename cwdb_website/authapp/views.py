@@ -670,7 +670,7 @@ def selfhelpgroup_report(request, proposal_unique_id):
     return render(request, 'progressReports/WMS/3.SelfHelpGroup.html', context)
 
 from django.shortcuts import render, redirect
-from .models import WMS_BuyerSellerExpo, ExpenditureData
+from .models import WMS_BuyerSellerExpo, ExpenditureData, BeneficiaryData
 from .forms import WMSBuyerSellerExpoForm
 from django.http import HttpResponse
 
@@ -680,6 +680,34 @@ def buyersellerexpo_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            df = pd.read_excel(form.cleaned_data['wool_sellers_sheet'])
+            analysis = process(df, 1, 1, 1, 1)
+            print(analysis)
+            
+            # Iterate through the state-wise analysis data
+            for state_name, state_data in analysis['state'].items():
+                # Check if beneficiaries count for the state is greater than 0
+                if state_data.get('beneficiaries', 0) > 0:
+                    # Create a new instance of BeneficiaryData model
+                    beneficiary_data_instance = BeneficiaryData(
+                        proposal_unique_id=proposal,
+                        num_beneficiaries=state_data.get('beneficiaries', 0),
+                        num_general_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[0],
+                        num_obc_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[4],
+                        num_sc_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[1] ,
+                        num_st_beneficiaries= state_data.get('category', [0, 0, 0, 0, 0])[2],
+                        num_bpl_beneficiaries= state_data.get('category', [0, 0, 0, 0, 0])[3],
+                        state_of_beneficiaries=state_name,
+                        num_males=state_data.get('gender', [0, 0, 0])[0],
+                        num_females=state_data.get('gender', [0, 0, 0])[1],
+                        num_other_gender=state_data.get('gender', [0, 0, 0])[2],
+                        quarter=form.cleaned_data['quarter'],
+                        year=form.cleaned_data['financial_year'],
+                        scheme=scheme,
+                    )
+
+                    # Save the instance to the database
+                    beneficiary_data_instance.save()
 
             expenditure_data_instance = ExpenditureData(
                 proposal_unique_id=proposal,
@@ -849,6 +877,35 @@ def sheep_shearing_machining(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            df = pd.read_excel(form.cleaned_data['beneficiaries_details_sheet'])
+            analysis = process(df, 1, 1, 1, 1)
+            print(analysis)
+            
+            # Iterate through the state-wise analysis data
+            for state_name, state_data in analysis['state'].items():
+                # Check if beneficiaries count for the state is greater than 0
+                if state_data.get('beneficiaries', 0) > 0:
+                    # Create a new instance of BeneficiaryData model
+                    beneficiary_data_instance = BeneficiaryData(
+                        proposal_unique_id=proposal,
+                        num_beneficiaries=state_data.get('beneficiaries', 0),
+                        num_general_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[0],
+                        num_obc_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[4],
+                        num_sc_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[1] ,
+                        num_st_beneficiaries= state_data.get('category', [0, 0, 0, 0, 0])[2],
+                        num_bpl_beneficiaries= state_data.get('category', [0, 0, 0, 0, 0])[3],
+                        state_of_beneficiaries=state_name,
+                        num_males=state_data.get('gender', [0, 0, 0])[0],
+                        num_females=state_data.get('gender', [0, 0, 0])[1],
+                        num_other_gender=state_data.get('gender', [0, 0, 0])[2],
+                        quarter=form.cleaned_data['quarter'],
+                        year=form.cleaned_data['financial_year'],
+                        scheme=scheme,
+                    )
+
+                    # Save the instance to the database
+                    beneficiary_data_instance.save()
+
             expenditure_data_instance = ExpenditureData(
                 proposal_unique_id=proposal,
                                 #added allotted and spent here 
@@ -922,6 +979,34 @@ def small_tools_distribution(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            df = pd.read_excel(form.cleaned_data['beneficiaries_details_sheet'])
+            analysis = process(df, 1, 1, 1, 1)
+            print(analysis)
+            
+            # Iterate through the state-wise analysis data
+            for state_name, state_data in analysis['state'].items():
+                # Check if beneficiaries count for the state is greater than 0
+                if state_data.get('beneficiaries', 0) > 0:
+                    # Create a new instance of BeneficiaryData model
+                    beneficiary_data_instance = BeneficiaryData(
+                        proposal_unique_id=proposal,
+                        num_beneficiaries=state_data.get('beneficiaries', 0),
+                        num_general_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[0],
+                        num_obc_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[4],
+                        num_sc_beneficiaries=state_data.get('category', [0, 0, 0, 0, 0])[1] ,
+                        num_st_beneficiaries= state_data.get('category', [0, 0, 0, 0, 0])[2],
+                        num_bpl_beneficiaries= state_data.get('category', [0, 0, 0, 0, 0])[3],
+                        state_of_beneficiaries=state_name,
+                        num_males=state_data.get('gender', [0, 0, 0])[0],
+                        num_females=state_data.get('gender', [0, 0, 0])[1],
+                        num_other_gender=state_data.get('gender', [0, 0, 0])[2],
+                        quarter=form.cleaned_data['quarter'],
+                        year=form.cleaned_data['financial_year'],
+                        scheme=scheme,
+                    )
+
+                    # Save the instance to the database
+                    beneficiary_data_instance.save()
             expenditure_data_instance = ExpenditureData(
                 proposal_unique_id=proposal,
                                 #added allotted and spent here 
