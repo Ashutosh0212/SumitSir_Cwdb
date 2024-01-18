@@ -499,6 +499,11 @@ class WPSSmallToolsDistributionForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
+        labels = {
+            'total_sellers' : 'Total Sellers, Total Equipment Shared, any other information if required.',
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in ₹):',
+            'quarterly_allocated_budget': 'Quarterly Allocated Budget (in ₹):'
+        }
     
     def __init__(self, *args, **kwargs):
         super(WPSSmallToolsDistributionForm, self).__init__(*args, **kwargs)

@@ -208,7 +208,7 @@ class WPS_EquipmentAdmin(admin.ModelAdmin):
 
 @admin.register(WPSSmallToolsDistribution)
 class WPSSmallToolsDistributionAdmin(admin.ModelAdmin):
-    list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'total_sellers', 'total_equipment_shared', 'total_quarterly_budget_spent')
+    list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'total_sellers', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
 
 from django.contrib import admin
@@ -264,7 +264,7 @@ class WoolTestingLabAdmin(admin.ModelAdmin):
 
 @admin.register(PublicityMonitoring)
 class PublicityMonitoringAdmin(admin.ModelAdmin):
-    list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'training_details', 'duration_from', 'duration_to', 'budget_spent_details', 'total_quarterly_budget_spent')
+    list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
 
 from django.contrib import admin
