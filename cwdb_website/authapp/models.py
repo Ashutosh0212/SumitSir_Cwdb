@@ -226,6 +226,7 @@ class WMS_BuyerSellerExpo(models.Model):
             ('Q4', 'Quarter 4 (January-March)'),
         ],
     )
+    quarterly_allocated_budget = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     financial_year = models.CharField(max_length=9)
     description_event = models.TextField()
     total_profit_interest = models.TextField()
@@ -251,6 +252,7 @@ class WMS_InfrastructureDevelopment(models.Model):
             ('Q4', 'Quarter 4 (January-March)'),
         ],
     )
+    quarterly_allocated_budget = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     financial_year = models.CharField(max_length=9)
     development_progress = models.TextField()
     budget_spent_details = models.TextField()
@@ -415,7 +417,6 @@ class WPSSmallToolsDistribution(models.Model):
     financial_year = models.CharField(max_length=9)
     quarterly_allocated_budget = models.DecimalField(max_digits=10, decimal_places=2)
     total_sellers = models.TextField()
-    total_equipment_shared = models.TextField()
     total_quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
     component_wise_budget_sheet = models.FileField(upload_to='documents/')
     machine_procured_sheet = models.FileField(upload_to='documents/')
@@ -562,11 +563,7 @@ class DomesticMeeting(models.Model):
     budget_spent_details = models.TextField()
     total_quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
     component_budget_sheet = models.FileField(upload_to='documents/')
-    trainee_details_sheet = models.FileField(upload_to='documents/')
-    topics_covered_sheet = models.FileField(upload_to='documents/')
-    master_trainer_details_sheet = models.FileField(upload_to='documents/')
-    office_assistant_details_sheet = models.FileField(upload_to='documents/')
-    payment_proofs = models.FileField(upload_to='documents/')
+    participants_details_sheet = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
 
     def __str__(self):
@@ -593,10 +590,7 @@ class OrganisingSeminar(models.Model):
     budget_spent_details = models.TextField()
     total_quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
     component_budget_sheet = models.FileField(upload_to='documents/')
-    trainee_details_sheet = models.FileField(upload_to='documents/')
-    topics_covered_sheet = models.FileField(upload_to='documents/')
-    master_trainer_details_sheet = models.FileField(upload_to='documents/')
-    office_assistant_details_sheet = models.FileField(upload_to='documents/')
+    participants_details_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
 
@@ -651,7 +645,7 @@ class WoolTestingLab(models.Model):
     budget_spent_details = models.TextField()
     total_quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
     componentwise_budget_sheet = models.FileField(upload_to='documents/')
-    training_details_wdtc_sheet = models.FileField(upload_to='documents/')
+    training_details_wtc_sheet = models.FileField(upload_to='documents/')
     details_of_trainees_wdtc_sheet = models.FileField(upload_to='documents/')
     payment_proofs_trainees = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
@@ -674,9 +668,6 @@ class PublicityMonitoring(models.Model):
     )
     financial_year = models.CharField(max_length=9)
     quarterly_allocated_budget = models.DecimalField(max_digits=10, decimal_places=2)
-    training_details = models.TextField()
-    duration_from = models.DateField()
-    duration_to = models.DateField()
     budget_spent_details = models.TextField()
     total_quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
     componentwise_budget_sheet = models.FileField(upload_to='documents/')
