@@ -160,12 +160,12 @@ class ProposalForm(forms.ModelForm):
 
 
 from django import forms
-from .models import SanctionLetter
+from .models import Proposal
 
 class ProposalApprovalForm(forms.ModelForm):
     class Meta:
-        model = SanctionLetter
-        fields = ['installment_number', 'fund_sanctioned', 'sanction_letter']
+        model = Proposal
+        fields = ['status', 'fund_allocated', 'sanction_letter']
 
     sanction_letter = forms.FileField(required=False)  # Ensure the FileField is present in the form
 
