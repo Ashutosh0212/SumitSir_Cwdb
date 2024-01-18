@@ -165,18 +165,24 @@ from .models import Proposal
 class ProposalApprovalForm(forms.ModelForm):
     class Meta:
         model = Proposal
-        fields = ['status', 'fund_allocated', 'sanction_letter']
+        fields = ['status', 'total_fund_allocated','Approved_by','project_sanction_letter']
+        labels = {
+            'status': 'Project Status',
+            'total_fund_allocated': 'Total Fund Allocated(in Lakhs)',
+            'Approved by':'Approved by',
+            'project_sanction_letter': 'Project Sanction Letter',
+        }
 
-    sanction_letter = forms.FileField(required=False)  # Ensure the FileField is present in the form
+    project_sanction_letter = forms.FileField(required=False)  # Ensure the FileField is present in the form
 
     def clean_sanction_letter(self):
         # You can add additional validation for the file if needed
-        sanction_letter = self.cleaned_data.get('sanction_letter')
-        if sanction_letter:
+        project_sanction_letter = self.cleaned_data.get('project_sanction_letter')
+        if project_sanction_letter:
             # Ensure the file size is acceptable, add more validations if needed
-            if sanction_letter.size > 10 * 1024 * 1024:  # 10 MB
+            if project_sanction_letter.size > 10 * 1024 * 1024:  # 10 MB
                 raise forms.ValidationError("File size must be less than 10 MB.")
-        return sanction_letter
+        return project_sanction_letter
 
 
 from django import forms

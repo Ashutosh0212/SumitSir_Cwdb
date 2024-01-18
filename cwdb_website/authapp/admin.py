@@ -37,7 +37,7 @@ class ProposalAdmin(admin.ModelAdmin):
     list_filter = ('status', 'user')
     search_fields = ('project_scheme', 'user__username')
     # list_editable = ('status',)
-    readonly_fields = ('fund_allocated', 'sanction_letter')
+    readonly_fields = ('total_fund_allocated', 'project_sanction_letter')
 
     def project_id(self, obj):
         return obj.unique_id
@@ -46,11 +46,12 @@ class ProposalAdmin(admin.ModelAdmin):
     
     def status_change(self, obj):
         return format_html(
-            '<a class="button" href="{}">Change Status and Submit Sanction letter</a>',
+            '<a class="button" href="{}">Change Status and Submit Approval Sanction letter</a>',
             reverse('authapp:submit_approval', args=[obj.unique_id])
         )
 
     status_change.short_description = 'Change Status'
+    
     def progress_report_link(self, obj):
         component_model = self.get_component_model(obj)
         if component_model:

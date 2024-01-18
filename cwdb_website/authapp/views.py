@@ -1019,7 +1019,7 @@ def sheep_shearing_machining(request, proposal_unique_id):
         if form.is_valid():
             df = pd.read_excel(form.cleaned_data['beneficiaries_details_sheet'])
             analysis = process(df, 1, 1, 1, 1)
-            print(analysis)
+            # print(analysis)
             
             # Iterate through the state-wise analysis data
             for state_name, state_data in analysis['state'].items():
@@ -1049,7 +1049,7 @@ def sheep_shearing_machining(request, proposal_unique_id):
             expenditure_data_instance = ExpenditureData(
                 proposal_unique_id=proposal,
                                 #added allotted and spent here 
-               quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
+                quarterly_budget_spent = form.cleaned_data['total_quarterly_budget_spent'],
                 quarterly_budget_allocated = form.cleaned_data['quarterly_allocated_budget'],
                 quarter=form.cleaned_data['quarter'],
                 year=form.cleaned_data['financial_year'],
@@ -2226,7 +2226,7 @@ def fodder_land_development_report(request, proposal_unique_id):
         form = FodderLandDevelopmentForm(initial=initial_data)
     
     context = {'form': form}
-    return render(request, 'progressReports/PWDS/8.FodderLandDevelopment.html', context)
+    return render(request, 'progressReports/PWDS/8.FodderLandDevelopmen.html', context)
 
 
 #staff view
@@ -2274,7 +2274,7 @@ def submit_approval(request, proposal_id):
             form.save()
 
             # Notify the user about the status change
-            send_status_change_notification(proposal.user, proposal.unique_id, proposal.status,proposal.sanction_letter)
+            send_status_change_notification(proposal.user, proposal.unique_id, proposal.status,proposal.project_sanction_letter)
 
             messages.success(request, 'Proposal status changed successfully.')
             
