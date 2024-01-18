@@ -111,8 +111,7 @@ class Proposal(models.Model):
     nodal_officer_details = models.TextField()
     other_info = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
-    fund_allocated = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
-    sanction_letter = models.FileField(upload_to='sanction_letters/', blank=True, null=True)
+    Approved_by=models.CharField
     project_report = models.FileField(upload_to='pdf_files/', blank=True, null=True)
     covering_letter = models.FileField(upload_to='pdf_files/', blank=True, null=True)
     unique_id = models.CharField(max_length=8, unique=True)
@@ -120,6 +119,18 @@ class Proposal(models.Model):
 
     def __str__(self):
         return self.unique_id
+
+#sanction letter
+class SanctionLetter(models.Model):
+    proposal = models.ForeignKey(Proposal, on_delete=models.CASCADE)
+    fund_sanctioned = models.DecimalField(max_digits=20, decimal_places=2,blank=True,null=True)
+    sanction_letter = models.FileField(upload_to='sanction_letters/')
+    installment_number = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Sanction Letter for {self.proposal.unique_id}, Installment {self.installment_number}"
+
 
 #add notification model
 # models.py

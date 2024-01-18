@@ -326,7 +326,7 @@ def submit_proposal(request):
         )
 
         # Generate a unique proposal_id
-        proposal.unique_id = generate_unique_id()
+        proposal.unique_id = generate_unique_id(project_scheme)
         # print(proposal)
         proposal.save()
 
@@ -334,9 +334,16 @@ def submit_proposal(request):
 
     return render(request, 'proposal/submit_proposal.html')
 
-def generate_unique_id():
-    # Generate a unique proposal_id using UUID
-    unique_id = uuid.uuid4().hex[:8]
+import uuid
+from datetime import datetime
+
+def generate_unique_id(scheme):
+    # Get the current date and year
+    current_date = datetime.now()
+    year = current_date.year
+
+    # Generate a unique ID using scheme, date, and year
+    unique_id = f"{scheme}-{current_date.strftime('%Y%m%d')}-{uuid.uuid4().hex[:4]}"
     return unique_id
 
 @login_required
@@ -1379,7 +1386,7 @@ def pashmina_cfc_report(request, proposal_unique_id):
         form = PWDS_PashminaCFCForm(initial=initial_data)
     
     context = {'form': form}
-    return render(request, 'PWDS/2.PashminaCFC.html', context)
+    return render(request, 'progressReports/PWDS/2.PashminaCFC.html', context)
 
 from django.shortcuts import render, redirect
 from .models import ShelterShedConstruction, ExpenditureData
@@ -1417,7 +1424,7 @@ def shelter_shed_report(request, proposal_unique_id):
         form = ShelterShedConstructionForm(initial=initial_data)
     
     context = {'form': form}
-    return render(request, 'ShelterShedConstruction/3.ShelterShedConstruction.html', context)
+    return render(request, 'progressReports/PWDS/3.ShelterShedConstruction.html', context)
 
 from django.shortcuts import render, redirect
 from .models import PortableTentDist, ExpenditureData
@@ -1455,7 +1462,7 @@ def portable_tent_report(request, proposal_unique_id):
         form = PortableTentDistForm(initial=initial_data)
     
     context = {'form': form}
-    return render(request, 'PortableTentDist/4.PortableTentDist.html', context)
+    return render(request, 'progressReports/PWDS/4.PortableTentDist.html', context)
 
 from django.shortcuts import render, redirect
 from .models import PredatorProofLightsDist, ExpenditureData
@@ -1493,7 +1500,7 @@ def predator_proof_lights_report(request, proposal_unique_id):
         form = PredatorProofLightsDistForm(initial=initial_data)
     
     context = {'form': form}
-    return render(request, 'PredatorProofLightsDist/5.PredatorProofLightsDist.html', context)
+    return render(request, 'progressReports/PWDS/5.PredatorProofLightsDist.html', context)
 
 from django.shortcuts import render, redirect
 from .models import TestingEquipment, ExpenditureData
@@ -1531,7 +1538,7 @@ def testing_equipment_report(request, proposal_unique_id):
         form = TestingEquipmentForm(initial=initial_data)
     
     context = {'form': form}
-    return render(request, 'TestingEquipment/6.TestingEquipment.html', context)
+    return render(request, 'progressReports/PWDS/6.TestingEquipment.html', context)
 
 from django.shortcuts import render, redirect
 from .models import ShowroomDevelopment, ExpenditureData
@@ -1569,7 +1576,7 @@ def showroom_development_report(request, proposal_unique_id):
         form = ShowroomDevelopmentForm(initial=initial_data)
     
     context = {'form': form}
-    return render(request, 'ShowroomDevelopment/7.ShowroomDevelopment.html', context)
+    return render(request, 'progressReports/PWDS/7.ShowroomDevelopment.html', context)
 
 from django.shortcuts import render, redirect
 from .models import FodderLandDevelopment, ExpenditureData
@@ -1607,7 +1614,7 @@ def fodder_land_development_report(request, proposal_unique_id):
         form = FodderLandDevelopmentForm(initial=initial_data)
     
     context = {'form': form}
-    return render(request, 'FodderLandDevelopment/8.FodderLandDevelopment.html', context)
+    return render(request, 'progressReports/PWDS/8.FodderLandDevelopment.html', context)
 
 
 #staff view
