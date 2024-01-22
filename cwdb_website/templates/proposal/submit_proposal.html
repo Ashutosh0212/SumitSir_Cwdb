@@ -219,7 +219,7 @@
 
         
 
-          <form action="" method="post" id="proposalForm">
+          <form action="{% url 'authapp:submit_proposal' %}" method="post" id="proposalForm">
             {% csrf_token %}
             <div class="form-group">
                 <label for="textarea1">Name & Full Address of Agency with Telephone No. & Email Address</label>
@@ -334,7 +334,7 @@
               <label for="coveringLetter">Upload Covering Letter (PDF)</label>
               <input type="file" id="coveringLetter" name="coveringLetter" accept=".pdf" required>
           </div>
-          <button type="button" onclick="previewEntries()">Preview</button>
+          {% comment %} <button type="button" onclick="previewEntries()">Preview</button> {% endcomment %}
 
             <button type="submit">Submit</button>
       </form>
@@ -467,7 +467,9 @@
             }
         }
     
-        showSubfiles();
+        window.onload = function () {
+          showSubfiles();  // Call the function when the page loads
+      };
     </script>
     
 

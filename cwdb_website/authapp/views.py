@@ -306,12 +306,13 @@ def submit_proposal(request):
             expected_outcome=expected_outcome_file,
             beneficiaries=beneficiaries_file,
             component_wise_cost=component_wise_cost_file,
-            total_duration=total_duration_file,
+            component_wise_duration=total_duration_file,
             project_report=project_report_file,
             covering_letter=covering_letter_file
         )
 
         # Generate a unique proposal_id
+    
         proposal.unique_id = generate_unique_id(project_scheme)
         # print(proposal)
         proposal.save()
