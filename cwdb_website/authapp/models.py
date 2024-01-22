@@ -3,6 +3,9 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from django.core.validators import MinValueValidator, MaxValueValidator
+
+
 from .managers import CustomUserManager
 
 from datetime import datetime
@@ -104,7 +107,7 @@ class Proposal(models.Model):
     beneficiaries = models.FileField(upload_to='excel_files/', blank=True, null=True)
     mode_of_selection = models.TextField()
     component_wise_cost = models.FileField(upload_to='excel_files/', blank=True, null=True)
-    total_duration = models.FileField(upload_to='excel_files/', blank=True, null=True)
+    component_wise_duration = models.FileField(upload_to='excel_files/', blank=True, null=True)
     location_of_project = models.CharField(max_length=100)
     associated_agency = models.TextField()
     bank_details = models.TextField()

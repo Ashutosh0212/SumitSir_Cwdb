@@ -239,20 +239,6 @@ from .models import Proposal
 import random
 import string
 
-# @login_required
-# def submit_proposal(request):
-#     if request.method == 'POST':
-#         form = ProposalForm(request.POST)
-#         if form.is_valid():
-#             proposal = form.save(commit=False)
-#             proposal.user = request.user
-#             proposal.unique_id = ''.join(random.choices(string.digits, k=8))
-#             proposal.save()
-#             return redirect('proposal_detail', proposal_id=proposal.id)
-#     else:
-#         form = ProposalForm()
-#     return render(request, 'proposal/submit_proposal.html', {'form': form})
-
 # views.py
 from django.shortcuts import render, redirect
 from .models import Proposal

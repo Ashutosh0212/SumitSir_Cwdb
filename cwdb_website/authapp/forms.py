@@ -106,6 +106,14 @@ class ProposalForm(forms.ModelForm):
     class Meta:
         model = Proposal
         exclude = ['user', 'unique_id', 'created_at', 'status']
+        total_duration = forms.IntegerField(
+            min_value=1, 
+            max_value=20,  # Add maximum value constraint
+            widget=forms.NumberInput(attrs={'required': 'true'})
+        )
+        labels = {
+            'total_duration' : "Total duration in quarters: (There are 4 quarters in a year)"
+        }
 
     subfileData = {
         'WMS': [
@@ -155,6 +163,14 @@ class ProposalForm(forms.ModelForm):
         elif self.instance.pk:
             # If the form is bound to an instance, set the component choices based on the instance's scheme
             self.fields['component'].choices = [(item, item) for item in self.subfileData.get(self.instance.scheme, [])]
+        if 'initial' in kwargs and 'quarters' in kwargs['initial']:
+            num_quarters = kwargs['initial']['quarters']
+
+            for i in range(1, num_quarters + 1):
+                label_text = f'Goals for Quarter {i}'
+                textarea_name = f'goals_quarter_{i}'
+                self.fields[textarea_name] = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), label=label_text)
+
 
 # In your views, use the form as usual, and the component choices should update dynamically.
 

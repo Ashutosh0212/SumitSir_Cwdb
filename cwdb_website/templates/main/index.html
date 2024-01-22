@@ -651,7 +651,25 @@
                         </div>
                     </div>
                     
-                  
+                    <div class="card mb-4">
+                      <div class="card-header pb-0 p-3">
+                          <div class="d-flex justify-content-between">
+                              <h6 class="mb-0">Beneficiary Data</h6>
+                              <button type="button" class="btn btn-icon-only btn-rounded btn-outline-secondary mb-0 ms-2 btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Distribution of funds given to CWDB">
+                                  <i class="material-icons text-sm">priority_high</i>
+                              </button>
+                          </div>
+                      </div>
+                      <div class="card-body pb-0 p-3 mt-8">
+                          <div class="row">
+                              <div class="text-start">
+                                  <div class="chart">
+                                      <canvas id="fundDistributionChart2" class="chart-canvas chart-pie" height="400" style="display: block; box-sizing: border-box; height: 400px; width: 191.8px;" width="191"></canvas>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
                 </div>              
             </div>
             
@@ -759,6 +777,32 @@
         });
       }
 
+
+      if (document.querySelector('#fundDistributionChart2')) {
+        // Create the fund distribution pie chart (as shown in the previous answer)
+        var ctx = document.querySelector("#fundDistributionChart").getContext("2d");
+        new Chart(ctx, {
+          type: "pie",
+          data: {
+            labels: fundData.schemeNames,
+            datasets: [{
+              data: fundData.fundAllocations,
+              backgroundColor: ['#17c1e8', '#e91e63', '#3A416F', '#a8b8d8','#ffc107'],
+            }],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true, // You can choose whether to display the legend
+                position: 'bottom', // Adjust the legend position
+              },
+            },
+          },
+          
+        });
+      }
    
 
       if (document.querySelector('#quarterlyFundsChart')) {
