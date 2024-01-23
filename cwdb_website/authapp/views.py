@@ -270,6 +270,8 @@ def submit_proposal(request):
         bank_details = request.POST.get('bankAccountDetails')
         nodal_officer_details = request.POST.get('nodalOfficerInfo')
         other_info = request.POST.get('otherInfo')
+        quarters = request.POST.get('quarters')
+        # quarterly_goal_classes = request.POST.getlist('goal_texts')
 
         # Handle file uploads
         expected_outcome_file = request.FILES.get('outcomeFile')
@@ -278,6 +280,14 @@ def submit_proposal(request):
         total_duration_file = request.FILES.get('durationFile')
         project_report_file = request.FILES.get('projectReport')
         covering_letter_file = request.FILES.get('coveringLetter')
+
+        # Handle dynamic goals
+        goals_data = []
+        for i in range(1, int(quarters) + 1):
+            goal_key = f'goal_texts_quarter:{i}[]'
+            goal_texts = request.POST.getlist(goal_key)
+            goals_data.append(goal_texts)
+
 
         # Create and save the Proposal object
         proposal = Proposal(
@@ -308,13 +318,15 @@ def submit_proposal(request):
             component_wise_cost=component_wise_cost_file,
             component_wise_duration=total_duration_file,
             project_report=project_report_file,
-            covering_letter=covering_letter_file
+            covering_letter=covering_letter_file,
+            total_duration=quarters ,
+            goals = goals_data 
         )
 
         # Generate a unique proposal_id
     
         proposal.unique_id = generate_unique_id(project_scheme)
-        # print(proposal)
+        print(proposal)
         proposal.save()
 
         return redirect('authapp:proposal_status')

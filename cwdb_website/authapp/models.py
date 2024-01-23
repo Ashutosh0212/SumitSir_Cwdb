@@ -121,6 +121,8 @@ class Proposal(models.Model):
     covering_letter = models.FileField(upload_to='pdf_files/', blank=True, null=True)
     unique_id = models.CharField(max_length=8, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    total_duration = models.IntegerField(blank=True, null=True)
+    goals = models.JSONField(default=dict)
 
     def __str__(self):
         return self.unique_id

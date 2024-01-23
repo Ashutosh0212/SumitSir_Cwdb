@@ -63,13 +63,12 @@
           display: none;
         }
     
-        .buttons {
+        /* .buttons {
           margin-left: 40%;
           margin-right: 40%;
           display: flex;
-          /* border: 8px solid red; */
           align-items: center;
-        }
+        } */
     
         button{
           /* display: block; */
@@ -251,7 +250,7 @@
             </div>
             <div class="form-group" id="otherField" style="display: none;">
                 <label for="otherInput" name="otherNature">Mention Other Nature:</label>
-                <input type="text" id="otherInput" name="otherNature" required>
+                <input type="text" id="otherInput" name="otherNature">
             </div>
             <div class="form-group">
                 <label for="textarea2">Brief of the Agency and its activities in the last 3 years in the related field and facilities available with it (Manpower, machines etc.)</label>
@@ -299,9 +298,19 @@
           <label for="projectCostFile">Upload Component Wise Project Cost (Excel)</label>
           <input type="file" id="projectCostFile" name="projectCostFile" accept=".xls, .xlsx" required>
       </div>
+
+      <div class="form-group">
+        <label for="quarters">Total Duration:</label>
+        <input type="number" id="quarters" name="quarters" min="1" max="20" required>
+  
+        <!-- Input for each quarter's goals -->
+        <div id="quarterly-goals">
+            <!-- JavaScript will dynamically generate inputs based on the number of quarters -->
+        </div>
+      </div>
       
       <div class="form-group">
-        <label for="durationFile">Upload Total Project Duration (Excel)</label>
+        <label for="durationFile">Upload Explained Project Duration (Excel)</label>
         <input type="file" id="durationFile" name="durationFile" accept=".xls, .xlsx" required>
     </div>
     
@@ -341,6 +350,56 @@
 
   
       <script>
+       document.getElementById('quarters').addEventListener('input', function () {
+    var numQuarters = parseInt(this.value, 10);
+
+    // Clear previous goal inputs
+    document.getElementById('quarterly-goals').innerHTML = '';
+
+    // Generate inputs for each quarter
+    for (var i = 1; i <= numQuarters; i++) {
+        var goalsLabel = document.createElement('label');
+        goalsLabel.textContent = 'Goals for Quarter ' + i + ':';
+
+        var goalsInput = document.createElement('textarea');
+        goalsInput.name = 'goals_quarter:' + i;
+        goalsInput.className = 'quarterly-goal';
+        goalsInput.rows = 3; // Set the number of rows for a multiline input
+
+        var addButton = document.createElement('button');
+        addButton.type = 'button';
+        addButton.textContent = 'Add Goals';
+        addButton.name = 'goal_button:' + i; // Update the name for the button
+
+        addButton.addEventListener('click', function (event) {
+            // Add a new item to the list when the button is clicked
+            var listItem = document.createElement('div');
+            listItem.id = 'goal:';
+
+            // Create hidden input fields for each goal text
+            var hiddenInputText = document.createElement('input');
+            hiddenInputText.type = 'hidden';
+            hiddenInputText.id = event.target.name.split(':')[1];
+            hiddenInputText.name = 'goal_texts_quarter:' + event.target.name.split(':')[1] + '[]'; // Use [] for array
+            hiddenInputText.value = document.getElementsByName('goals_quarter:' + event.target.name.split(':')[1])[0].value;
+
+            listItem.textContent = hiddenInputText.value;
+            document.getElementById('quarterly-goals').appendChild(listItem);
+            document.getElementById('quarterly-goals').appendChild(hiddenInputText);
+
+            // Clear the textarea after adding the item
+            document.getElementsByName('goals_quarter:' + event.target.name.split(':')[1])[0].value = '';
+        });
+
+        var goalsContainer = document.createElement('div');
+        goalsContainer.appendChild(goalsLabel);
+        goalsContainer.appendChild(goalsInput);
+        goalsContainer.appendChild(addButton);
+
+        document.getElementById('quarterly-goals').appendChild(goalsContainer);
+    }
+});
+
         function previewEntries() {
             // Retrieve form data
             var formData = new FormData(document.getElementById('proposalForm'));
@@ -399,7 +458,7 @@
             const otherField = document.getElementById('otherField');
             const otherInput = document.getElementById('otherInput');
     
-            if (dropdown.value === 'other') {
+            if (dropdown.value === 'Any Other Govt. Marketing Agency') {
                 otherField.style.display = 'block';
                 otherInput.setAttribute('required', 'true');
             } else {
@@ -408,7 +467,8 @@
             }
         }
     
-        var subfileData = {
+        function showSubfiles() {
+          var subfileData = {
             WMS: [
                 "1.Creation of Revolving Fund for Marketing of Raw Wool",
                 "2.E-Portal for Marketing Auction of Wool and Development of MIS",
@@ -446,12 +506,12 @@
                 "8.Development of fodder land/Govt. farms for pashmina goats",
             ]
         };
-    
-        function showSubfiles() {
+
             var folderSelect = document.getElementById("folderSelect");
             var subfileSelect = document.getElementById("subfileSelect");
             var selectedFolder = folderSelect.value;
             var subfiles = subfileData[selectedFolder];
+            console.log(subfiles);
     
             // Clear the current subfile list
             subfileSelect.innerHTML = '<option value="none">Select a Component:</option>';
@@ -468,6 +528,7 @@
         }
     
         window.onload = function () {
+          // document.getElementById('otherField').style.display = 'none';
           showSubfiles();  // Call the function when the page loads
       };
     </script>
