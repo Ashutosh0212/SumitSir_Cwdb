@@ -2283,6 +2283,52 @@ def submit_approval(request, proposal_id):
     return render(request, 'admin/submit_approval.html', {'form': form, 'proposal': proposal})
 
 
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Proposal, SanctionLetter, InspectionReport
+from .forms import SanctionLetterForm, InspectionReportForm
+
+@user_passes_test(lambda u: u.is_staff or u.is_superuser)
+def submit_installment_sanction_letter(request, proposal_id):
+    proposal = get_object_or_404(Proposal, unique_id=proposal_id)
+
+    if request.method == 'POST':
+        form = SanctionLetterForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Save the form to create a new SanctionLetter instance
+            sanction_letter = form.save(commit=False)
+            sanction_letter.proposal = proposal
+            sanction_letter.save()
+
+            messages.success(request, 'Sanction Letter submitted successfully.')
+
+            return redirect('admin:index')
+    else:
+        form = SanctionLetterForm()
+
+    return render(request, 'admin/submit_sanction_letter.html', {'form': form, 'proposal': proposal})
+
+@user_passes_test(lambda u: u.is_staff or u.is_superuser)
+def submit_inspection_letter(request, proposal_id):
+    proposal = get_object_or_404(Proposal, unique_id=proposal_id)
+
+    if request.method == 'POST':
+        form = InspectionReportForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Save the form to create a new InspectionReport instance
+            inspection_report = form.save(commit=False)
+            inspection_report.proposal = proposal
+            inspection_report.save()
+
+            messages.success(request, 'Inspection Letter submitted successfully.')
+
+            return redirect('admin:index')
+    else:
+        form = InspectionReportForm()
+
+    return render(request, 'admin/submit_inspection_letter.html', {'form': form, 'proposal': proposal})
+
+
 # #admin view progress _report according to proposal_id
 # from django.shortcuts import render, get_object_or_404
 # @user_passes_test(lambda u: u.is_staff or u.is_superuser)

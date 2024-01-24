@@ -1,0 +1,14 @@
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+  <div class="submit-inspection-letter">
+    <h2>Submit Inspection Letter</h2>
+    <p>Proposal: {{ proposal }}</p>
+    
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+{% endblock %}

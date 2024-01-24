@@ -128,15 +128,25 @@ class Proposal(models.Model):
         return self.unique_id
 
 #sanction letter
+from django.db import models
+
 class SanctionLetter(models.Model):
     proposal = models.ForeignKey(Proposal, on_delete=models.CASCADE)
-    fund_sanctioned = models.DecimalField(max_digits=20, decimal_places=2,blank=True,null=True)
+    fund_sanctioned = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
     sanction_letter = models.FileField(upload_to='sanction_letters/')
     installment_number = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Sanction Letter for {self.proposal.unique_id}, Installment {self.installment_number}"
+
+class InspectionReport(models.Model):  # Updated class name to follow PEP 8 naming conventions
+    proposal = models.ForeignKey(Proposal, on_delete=models.CASCADE)
+    inspection_letter = models.FileField(upload_to='inspection_letters/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Inspection Report for {self.proposal.unique_id}"
 
 
 #add notification model

@@ -200,6 +200,21 @@ class ProposalApprovalForm(forms.ModelForm):
                 raise forms.ValidationError("File size must be less than 10 MB.")
         return project_sanction_letter
 
+# forms.py
+
+from django import forms
+from .models import SanctionLetter, InspectionReport
+
+class SanctionLetterForm(forms.ModelForm):
+    class Meta:
+        model = SanctionLetter
+        fields = ['fund_sanctioned', 'sanction_letter', 'installment_number']
+
+class InspectionReportForm(forms.ModelForm):
+    class Meta:
+        model = InspectionReport
+        fields = ['inspection_letter']
+
 
 from django import forms
 from .models import WMS_RevolvingFund

@@ -33,7 +33,7 @@ from .models import Proposal
 from .forms import ProposalApprovalForm
 
 class ProposalAdmin(admin.ModelAdmin):
-    list_display = ('project_id', 'project_scheme', 'user', 'created_at','status_change','progress_report_link')
+    list_display = ('project_id', 'project_scheme', 'user', 'created_at','status_change','progress_report_link','submit_installment_sanction_letter','submit_Inspection_letter')
     list_filter = ('status', 'user')
     search_fields = ('project_scheme', 'user__username')
     # list_editable = ('status',)
@@ -124,10 +124,44 @@ class ProposalAdmin(admin.ModelAdmin):
     
         # Add more conditions for other components as needed
         return None
+        
+    def submit_installment_sanction_letter(self, obj):
+        return format_html(
+            '<a class="button" href="{}">Submit Installment Sanction letter</a>',
+            reverse('authapp:submit_installment_sanction_letter', args=[obj.unique_id])
+        )
 
+    submit_installment_sanction_letter.short_description = 'Submit Installment Sanction Letter'
+    
+    def submit_Inspection_letter(self, obj):
+        return format_html(
+            '<a class="button" href="{}">Submit Inspection letter</a>',
+            reverse('authapp:submit_inspection_report', args=[obj.unique_id])
+        )
+
+    submit_Inspection_letter.short_description = 'Submit Inspection Letter'
+    
+    
+    
 
 
 admin.site.register(Proposal, ProposalAdmin)
+
+from django.contrib import admin
+from .models import SanctionLetter, InspectionReport
+
+@admin.register(SanctionLetter)
+class SanctionLetterAdmin(admin.ModelAdmin):
+    list_display = ('proposal', 'fund_sanctioned', 'installment_number', 'created_at')
+    search_fields = ('proposal__unique_id', 'installment_number')
+    list_filter = ('proposal__unique_id','created_at',)
+
+@admin.register(InspectionReport)
+class InspectionReportAdmin(admin.ModelAdmin):
+    list_display = ('proposal', 'created_at')
+    search_fields = ('proposal__unique_id',)
+    list_filter = ('proposal__unique_id','created_at',)
+
 
 from .models import Notification
 admin.site.register(Notification)
@@ -350,3 +384,4 @@ class FundDistributionAdmin(admin.ModelAdmin):
     search_fields = ('financial_year',)
 
 admin.site.register(FundDistribution, FundDistributionAdmin)
+

@@ -36,7 +36,11 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='authapp:index'), name='logout'),
     path('admin/logout/',LogoutView.as_view(next_page='authapp:index'), name='logout'),
      path('dashboard/change-password/', PasswordChangeView.as_view(), name='change_password'),
-    
+    #proposal admin urls
+    path('admin/submit_approval/<str:proposal_id>/', views.submit_approval, name='submit_approval'),
+path('admin/submit_installment_sanction_letter/<str:proposal_id>/', views.submit_installment_sanction_letter, name='submit_installment_sanction_letter'),
+ path('admin/submit_inspection_report/<str:proposal_id>/', views.submit_inspection_letter, name='submit_inspection_report'),
+
     # Password Reset URLs
     path('dashboard/forgot-password/', PasswordResetView.as_view(), name='forgot_password'),
     path('dashboard/5/password/', PasswordResetView.as_view(), name='forgot_password'),
@@ -79,7 +83,7 @@ urlpatterns = [
     path('dashboard/fodder_land_development_report/<str:proposal_unique_id>/', views.fodder_land_development_report, name='fodder_land_development_report'),
     #admin
     # urls.py
-path('admin/submit_approval/<str:proposal_id>/', views.submit_approval, name='submit_approval'),
+
 # path('admin/view_progress_report/<str:proposal_id>/', views.view_progress_report, name='view_progress_report'),
     
 #notifications
