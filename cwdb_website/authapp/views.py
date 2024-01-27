@@ -483,6 +483,7 @@ def process(df, gender=0, category=0, state=0, beneficiaries=0):
     return analysis
 
 from .models import BeneficiaryData, ExpenditureData
+import json
 
 def revolving_fund_progress_report(request, proposal_unique_id):
     if request.method == 'POST':
@@ -582,9 +583,10 @@ def revolving_fund_progress_report(request, proposal_unique_id):
             'financial_year': get_financial_year(),  # Set the initial value for financial_year
         }
         form = WMSRevolvingFundForm(initial=initial_data)
-    
-    context = {'form': form}
-    return render(request, 'progressReports/WMS/1.RevolvingFund.html', context)
+
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+        
+    return render(request, 'progressReports/WMS/1.RevolvingFund.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from .models import EPortal
 from .forms import EPortalForm
@@ -705,8 +707,34 @@ def selfhelpgroup_report(request, proposal_unique_id):
         }
         form = WMSSelfHelpGroupForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/WMS/3.SelfHelpGroup.html', context)
+    # Calculate the current quarter based on the created_at date of the Proposal
+    current_quarter = None
+    proposals = Proposal.objects.all()  # Retrieve all proposals, you might need to filter this queryset
+    for proposal in proposals:
+        created_at = proposal.created_at
+        if created_at:
+            current_year = created_at.year
+            month = created_at.month
+            if month in range(1, 4):
+                current_quarter = 'Q4'  # January-March
+            elif month in range(4, 7):
+                current_quarter = 'Q1'  # April-June
+            elif month in range(7, 10):
+                current_quarter = 'Q2'  # July-September
+            else:
+                current_quarter = 'Q3'  # October-December
+            break  # Found the current quarter, exit loop    
+    
+    # context = {'form': form}
+    # Retrieve goals for the current quarter
+    current_quarter_goals = None
+    print(current_quarter)
+    if current_quarter:
+        # Assuming goals are stored in the Proposal instance as a list of lists
+        current_quarter_goals = proposals.filter(created_at__month__in=(1, 4, 7, 10), created_at__year=current_year).values_list('goals', flat=True)
+        print(current_quarter_goals)
+
+    return render(request, 'progressReports/WMS/3.SelfHelpGroup.html', {'form': form, 'current_quarter': current_quarter, 'current_quarter_goals': current_quarter_goals})
 
 from django.shortcuts import render, redirect
 from .models import WMS_BuyerSellerExpo, ExpenditureData, BeneficiaryData

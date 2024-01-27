@@ -154,6 +154,8 @@
       <h1>Revolving Fund Progress Report</h1>
     </div>
       <form method="post" enctype="multipart/form-data">
+        <div id="goalsDiv"></div>
+
         {% csrf_token %}
         {{ form.as_p }}
 
@@ -184,21 +186,94 @@
       </form>
   </div>
 
-  <script>
-    function handleDropdownChange() {
-      const dropdown = document.getElementById("dropdown");
-      const otherField = document.getElementById("otherField");
-      const otherInput = document.getElementById("otherInput");
+<script>
+  // Function to calculate the number of quarters spent between selectedQuarter (which has values such as 'Q1' till 'Q4')
+  // the yeaer should be taken as the current year
+  // and difference betwen selectedQuarter and createdAtDate
+  function calculateQuartersSpent(selectedQuarter) {
+    // Define quarters in terms of months
+    var quarters = {
+        "Q1": 2,    // Quarter 1 (April-June)
+        "Q2": 3,    // Quarter 2 (July-September)
+        "Q3": 4,    // Quarter 3 (October-December)
+        "Q4": 1  // Quarter 4 (January-March)
+    };
 
-      if (dropdown.value === "other") {
-        otherField.style.display = "block";
-        otherInput.setAttribute("required", "true");
-      } else {
-        otherField.style.display = "none";
-        otherInput.removeAttribute("required");
+    // Create the Date object
+    var createdAtDate = new Date("{{ created_at.isoformat }}")
+
+    // Get the current date
+    var currentDate = new Date();
+    var currentYear = currentDate.getFullYear();
+
+    // Get quarter and year from createdAtDate
+    var createdAtQuarter = Math.floor((createdAtDate.getMonth() + 3) / 3);
+    console.log(createdAtQuarter) 
+
+    var currentQuarter = quarters[selectedQuarter];
+    var createdAtYear = createdAtDate.getFullYear(); // Get year
+    if (selectedQuarter[1] < createdAtQuarter) {
+        currentYear++;
+    } 
+
+    var quartersSpent = (currentYear - createdAtYear) * 4 + currentQuarter - createdAtQuarter;
+    // console.log("quartersSpent:", quartersSpent);
+    // console.log(currentQuarter, createdAtQuarter, currentYear, createdAtYear, createdAtQuarter);
+
+    return quartersSpent;
+}
+  // Function to update calculations and goals when the dropdown value changes
+  function handleDropdownChange() {
+    // Get the selected quarter from the dropdown
+    var selectedQuarterDropdown = document.getElementById("id_quarter");
+    var selectedQuarter = selectedQuarterDropdown.options[selectedQuarterDropdown.selectedIndex].value;
+
+    // Calculate the number of quarters spent
+    var quartersSpent = calculateQuartersSpent(selectedQuarter);
+    console.log(quartersSpent);
+
+    // Print the number of quarters spent
+    // console.log("Number of quarters spent:", quartersSpent);
+
+    // Get the goals array passed from the backend
+    var goals = {{ goals|safe }};
+    console.log(goals);
+
+    var goalsDiv = document.getElementById("goalsDiv");
+    // Clear previous content
+    goalsDiv.innerHTML = "";
+
+    for (var i = 0; i <= quartersSpent; i++) {
+      // Print the goals at the index corresponding to the selected quarter
+      // var selectedQuarterIndex = parseInt(selectedQuarter.charAt(1)) - 1;
+      var selectedQuarterGoals = goals[0][i];
+      // console.log(selectedQuarterGoals)
+      // Get the div element to display goals
+
+      // Create a list element for each goal
+      if (selectedQuarterGoals) {
+        selectedQuarterGoals.forEach(function(goal) {
+          var li = document.createElement("li");
+          li.textContent = goal; // Join elements of sub-array with space
+          goalsDiv.appendChild(li);
+        });
       }
     }
-  </script>
+
+    if(goalsDiv.innerHTML == "") {
+      message.textContent = "No goals available for the selected quarter.";
+      goalsDiv.appendChild(message);
+    }
+  }
+
+  // Add event listener to the dropdown for value change
+  document.getElementById("id_quarter").addEventListener("change", handleDropdownChange);
+
+  // Initial call to handleDropdownChange function to perform calculations and print goals for the initial value of the dropdown
+  handleDropdownChange();
+</script>
+  
+
 </body>
 
 </html>
