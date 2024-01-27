@@ -157,9 +157,7 @@ class Notification(models.Model):
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
-    # attachment_name = models.CharField(max_length=255, null=True, blank=True)
-    # attachment_content = models.FileField(upload_to='notification_attachments/', null=True, blank=True)
-
+   
     def __str__(self):
         return f'Notification for {self.user} - {self.created_at}'
 

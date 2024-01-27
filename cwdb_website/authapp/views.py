@@ -393,6 +393,93 @@ def get_financial_year():
     else:
         return f'{today.year - 1}-{today.year}'
 
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import user_passes_test
+from .models import Proposal, SanctionLetter, InspectionReport, Notification
+from .forms import SanctionLetterForm, InspectionReportForm
+
+@user_passes_test(lambda u: u.is_staff or u.is_superuser)
+def submit_installment_sanction_letter(request, proposal_id):
+    proposal = get_object_or_404(Proposal, unique_id=proposal_id)
+
+    if request.method == 'POST':
+        form = SanctionLetterForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Save the form to create a new SanctionLetter instance
+            sanction_letter = form.save(commit=False)
+            sanction_letter.proposal = proposal
+            sanction_letter.save()
+
+            # Send email to user
+            send_sanction_letter_email(proposal, sanction_letter)
+
+            # Create notification
+            create_notification(proposal.user, f"You have received your {sanction_letter.installment_number} installment sanction letter for project {proposal.unique_id}.")
+
+            messages.success(request, 'Sanction Letter submitted successfully.')
+
+            return redirect('admin:index')
+    else:
+        form = SanctionLetterForm()
+
+    return render(request, 'admin/submit_sanction_letter.html', {'form': form, 'proposal': proposal})
+
+@user_passes_test(lambda u: u.is_staff or u.is_superuser)
+def submit_inspection_letter(request, proposal_id):
+    proposal = get_object_or_404(Proposal, unique_id=proposal_id)
+
+    if request.method == 'POST':
+        form = InspectionReportForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Save the form to create a new InspectionReport instance
+            inspection_report = form.save(commit=False)
+            inspection_report.proposal = proposal
+            inspection_report.save()
+
+            # Send email to user
+            send_inspection_report_email(proposal, inspection_report)
+
+            # Create notification
+            create_notification(proposal.user, f"Please view your inspection report for project {proposal.unique_id}.")
+
+            messages.success(request, 'Inspection Letter submitted successfully.')
+
+            return redirect('admin:index')
+    else:
+        form = InspectionReportForm()
+
+    return render(request, 'admin/submit_inspection_letter.html', {'form': form, 'proposal': proposal})
+
+def send_sanction_letter_email(proposal, sanction_letter):
+    subject = f"installment sanction letter for project {proposal.unique_id}"
+    message = render_to_string('email/sanction_letter_email.html', {'proposal': proposal})
+    plain_message = strip_tags(message)
+    from_email = EMAIL_HOST_USER  # Set your email address
+    to_email = [proposal.user.email]
+
+    email = EmailMessage(subject, plain_message, from_email, to_email)
+    email.attach_file(sanction_letter.sanction_letter.path)
+    email.send()
+
+def send_inspection_report_email(proposal, inspection_report):
+    subject = f"Inspection report for project {proposal.unique_id}"
+    message = render_to_string('email/inspection_report_email.html', {'proposal': proposal})
+    plain_message = strip_tags(message)
+    from_email = EMAIL_HOST_USER  # Set your email address
+    to_email = [proposal.user.email]
+
+    email = EmailMessage(subject, plain_message, from_email, to_email)
+    email.attach_file(inspection_report.inspection_letter.path)
+    email.send()
+
+def create_notification(user, message):
+    created_at=timezone.now()
+    Notification.objects.create(user=user, message=message,created_at=created_at)
+
 #generate progress report 
 from io import BytesIO
 from django.http import HttpResponse
@@ -2311,281 +2398,8 @@ def submit_approval(request, proposal_id):
     return render(request, 'admin/submit_approval.html', {'form': form, 'proposal': proposal})
 
 
-from django.contrib import messages
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Proposal, SanctionLetter, InspectionReport
-from .forms import SanctionLetterForm, InspectionReportForm
-
-@user_passes_test(lambda u: u.is_staff or u.is_superuser)
-def submit_installment_sanction_letter(request, proposal_id):
-    proposal = get_object_or_404(Proposal, unique_id=proposal_id)
-
-    if request.method == 'POST':
-        form = SanctionLetterForm(request.POST, request.FILES)
-        if form.is_valid():
-            # Save the form to create a new SanctionLetter instance
-            sanction_letter = form.save(commit=False)
-            sanction_letter.proposal = proposal
-            sanction_letter.save()
-
-            messages.success(request, 'Sanction Letter submitted successfully.')
-
-            return redirect('admin:index')
-    else:
-        form = SanctionLetterForm()
-
-    return render(request, 'admin/submit_sanction_letter.html', {'form': form, 'proposal': proposal})
-
-@user_passes_test(lambda u: u.is_staff or u.is_superuser)
-def submit_inspection_letter(request, proposal_id):
-    proposal = get_object_or_404(Proposal, unique_id=proposal_id)
-
-    if request.method == 'POST':
-        form = InspectionReportForm(request.POST, request.FILES)
-        if form.is_valid():
-            # Save the form to create a new InspectionReport instance
-            inspection_report = form.save(commit=False)
-            inspection_report.proposal = proposal
-            inspection_report.save()
-
-            messages.success(request, 'Inspection Letter submitted successfully.')
-
-            return redirect('admin:index')
-    else:
-        form = InspectionReportForm()
-
-    return render(request, 'admin/submit_inspection_letter.html', {'form': form, 'proposal': proposal})
 
 
-# #admin view progress _report according to proposal_id
-# from django.shortcuts import render, get_object_or_404
-# @user_passes_test(lambda u: u.is_staff or u.is_superuser)
-# def view_progress_report(request, proposal_id, quarter, financial_year):
-#     proposal = get_object_or_404(Proposal, unique_id=proposal_id)
-#     scheme = proposal.project_scheme
-#     component=proposal.scheme_component
-
-#     if scheme == "WMS":
-#         progress_reports = get_wms_progress_reports(proposal, quarter, financial_year,component)
-#     elif scheme == "WPS":
-#         progress_reports = get_wps_progress_reports(proposal, quarter, financial_year,component)
-#     elif scheme == "HRD":
-#         progress_reports = get_hrd_progress_reports(proposal, quarter, financial_year,component)
-#     elif scheme == "PWDS":
-#         progress_reports = get_pwds_progress_reports(proposal, quarter, financial_year,component)
-#     else:
-#         # Handle other scheme components or return an error
-#         return render(request, 'error_template.html', {'error_message': 'Invalid scheme component'})
-
-#     context = {
-#         'proposal': proposal,
-#         'progress_reports': progress_reports,
-#     }
-#     return render(request, 'progress_report_template.html', context)
-
-# def get_wms_progress_reports(proposal, quarter, financial_year,component):
-#     if  component== "1.Creation of Revolving Fund for Marketing of Raw Wool":
-#         return WMS_RevolvingFund.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component == "2.E-Portal for Marketing Auction of Wool and Development of MIS":
-#         return EPortal.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component == "3.Financial Assistance for Formation of Wool Producers Societies/Self Help Group(SHGs)":
-#         return WMS_SelfHelpGroup.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component == "4.Organizing Buyers Sellers Meets":
-#         return WMS_BuyerSellerExpo.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component == "5.Financial Assistance to Strengthening Infrastructure Required for Wool Marketing":
-#         return WMS_InfrastructureDevelopment.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component == "6.Organization of Domestic Independent Woolen Expo":
-#         return WoolenExpo.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component == "7.Organizing Domestic Expo on Hiring Stall Basis":
-#         return WoolenExpoHiring.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     pass
-    
-# from .models import *
-# def get_wps_progress_reports(proposal, quarter, financial_year,component):
-#     # Implement this function similarly to get_wms_progress_reports for the WPS component
-#     if  component== "1.Establishing Common Facility Centres (CFCs) for Wool Processing Machines/Facilities":
-#         return WPS_CFC.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component== "2.Financial Assistance for Sheep Shearing Machines":
-#         return WPS_SheepShearingMaching.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component==  "3.Financial Assistance for Other Machines and Equipments":
-#         return WPS_Equipment.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component== "4.Financial Assistance for Distribution of Small Tools for Manufacturing of Woolen Items":
-#         return WPSSmallToolsDistribution.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     pass
-
-# def get_hrd_progress_reports(proposal, quarter, financial_year,component):
-#     # Implement this function similarly to get_wms_progress_reports for the HRD component
-#     if component== "1.Short Term Training Program for Manufacturing and Weaving of Woolen Items":
-#         return HRD_ShortTermProgramme.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component== "2.On-Site Training for Industrial Workers":
-#         return HRD_OnsiteTraining.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component== "3.Training on Machine Sheep Shearing":
-#         return HRD_ShearingMachineTraining.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component=="4.Research and Development Projects":
-#         return RD.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component== "5.International/Domestic Corporations Stakeholders Meeting/Conference":
-#         return DomesticMeeting.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component=="6.Organizing Seminars, Workshops, Sheep Mela, Fare, Meet":
-#         return OrganisingSeminar.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component== "7.Wool Survey and Study on Wool Sector":
-#         return WoolSurvey.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component== "8.Operating Existing Wool Testing Lab at Bikaner Including Upgradation and WDTC/ISC at Kullu":
-#         return WoolTestingLab.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component== "9.Publicity of Scheme, Monitoring of Projects, Common Visits, Evaluation of Projects/Schemes, and Awareness Program for Swachhta, etc.":
-#         return PublicityMonitoring.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     pass
-
-# def get_pwds_progress_reports(proposal, quarter, financial_year):
-#     # Implement this function similarly to get_wms_progress_reports for the PWDS component
-#     if component== "1.Revolving fund for pashmina wool marketing (For UT of J&K & UT of Ladakh)":
-#         return WMS_RevolvingFund.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component=="2.Setting of machines for pashmina wool processing":
-#         return WMS_RevolvingFund.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component== "3.Construction of shelter shed with guard rooms for pashmina goat":
-#         return WMS_RevolvingFund.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component=="4.Distribution of portable tents with accessories":
-#         return WMS_RevolvingFund.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component=="5.Distribution of predator-proof corral with LED lights":
-#         return WMS_RevolvingFund.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component== "6.Testing equipment, including DNA analyzer for identification/testing of pashmina products":
-#         return WMS_RevolvingFund.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component== "7.Development of showroom at Dehairing Plant premises at Leh":
-#         return WMS_RevolvingFund.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     elif component=="8.Development of fodder land/Govt. farms for pashmina goats":
-#         return WMS_RevolvingFund.objects.filter(
-#             proposal_unique_id=proposal,
-#             quarter=quarter,
-#             financial_year=financial_year
-#         ).order_by('-quarter', '-financial_year')
-#     pass
-
-# views.py
-# views.py
-# from django.urls import reverse
-# from django.shortcuts import redirect, render
-# from django.shortcuts import get_object_or_404
-# from .models import Proposal
-
-# def view_progress_report(request, proposal_id):
-#     proposal = get_object_or_404(Proposal, unique_id=proposal_id)
-#     scheme_component = proposal.scheme_component
-
-#     if scheme_component == "1.Creation of Revolving Fund for Marketing of Raw Wool":
-#         return redirect(reverse('admin:authapp_wms_revolvingfund_changelist') + f'?q={proposal_id}')
-#     elif scheme_component == "2.E-Portal for Marketing Auction of Wool and Development of MIS":
-#         return redirect(reverse('admin:authapp_eportal_changelist') + f'?q={proposal_id}')
-#     elif scheme_component == "3.Financial Assistance for Formation of Wool Producers Societies/Self Help Group(SHGs)":
-#         return redirect(reverse('admin:authapp_wms_selfhelpgroup_changelist') + f'?q={proposal_id}')
-
-#     return render(request, 'error_template.html', {'error_message': 'Invalid scheme component'})
 
 from django.shortcuts import render
 from .models import Proposal
