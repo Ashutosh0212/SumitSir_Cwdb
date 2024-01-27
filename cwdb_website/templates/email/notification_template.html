@@ -2,12 +2,18 @@
 <!DOCTYPE html>
 <html>
 <body>
-    <p>Your proposal Status with ID {{ project_id }} has been updated. New status: {{ new_status }}.</p>
+    <p>
+    Dear User,<br>
+    Your proposal Status with ID {{ project_id }} has been updated. 
+        <br>New status: {{ new_status }}.
     
     {% if new_status == "Approved" %}
-        <br>
         <p>You can download your sanction letter from below </p>
-        <a href="cid:sanction_letter">Download Sanction Letter</a>
-    {% endif %}
+        <a href="cid:sanction_letter"></a>
+        <p>Thank you</p>
+    {% else %}
+    <p>Thank you</p>
+    {%endif%}
+    </p>
 </body>
 </html>

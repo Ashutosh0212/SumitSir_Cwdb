@@ -144,7 +144,7 @@ def send_status_change_notification(user_email, project_id, new_status, sanction
         created_at=timezone.now(),
     )
     
-    email = EmailMessage(subject, message_plain, from_email=EMAIL_HOST_USER, to=[user_email])
+    email = EmailMessage(subject, message_html, from_email=EMAIL_HOST_USER, to=[user_email])
     email.content_subtype = 'html'  # Set the content type to HTML
 
     if new_status == "Approved" and sanction_letter:
@@ -413,9 +413,9 @@ def submit_installment_sanction_letter(request, proposal_id):
             sanction_letter = form.save(commit=False)
             sanction_letter.proposal = proposal
             sanction_letter.save()
-
+            installment_number=sanction_letter.installment_number
             # Send email to user
-            send_sanction_letter_email(proposal, sanction_letter)
+            send_sanction_letter_email(proposal, sanction_letter,installment_number)
 
             # Create notification
             create_notification(proposal.user, f"You have received your {sanction_letter.installment_number} installment sanction letter for project {proposal.unique_id}.")
@@ -454,26 +454,29 @@ def submit_inspection_letter(request, proposal_id):
 
     return render(request, 'admin/submit_inspection_letter.html', {'form': form, 'proposal': proposal})
 
-def send_sanction_letter_email(proposal, sanction_letter):
+def send_sanction_letter_email(proposal, sanction_letter,installment_number):
     subject = f"installment sanction letter for project {proposal.unique_id}"
-    message = render_to_string('email/sanction_letter_email.html', {'proposal': proposal})
-    plain_message = strip_tags(message)
+    message = render_to_string('email/sanction_letter_email.html', {'proposal': proposal,'installment_number':installment_number})
+    # plain_message = strip_tags(message)
     from_email = EMAIL_HOST_USER  # Set your email address
     to_email = [proposal.user.email]
 
-    email = EmailMessage(subject, plain_message, from_email, to_email)
+    email = EmailMessage(subject, message, from_email, to_email)
+    email.content_subtype = 'html'
     email.attach_file(sanction_letter.sanction_letter.path)
     email.send()
 
 def send_inspection_report_email(proposal, inspection_report):
     subject = f"Inspection report for project {proposal.unique_id}"
     message = render_to_string('email/inspection_report_email.html', {'proposal': proposal})
-    plain_message = strip_tags(message)
+    # plain_message = strip_tags(message)
     from_email = EMAIL_HOST_USER  # Set your email address
     to_email = [proposal.user.email]
 
-    email = EmailMessage(subject, plain_message, from_email, to_email)
+    email = EmailMessage(subject, message, from_email, to_email)
+    
     email.attach_file(inspection_report.inspection_letter.path)
+    email.content_subtype = 'html'
     email.send()
 
 def create_notification(user, message):

@@ -2,7 +2,8 @@
 <!DOCTYPE html>
 <html>
 <body>
-    <p>Your proposal Status with ID {{ project_id }} has been updated. New status: {{ new_status }}.</p>
+    <p>Your proposal Status with ID {{ project_id }} has been updated. <br>
+        New status: {{ new_status }}.</p>
     
     {% if new_status == "Approved" %}
         <br>

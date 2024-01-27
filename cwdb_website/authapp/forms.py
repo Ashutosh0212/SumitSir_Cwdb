@@ -209,6 +209,11 @@ class SanctionLetterForm(forms.ModelForm):
     class Meta:
         model = SanctionLetter
         fields = ['fund_sanctioned', 'sanction_letter', 'installment_number']
+        labels={
+            'fund_sanctioned':'Fund Sanctioned in Lakhs ',
+            'sanction_letter':'Sanction Letter',
+            'installment_number':'Installment Number',
+        }
 
 class InspectionReportForm(forms.ModelForm):
     class Meta:
