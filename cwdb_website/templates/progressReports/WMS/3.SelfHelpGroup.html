@@ -153,6 +153,22 @@
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
+
+      <!-- Display current quarter -->
+      {% if current_quarter %}
+      <input type="hidden" id="currentQuarter" value="{{ current_quarter }}">
+      {% endif %}
+
+      <!-- Display goals for current quarter -->
+      {% if current_quarter_goals %}
+      <div>
+        <h2>Goals for Current Quarter</h2>
+        <ul id="currentQuarterGoals">
+          <!-- Dynamically populate goals list based on selected quarter -->
+        </ul>
+      </div>
+      {% endif %}
+
       <div id="instructionsList">
         <p>
             Download the following sheets and upload it back using the <b>Upload</b> button below: <br>
@@ -175,19 +191,30 @@
   </div>
 
   <script>
-    function handleDropdownChange() {
-      const dropdown = document.getElementById("dropdown");
-      const otherField = document.getElementById("otherField");
-      const otherInput = document.getElementById("otherInput");
+    // Get the current quarter from the hidden input field
+    const currentQuarter = document.getElementById('currentQuarter').value;
 
-      if (dropdown.value === "other") {
-        otherField.style.display = "block";
-        otherInput.setAttribute("required", "true");
-      } else {
-        otherField.style.display = "none";
-        otherInput.removeAttribute("required");
-      }
+    // Define the goals list for each quarter
+    const goals = JSON.parse('{{ current_quarter_goals|escapejs }}');
+
+    // Function to dynamically populate goals list based on selected quarter
+    function populateGoalsList() {
+      const currentQuarterGoals = document.getElementById('currentQuarterGoals');
+      currentQuarterGoals.innerHTML = ''; // Clear previous content
+
+      goals.forEach((quarterGoals, index) => {
+        if (currentQuarter === `Q${index + 1}`) {
+          quarterGoals.forEach(goal => {
+            const li = document.createElement('li');
+            li.textContent = goal;
+            currentQuarterGoals.appendChild(li);
+          });
+        }
+      });
     }
+
+    // Call the function to populate goals list on page load
+    window.onload = populateGoalsList;
   </script>
 </body>
 
