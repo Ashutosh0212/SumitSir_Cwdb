@@ -406,7 +406,7 @@
                     <div class="card mb-4">
                         <div class="card-header pb-0 p-3">
                             <div class="d-flex justify-content-between">
-                                <h6 class="mb-0">Quarterly Schemes Fund Utilization </h6>
+                                <h6 class="mb-0">Quarterly Schemes Fund Sanctioned </h6>
                                 <button type="button" class="btn btn-icon-only btn-rounded btn-outline-secondary mb-0 ms-2 btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="See Fund Utilization">
                                     <i class="material-icons text-sm">priority_high</i>
                                 </button>
@@ -778,31 +778,7 @@
       }
 
 
-      if (document.querySelector('#fundDistributionChart2')) {
-        // Create the fund distribution pie chart (as shown in the previous answer)
-        var ctx = document.querySelector("#fundDistributionChart").getContext("2d");
-        new Chart(ctx, {
-          type: "pie",
-          data: {
-            labels: fundData.schemeNames,
-            datasets: [{
-              data: fundData.fundAllocations,
-              backgroundColor: ['#17c1e8', '#e91e63', '#3A416F', '#a8b8d8','#ffc107'],
-            }],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: true, // You can choose whether to display the legend
-                position: 'bottom', // Adjust the legend position
-              },
-            },
-          },
-          
-        });
-      }
+    
    
 
       if (document.querySelector('#quarterlyFundsChart')) {

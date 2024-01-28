@@ -971,7 +971,7 @@ class BeneficiaryData(models.Model):
             ('Q4', 'Quarter 4 (January-March)'),
         ],
     )
-    year = models.CharField(max_length=4)
+    year = models.CharField(max_length=9)
     scheme = models.CharField(max_length=100)
     num_beneficiaries = models.PositiveIntegerField(default=0, editable=False)  # Set editable to False
     def save(self, *args, **kwargs):
