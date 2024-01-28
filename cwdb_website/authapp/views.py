@@ -2403,7 +2403,7 @@ def submit_approval(request, proposal_id):
 
 
 
-
+#projects HomePage 
 from django.shortcuts import render
 from .models import Proposal
 from .forms import ProposalFilterForm
@@ -2428,3 +2428,33 @@ def proposal_list(request):
     }
 
         return render(request, 'main/HomePage/Projects.html', context)
+
+#beneficiaries HomePage 
+from django.shortcuts import render
+from .models import BeneficiaryData
+from .forms import BeneficiaryDataFilterForm
+
+def beneficiary_data_table(request):
+    form = BeneficiaryDataFilterForm(request.GET)
+
+    # Filter queryset based on form data
+    queryset = BeneficiaryData.objects.all()
+
+    if form.is_valid():
+        state = form.cleaned_data.get('state')
+        financial_year = form.cleaned_data.get('financial_year')
+        scheme = form.cleaned_data.get('scheme')
+
+        if state:
+            queryset = queryset.filter(state_of_beneficiaries=state)
+        if financial_year:
+            queryset = queryset.filter(year=financial_year)
+        if scheme:
+            queryset = queryset.filter(scheme=scheme)
+
+    context = {
+        'form': form,
+        'data_table': queryset,
+    }
+
+    return render(request, 'your_template.html', context)
