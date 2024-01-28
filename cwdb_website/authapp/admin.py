@@ -172,7 +172,7 @@ from .models import (WMS_RevolvingFund, EPortal, WMS_SelfHelpGroup, WMS_BuyerSel
 
 class WMSRevolvingFundAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year')
-    search_fields = ('proposal_unique_id', 'quarter', 'financial_year')
+    search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
     list_filter = ('quarter', 'financial_year')
 
 admin.site.register(WMS_RevolvingFund, WMSRevolvingFundAdmin)
