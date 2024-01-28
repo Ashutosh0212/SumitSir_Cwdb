@@ -1041,7 +1041,7 @@ class SummaryReportForm(forms.Form):
 #HomePage Work
 # forms.py
 from django import forms
-
+#Project
 class ProposalFilterForm(forms.Form):
     SCHEME_CHOICES = [
         ('', 'All Schemes'),  # Empty value to show all schemes
@@ -1051,4 +1051,35 @@ class ProposalFilterForm(forms.Form):
         ('PWDS', 'PWDS'),
     ]
 
+    scheme = forms.ChoiceField(choices=SCHEME_CHOICES, required=False)
+
+#beneficiaries 
+from django import forms
+
+class BeneficiaryDataFilterForm(forms.Form):
+    SCHEME_CHOICES = [
+        ('', 'All Schemes'),
+        ('WMS', 'WMS'),
+        ('WPS', 'WPS'),
+        ('HRD', 'HRD'),
+        ('PWDS', 'PWDS'),
+    ]
+
+    STATE_CHOICES = [
+        ('', 'All States'),
+        # Add all states of India
+        # Example: ('KA', 'Karnataka'),
+        #         ('MH', 'Maharashtra'),
+    ]
+
+    FINANCIAL_YEAR_CHOICES = [
+        ('', 'All Financial Years'),
+        # Add financial year choices
+        # Example: ('2000-2001', '2000-2001'),
+        #         ('2001-2002', '2001-2002'),
+        #         ...
+    ]
+
+    state = forms.ChoiceField(choices=STATE_CHOICES, required=False)
+    financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR_CHOICES, required=False)
     scheme = forms.ChoiceField(choices=SCHEME_CHOICES, required=False)
