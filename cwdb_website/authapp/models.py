@@ -958,7 +958,7 @@ class BeneficiaryData(models.Model):
     num_sc_beneficiaries = models.PositiveIntegerField(default=0)
     num_st_beneficiaries = models.PositiveIntegerField(default=0)
     num_bpl_beneficiaries = models.PositiveIntegerField(default=0)
-    state_of_beneficiaries = models.CharField(max_length=100)
+    state_of_beneficiaries = models.CharField(max_length=50)
     num_males = models.PositiveIntegerField(default=0)
     num_females = models.PositiveIntegerField(default=0)
     num_other_gender = models.PositiveIntegerField(default=0)

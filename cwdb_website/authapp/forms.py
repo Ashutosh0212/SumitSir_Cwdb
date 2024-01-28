@@ -1054,6 +1054,25 @@ class ProposalFilterForm(forms.Form):
     scheme = forms.ChoiceField(choices=SCHEME_CHOICES, required=False)
 
 #beneficiaries 
+
+import datetime
+
+import datetime
+
+def generate_financial_years():
+    current_year = datetime.datetime.now().year
+    start_year = 2000
+    end_year = current_year + 1  # Add 1 to include the current financial year
+
+    financial_years = []
+    for year in range(start_year, end_year):
+        next_year = year + 1
+        financial_year = f'{year}-{next_year}'
+        financial_years.append((financial_year, financial_year))
+
+    return financial_years
+
+
 from django import forms
 
 class BeneficiaryDataFilterForm(forms.Form):
@@ -1066,19 +1085,50 @@ class BeneficiaryDataFilterForm(forms.Form):
     ]
 
     STATE_CHOICES = [
-        ('', 'All States'),
-        # Add all states of India
-        # Example: ('KA', 'Karnataka'),
-        #         ('MH', 'Maharashtra'),
-    ]
+    ('', 'All States'),
+    ('Andhra Pradesh', 'Andhra Pradesh'),
+    ('Arunachal Pradesh', 'Arunachal Pradesh'),
+    ('Assam', 'Assam'),
+    ('Bihar', 'Bihar'),
+    ('Chhattisgarh', 'Chhattisgarh'),
+    ('Goa', 'Goa'),
+    ('Gujarat', 'Gujarat'),
+    ('Haryana', 'Haryana'),
+    ('Himachal Pradesh', 'Himachal Pradesh'),
+    ('Jharkhand', 'Jharkhand'),
+    ('Karnataka', 'Karnataka'),
+    ('Kerala', 'Kerala'),
+    ('Madhya Pradesh', 'Madhya Pradesh'),
+    ('Maharashtra', 'Maharashtra'),
+    ('Manipur', 'Manipur'),
+    ('Meghalaya', 'Meghalaya'),
+    ('Mizoram', 'Mizoram'),
+    ('Nagaland', 'Nagaland'),
+    ('Odisha', 'Odisha'),
+    ('Punjab', 'Punjab'),
+    ('Rajasthan', 'Rajasthan'),
+    ('Sikkim', 'Sikkim'),
+    ('Tamil Nadu', 'Tamil Nadu'),
+    ('Telangana', 'Telangana'),
+    ('Tripura', 'Tripura'),
+    ('Uttarakhand', 'Uttarakhand'),
+    ('Uttar Pradesh', 'Uttar Pradesh'),
+    ('West Bengal', 'West Bengal'),
+    ('Andaman and Nicobar Islands', 'Andaman and Nicobar Islands'),
+    ('Chandigarh', 'Chandigarh'),
+    ('Dadra and Nagar Haveli and Daman and Diu', 'Dadra and Nagar Haveli and Daman and Diu'),
+    ('Delhi', 'Delhi'),
+    ('Jammu and Kashmir', 'Jammu and Kashmir'),
+    ('Ladakh', 'Ladakh'),
+    ('Lakshadweep', 'Lakshadweep'),
+    ('Puducherry', 'Puducherry'),
+]
+
 
     FINANCIAL_YEAR_CHOICES = [
-        ('', 'All Financial Years'),
-        # Add financial year choices
-        # Example: ('2000-2001', '2000-2001'),
-        #         ('2001-2002', '2001-2002'),
-        #         ...
-    ]
+    ('', 'All Financial Years'),
+    *generate_financial_years(),
+]
 
     state = forms.ChoiceField(choices=STATE_CHOICES, required=False)
     financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR_CHOICES, required=False)

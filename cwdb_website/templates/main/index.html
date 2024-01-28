@@ -391,7 +391,7 @@
                       <span class="text-success text-sm font-weight-bolder">Financial Year:</span>
                       <span id="financialYear" class="fw-bold">{{ current_financial_year }}</span>
                   </p>
-                  <button class="btn btn-sm btn-primary">
+                  <button class="btn btn-sm btn-primary" onclick="window.location.href='{% url "authapp:beneficiary_data_table" %}'">
                       See More <i class="fas fa-arrow-right"></i>
                   </button>
               </div>
@@ -421,7 +421,7 @@
                         
                        
                     </div>
-                    <div class="card">
+                    {% comment %} <div class="card">
                       <div class="card-header pb-0">
                           <div class="row">
                               <div class="col-lg-6 col-7">

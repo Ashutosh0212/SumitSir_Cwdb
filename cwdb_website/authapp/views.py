@@ -207,7 +207,8 @@ def dashboard(request):
     return render(request, 'main/dashboard.html',{'submitted_proposals_count': submitted_proposals_count,
         'pending_proposals_count': pending_proposals_count,
         'approved_proposals_count': approved_proposals_count,
-        'rejected_proposals_count': rejected_proposals_count,'new_notifications': first_three_notifications})
+        'rejected_proposals_count': rejected_proposals_count,
+        'new_notifications': first_three_notifications})
 
 from django.shortcuts import render
 from .models import FundDistribution,Proposal,BeneficiaryData,ExpenditureData
@@ -2429,8 +2430,8 @@ def proposal_list(request):
 
         return render(request, 'main/HomePage/Projects.html', context)
 
-#beneficiaries HomePage 
 from django.shortcuts import render
+from django.db.models import Sum
 from .models import BeneficiaryData
 from .forms import BeneficiaryDataFilterForm
 
@@ -2452,9 +2453,29 @@ def beneficiary_data_table(request):
         if scheme:
             queryset = queryset.filter(scheme=scheme)
 
+    # Calculate sum for each column
+    total_beneficiaries = queryset.aggregate(Sum('num_beneficiaries'))['num_beneficiaries__sum'] or 0
+    total_general = queryset.aggregate(Sum('num_general_beneficiaries'))['num_general_beneficiaries__sum'] or 0
+    total_obc = queryset.aggregate(Sum('num_obc_beneficiaries'))['num_obc_beneficiaries__sum'] or 0
+    total_sc = queryset.aggregate(Sum('num_sc_beneficiaries'))['num_sc_beneficiaries__sum'] or 0
+    total_st = queryset.aggregate(Sum('num_st_beneficiaries'))['num_st_beneficiaries__sum'] or 0
+    total_bpl = queryset.aggregate(Sum('num_bpl_beneficiaries'))['num_bpl_beneficiaries__sum'] or 0
+    total_males = queryset.aggregate(Sum('num_males'))['num_males__sum'] or 0
+    total_females = queryset.aggregate(Sum('num_females'))['num_females__sum'] or 0
+    total_other_gender = queryset.aggregate(Sum('num_other_gender'))['num_other_gender__sum'] or 0
+
     context = {
         'form': form,
         'data_table': queryset,
+        'total_beneficiaries': total_beneficiaries,
+        'total_general': total_general,
+        'total_obc': total_obc,
+        'total_sc': total_sc,
+        'total_st': total_st,
+        'total_bpl': total_bpl,
+        'total_males': total_males,
+        'total_females': total_females,
+        'total_other_gender': total_other_gender,
     }
 
-    return render(request, 'your_template.html', context)
+    return render(request, 'main/HomePage/beneficairy_data.html', context)
