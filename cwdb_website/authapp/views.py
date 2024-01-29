@@ -596,6 +596,48 @@ def generate_progress_report_document(proposal_unique_id, form_data):
 
     return response
 
+from django.shortcuts import render
+from .models import SummReportGen
+
+def summ_report(request):
+    # Filter options
+    quarters = SummReportGen.QUARTER_CHOICES
+    financial_years = SummReportGen.objects.values_list('financial_year', flat=True).distinct()
+    schemes = SummReportGen.objects.values_list('scheme', flat=True).distinct()
+    subcomponents = SummReportGen.objects.values_list('subcomponent', flat=True).distinct()
+
+    # Applying filters
+    selected_quarter = request.GET.get('quarter', None)
+    selected_financial_year = request.GET.get('financial_year', None)
+    selected_scheme = request.GET.get('scheme', None)
+    selected_subcomponent = request.GET.get('subcomponent', None)
+
+    summ_reports = SummReportGen.objects.all()
+
+    if selected_quarter:
+        summ_reports = summ_reports.filter(quarter=selected_quarter)
+    if selected_financial_year:
+        summ_reports = summ_reports.filter(financial_year=selected_financial_year)
+    if selected_scheme:
+        summ_reports = summ_reports.filter(scheme=selected_scheme)
+    if selected_subcomponent:
+        summ_reports = summ_reports.filter(subcomponent=selected_subcomponent)
+
+    context = {
+        'summ_reports': summ_reports,
+        'quarters': quarters,
+        'financial_years': financial_years,
+        'schemes': schemes,
+        'subcomponents': subcomponents,
+        'selected_quarter': selected_quarter,
+        'selected_financial_year': selected_financial_year,
+        'selected_scheme': selected_scheme,
+        'selected_subcomponent': selected_subcomponent,
+    }
+
+    return render(request, 'summ_report.html', context)
+
+
 def process(df, gender=0, category=0, state=0, beneficiaries=0):
     """takes all xlsx data and flags of data required
     to analyze and return as just 1 row"""

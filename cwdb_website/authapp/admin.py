@@ -359,6 +359,22 @@ class ProgressReportDocumentAdmin(admin.ModelAdmin):
 
 admin.site.register(ProgressReportDocument, ProgressReportDocumentAdmin)
 
+from django.contrib import admin
+from .models import SummReportGen
+
+class SummaryReportFormAdmin(admin.ModelAdmin):
+    list_display = ('quarter', 'financial_year', 'get_scheme_names', 'project_name', 'subcomponent', 'created_at')
+    search_fields = ('quarter', 'financial_year', 'scheme__name', 'subcomponent')
+    list_filter = ('quarter', 'financial_year', 'scheme__name', 'subcomponent')
+    date_hierarchy = 'created_at'
+
+    def get_scheme_names(self, obj):
+        return ", ".join([scheme.name for scheme in obj.scheme.all()])
+    get_scheme_names.short_description = 'Schemes'
+
+admin.site.register(SummReportGen, SummaryReportFormAdmin)
+
+
 # admin.py
 from django.contrib import admin
 from .models import BeneficiaryData,ExpenditureData

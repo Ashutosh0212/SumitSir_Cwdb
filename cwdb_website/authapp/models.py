@@ -162,8 +162,33 @@ class Notification(models.Model):
     def __str__(self):
         return f'Notification for {self.user} - {self.created_at}'
 
+class SummReportGen(models.Model):
+    QUARTER_CHOICES = [
+        ('q1', 'Q1'),
+        ('q2', 'Q2'),
+        ('q3', 'Q3'),
+        ('q4', 'Q4'),
+    ]
 
+    SCHEME_CHOICES = [
+        ('HRD', 'HRD'),
+        ('WPS', 'WPS'),
+        ('WMS', 'WMS'),
+        ('PWDS', 'PWDS'),
+    ]
 
+    quarter = models.CharField(max_length=2, choices=QUARTER_CHOICES)
+    financial_year = models.CharField(max_length=9)
+    scheme = models.ManyToManyField('Scheme', choices=SCHEME_CHOICES)
+    project_name = models.CharField(max_length=100)  # You can modify the max_length as needed
+    subcomponent = models.CharField(max_length=100)  # You can modify the max_length as needed
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class Scheme(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
 
 class WMS_RevolvingFund(models.Model):
     proposal_unique_id = models.ForeignKey(Proposal, to_field='unique_id', on_delete=models.CASCADE)
