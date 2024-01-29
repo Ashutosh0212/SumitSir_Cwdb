@@ -5,6 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title> CWDB: Revolving Fund Progress Report</title>
   <style>
     body {
@@ -128,6 +129,51 @@
       margin-left: 150px;
     }
 
+    .list-items .item{
+    display: flex;
+    align-items: center;
+    list-style: none;
+    height: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 0 15px;
+    border-radius: 8px;
+    }
+    
+    .list-items .item:hover{
+        background-color: #e7edfe;
+    }
+    .item .item-text{
+        font-size: 16px;
+        font-weight: 400;
+        color: #333;
+    }
+    .item .checkbox{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 16px;
+        width: 16px;
+        border-radius: 4px;
+        margin-right: 12px;
+        border: 1.5px solid #c0c0c0;
+        transition: all 0.3s ease-in-out;
+    }
+    .item.checked .checkbox{
+        background-color: #4070f4;
+        border-color: #4070f4;
+    }
+    .checkbox .check-icon{
+        color: #fff;
+        font-size: 11px;
+        transform: scale(0);
+        transition: all 0.2s ease-in-out;
+    }
+    .item.checked .check-icon{
+        transform: scale(1);
+    }
+
+
     @media (max-width: 768px) {
         .content {
         display: flex;
@@ -208,7 +254,7 @@
 
     // Get quarter and year from createdAtDate
     var createdAtQuarter = Math.floor((createdAtDate.getMonth() + 3) / 3);
-    console.log(createdAtQuarter) 
+    // console.log(createdAtQuarter) 
 
     var currentQuarter = quarters[selectedQuarter];
     var createdAtYear = createdAtDate.getFullYear(); // Get year
@@ -232,9 +278,6 @@
     var quartersSpent = calculateQuartersSpent(selectedQuarter);
     console.log(quartersSpent);
 
-    // Print the number of quarters spent
-    // console.log("Number of quarters spent:", quartersSpent);
-
     // Get the goals array passed from the backend
     var goals = {{ goals|safe }};
     console.log(goals);
@@ -243,28 +286,62 @@
     // Clear previous content
     goalsDiv.innerHTML = "";
 
-    for (var i = 0; i <= quartersSpent; i++) {
-      // Print the goals at the index corresponding to the selected quarter
-      // var selectedQuarterIndex = parseInt(selectedQuarter.charAt(1)) - 1;
-      var selectedQuarterGoals = goals[0][i];
-      // console.log(selectedQuarterGoals)
-      // Get the div element to display goals
+    if(goals[0].length !=0  && quartersSpent && goalsDiv.innerHTML=="") {
+      var ulItem = document.createElement("ul");
+      ulItem.className = "list-items";
+      for (var i = 0; i < quartersSpent && i < goals[0].length; i++) {
+      // console.log("Quarter " + (i + 1));
+      // console.log(Object.keys(goals[0][i]).length)
+        for (var j = 0; j < Object.keys(goals[0][i]).length; j++) {
+            // console.log(goals[0][i]);
+            if (goals[0][i]['goal_' + (j+1)].completed === 0) {
+                var listItem = document.createElement("li");
+                listItem.className = "item";
+                // Add class to the span element
+                var checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.classList.add("checkbox"); // Add your desired class name
+                checkbox.id = "goal_checkbox_" + (j + 1); // Add an id if needed
+                listItem.append(checkbox);
 
-      // Create a list element for each goal
-      if (selectedQuarterGoals) {
-        selectedQuarterGoals.forEach(function(goal) {
-          var li = document.createElement("li");
-          li.textContent = goal; // Join elements of sub-array with space
-          goalsDiv.appendChild(li);
-        });
+                var label = document.createElement("label");
+                label.setAttribute("for", "goal_checkbox_" + (j + 1)); // Connect the label to the checkbox
+                label.textContent = goals[0][i]['goal_' + (j + 1)].text;
+                listItem.append(label);
+
+                //replace from
+                // var spanElement = document.createElement("span");
+                // spanElement.classList.add("checkbox"); // Add your desired class name
+
+                // var iconElement = document.createElement("i");
+                // iconElement.classList.add("fa-solid", "fa-check", "check-icon"); // Add Font Awesome classes
+                // spanElement.appendChild(iconElement);
+                // listItem.append(spanElement);
+                //replace to
+
+                // spanElement = document.createElement("span");
+                // spanElement.classList.add("item-text");
+                // spanElement.textContent = goals[0][i]['goal_' + (j+1)].text;
+                // listItem.append(spanElement);
+
+                // var checkbox = document.createElement("input");
+                // checkbox.type = "checkbox";
+                // listItem.appendChild(checkbox);
+                // listItem.appendChild(document.createTextNode(goals[0][i]['goal_' + (j+1)].text));
+                ulItem.appendChild(listItem); // Changed from goalsList to goalsDiv
+            }
+        }
+        goalsDiv.append(ulItem)
       }
     }
 
-    if(goalsDiv.innerHTML == "") {
-      message.textContent = "No goals available for the selected quarter.";
-      goalsDiv.appendChild(message);
+
+    else {
+      var msg = "No goals available for the selected quarter.";
+      goalsDiv.appendChild(document.createTextNode(msg));
     }
-  }
+}
+
 
   // Add event listener to the dropdown for value change
   document.getElementById("id_quarter").addEventListener("change", handleDropdownChange);

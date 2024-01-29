@@ -326,7 +326,11 @@ def submit_proposal(request):
         for i in range(1, int(quarters) + 1):
             goal_key = f'goal_texts_quarter:{i}[]'
             goal_texts = request.POST.getlist(goal_key)
-            goals_data.append(goal_texts)
+            quarter_goals = dict()
+            for index, text in enumerate(goal_texts):
+                # Initialize each goal as "No" (not submitted)
+                quarter_goals[f'goal_{index + 1}'] = {'text': text, 'completed': 0}
+            goals_data.append(quarter_goals)
 
 
         # Create and save the Proposal object
