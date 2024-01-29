@@ -227,7 +227,7 @@
             <!-- State of Implementing Agency Dropdown -->
 <div class="form-group">
   <label for="implementingAgencyState">State of Implementing Agency</label>
-  <select id="implementingAgencyState" name="implementingAgencyState" >
+  <select id="implementingAgencyState" name="implementingAgencyState" class="form-control" required>
       {% for state_code, state_name in STATE_CHOICES %}
           <option value="{{ state_code }}">{{ state_name }}</option>
       {% endfor %}

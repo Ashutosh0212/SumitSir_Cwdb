@@ -92,6 +92,7 @@ class Proposal(models.Model):
     ]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name_and_address = models.TextField()
+    implementingAgencyState = models.CharField(max_length=100, blank=True, null=True)
     project_scheme = models.CharField(max_length=20)
     scheme_component = models.CharField(max_length=100)
     nature_of_applicant = models.CharField(max_length=50)
@@ -1006,7 +1007,7 @@ class ExpenditureData(models.Model):
             ('Q4', 'Quarter 4 (January-March)'),
         ],
     )
-    year = models.CharField(max_length=4)
+    year = models.CharField(max_length=9)
     scheme = models.CharField(max_length=100)
 
     def _str_(self):

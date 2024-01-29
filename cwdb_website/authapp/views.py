@@ -246,11 +246,50 @@ from .models import Proposal
 from django.contrib.auth.decorators import login_required
 import uuid
 
+STATE_CHOICES = [
+    ('Andhra Pradesh', 'Andhra Pradesh'),
+    ('Arunachal Pradesh', 'Arunachal Pradesh'),
+    ('Assam', 'Assam'),
+    ('Bihar', 'Bihar'),
+    ('Chhattisgarh', 'Chhattisgarh'),
+    ('Goa', 'Goa'),
+    ('Gujarat', 'Gujarat'),
+    ('Haryana', 'Haryana'),
+    ('Himachal Pradesh', 'Himachal Pradesh'),
+    ('Jharkhand', 'Jharkhand'),
+    ('Karnataka', 'Karnataka'),
+    ('Kerala', 'Kerala'),
+    ('Madhya Pradesh', 'Madhya Pradesh'),
+    ('Maharashtra', 'Maharashtra'),
+    ('Manipur', 'Manipur'),
+    ('Meghalaya', 'Meghalaya'),
+    ('Mizoram', 'Mizoram'),
+    ('Nagaland', 'Nagaland'),
+    ('Odisha', 'Odisha'),
+    ('Punjab', 'Punjab'),
+    ('Rajasthan', 'Rajasthan'),
+    ('Sikkim', 'Sikkim'),
+    ('Tamil Nadu', 'Tamil Nadu'),
+    ('Telangana', 'Telangana'),
+    ('Tripura', 'Tripura'),
+    ('Uttarakhand', 'Uttarakhand'),
+    ('Uttar Pradesh', 'Uttar Pradesh'),
+    ('West Bengal', 'West Bengal'),
+    ('Andaman and Nicobar Islands', 'Andaman and Nicobar Islands'),
+    ('Chandigarh', 'Chandigarh'),
+    ('Dadra and Nagar Haveli and Daman and Diu', 'Dadra and Nagar Haveli and Daman and Diu'),
+    ('Delhi', 'Delhi'),
+    ('Jammu and Kashmir', 'Jammu and Kashmir'),
+    ('Ladakh', 'Ladakh'),
+    ('Lakshadweep', 'Lakshadweep'),
+    ('Puducherry', 'Puducherry'),
+]
 @login_required
 def submit_proposal(request):
     if request.method == 'POST':
         # Handle text fields
         agency_address = request.POST.get('agencyAddress')
+        implementingAgencyState=request.POST.get('implementingAgencyState')
         project_scheme = request.POST.get('projectScheme')
         scheme_component = request.POST.get('schemeComponent')
         applicant_nature = request.POST.get('applicantNature')
@@ -294,6 +333,7 @@ def submit_proposal(request):
         proposal = Proposal(
             user=request.user,
             name_and_address=agency_address,
+            implementingAgencyState=implementingAgencyState,
             project_scheme=project_scheme,
             scheme_component=scheme_component,
             nature_of_applicant=applicant_nature,
@@ -331,6 +371,14 @@ def submit_proposal(request):
         proposal.save()
 
         return redirect('authapp:proposal_status')
+    
+    # Pass STATE_CHOICES to the context
+    context = {
+        'STATE_CHOICES': STATE_CHOICES,
+    }
+
+    return render(request, 'proposal/submit_proposal.html', context)
+
 
     return render(request, 'proposal/submit_proposal.html')
 
@@ -2416,12 +2464,15 @@ def proposal_list(request):
         proposals = Proposal.objects.all()
 
     # Filter proposals with status 'Approved' or 'Completed'
-        proposals = proposals.filter(status__in=['Approved', 'Completed'])
+        status=form.cleaned_data['status']
         scheme = form.cleaned_data['scheme']
-   
+        state= form.cleaned_data['state']
+        if status:
+             proposals = proposals.filter(status=status)
         if scheme:
             proposals = proposals.filter(project_scheme=scheme)
-
+        if state:
+            proposals = proposals.filter(implementingAgencyState=state)
         context = {
         'proposals': proposals,
         'form': form,

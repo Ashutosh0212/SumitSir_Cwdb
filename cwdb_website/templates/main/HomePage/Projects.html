@@ -11,11 +11,19 @@
         <div class="card-body">
             <form method="get" action="{% url 'authapp:proposal_list' %}" class="mb-4">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div >
                         <div class="input-group">
                            {% comment %} <h5> {{ form.scheme.label_tag }}</h5>
                             <div style="margin-right: 10px;"></div> {% endcomment %}
+                            <h6>{{ form.status }}</h6>
+                            <div style="margin-right: 10px;"></div>
                             <h6>{{ form.scheme }}</h6>
+                            <div style="margin-right: 10px;"></div>
+                            <h6>{{ form.state }}</h6>
+                            <div style="margin-right: 10px;"></div>
+                            <h6>{{ form.quarter }}</h6>
+                            <div style="margin-right: 10px;"></div>
+                            <h6>{{ form.financial_year}}</h6>
                             <div style="margin-right: 10px;"></div>
                             <button type="submit" class="btn btn-primary" style="font-size: 12px; padding: 5px 10px;">Apply Filters</button>
 
@@ -33,7 +41,9 @@
                             <th>Scheme</th>
                             <th>Subcomponent</th>
                             <th>State</th>
-                            <th>Fund Sanctioned(in Lakhs)</th>
+                            <th>Total Fund Sanctioned(in Lakhs)</th>
+                            <th>Fund Allocated(in Lakhs)</th>
+                            <th>Fund Utilised(in Lakhs)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,13 +54,13 @@
                                     <td>{{ proposal.name_and_address }}</td>
                                     <td>{{ proposal.project_scheme }}</td>
                                     <td>{{ proposal.scheme_component }}</td>
-                                    <td>{{ proposal.state }}</td>
-                                    <td>{{ proposal.fund_allocated }}</td>
+                                    <td>{{ proposal.implementingAgencyState }}</td>
+                                    <td>{{ proposal.total_fund_allocated}}</td>
                                 </tr>
                             {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="6">No data found for the selected criteria.</td>
+                                <td colspan="7">No data found for the selected criteria.</td>
                             </tr>
                         {% endif %}
                     </tbody>

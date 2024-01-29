@@ -1039,11 +1039,7 @@ class SummaryReportForm(forms.Form):
     financial_year = forms.CharField(widget=forms.SelectMultiple)
 
 #HomePage Work
-# forms.py
-from django import forms
-#Project
-class ProposalFilterForm(forms.Form):
-    SCHEME_CHOICES = [
+SCHEME_CHOICES = [
         ('', 'All Schemes'),  # Empty value to show all schemes
         ('WMS', 'WMS'),
         ('WPS', 'WPS'),
@@ -1051,40 +1047,7 @@ class ProposalFilterForm(forms.Form):
         ('PWDS', 'PWDS'),
     ]
 
-    scheme = forms.ChoiceField(choices=SCHEME_CHOICES, required=False)
-
-#beneficiaries 
-
-import datetime
-
-import datetime
-
-def generate_financial_years():
-    current_year = datetime.datetime.now().year
-    start_year = 2000
-    end_year = current_year + 1  # Add 1 to include the current financial year
-
-    financial_years = []
-    for year in range(start_year, end_year):
-        next_year = year + 1
-        financial_year = f'{year}-{next_year}'
-        financial_years.append((financial_year, financial_year))
-
-    return financial_years
-
-
-from django import forms
-
-class BeneficiaryDataFilterForm(forms.Form):
-    SCHEME_CHOICES = [
-        ('', 'All Schemes'),
-        ('WMS', 'WMS'),
-        ('WPS', 'WPS'),
-        ('HRD', 'HRD'),
-        ('PWDS', 'PWDS'),
-    ]
-
-    STATE_CHOICES = [
+STATE_CHOICES = [
     ('', 'All States'),
     ('Andhra Pradesh', 'Andhra Pradesh'),
     ('Arunachal Pradesh', 'Arunachal Pradesh'),
@@ -1123,13 +1086,53 @@ class BeneficiaryDataFilterForm(forms.Form):
     ('Lakshadweep', 'Lakshadweep'),
     ('Puducherry', 'Puducherry'),
 ]
+import datetime
+def generate_financial_years():
+    current_year = datetime.datetime.now().year
+    start_year = 2000
+    end_year = current_year + 1  # Add 1 to include the current financial year
 
+    financial_years = []
+    for year in range(start_year, end_year):
+        next_year = year + 1
+        financial_year = f'{year}-{next_year}'
+        financial_years.append((financial_year, financial_year))
 
-    FINANCIAL_YEAR_CHOICES = [
+    return financial_years
+
+FINANCIAL_YEAR_CHOICES = [
     ('', 'All Financial Years'),
     *generate_financial_years(),
 ]
 
+QUARTER_CHOICES=[
+            ('','All Quarters'),
+            ('Q1', 'Quarter 1 (April-June)'),
+            ('Q2', 'Quarter 2 (July-September)'),
+            ('Q3', 'Quarter 3 (October-December)'),
+            ('Q4', 'Quarter 4 (January-March)'),
+        ]
+
+STATUS_CHOICES = [
+        ('', 'ALL'),
+        ('Approved', 'Approved'),
+        ('Completed', 'Completed'),
+
+    ]
+# forms.py
+from django import forms
+#Project
+class ProposalFilterForm(forms.Form):
+    status=forms.ChoiceField(choices=STATUS_CHOICES, required=False)
+    scheme = forms.ChoiceField(choices=SCHEME_CHOICES, required=False)
+    state = forms.ChoiceField(choices=STATE_CHOICES, required=False)
+    quarter = forms.ChoiceField(choices=QUARTER_CHOICES, required=False)
+    financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR_CHOICES, required=False)
+    
+
+#beneficiaries 
+
+class BeneficiaryDataFilterForm(forms.Form):
     state = forms.ChoiceField(choices=STATE_CHOICES, required=False)
     financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR_CHOICES, required=False)
     scheme = forms.ChoiceField(choices=SCHEME_CHOICES, required=False)
