@@ -287,11 +287,17 @@
     goalsDiv.innerHTML = "";
 
     if(goals[0].length !=0  && quartersSpent && goalsDiv.innerHTML=="") {
+      var h3banao = document.createElement("h3");
+      h3banao.textContent = "Quarterly Goals";
+      goalsDiv.appendChild(h3banao);
       var ulItem = document.createElement("ul");
       ulItem.className = "list-items";
       for (var i = 0; i < quartersSpent && i < goals[0].length; i++) {
       // console.log("Quarter " + (i + 1));
       // console.log(Object.keys(goals[0][i]).length)
+        var h2banao = document.createElement("h4");
+        h2banao.textContent = "Quarter" + (i+1);
+        ulItem.appendChild(h2banao);
         for (var j = 0; j < Object.keys(goals[0][i]).length; j++) {
             // console.log(goals[0][i]);
             if (goals[0][i]['goal_' + (j+1)].completed === 0) {
