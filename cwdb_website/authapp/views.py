@@ -676,6 +676,11 @@ def revolving_fund_progress_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+
+            # Process the checkbox values as needed
+            print(checkbox_values)
+
             print(form.cleaned_data)
             df = pd.read_excel(form.cleaned_data['wool_procured_sheet'])
             analysis = process(df, 1, 1, 1, 1)

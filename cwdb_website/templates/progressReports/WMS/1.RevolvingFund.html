@@ -267,52 +267,75 @@
     // console.log(currentQuarter, createdAtQuarter, currentYear, createdAtYear, createdAtQuarter);
 
     return quartersSpent;
+  }
+
+
+  function toggleCheckboxValue(checkbox) {
+  // Split the checkbox value to extract the goal text and completion status
+  // var checkboxValueParts = checkbox.value.slice(0,-1), checkbox.value.slice(-1);
+  // var goalText = checkboxValueParts[0];
+  // var completionStatus = checkboxValueParts[1];
+
+  // var goalText = checkbox.value.slice(0, -1);
+  var completionStatus = checkbox.value.charAt(checkbox.value.length-2);
+
+  // console.log(goalText, completionStatus, checkbox.value.slice[-2,-1]);
+  // console.log(completionStatus)
+  // Toggle the completion status
+  var newCompletionStatus = completionStatus === "0" ? "1" : "0";
+
+  // Update the checkbox value with the new completion status
+  checkbox.value = checkbox.value.slice(0, -2) + newCompletionStatus + checkbox.value.slice(-1);
+  // console.log(checkbox.value)
 }
+
+
   // Function to update calculations and goals when the dropdown value changes
   function handleDropdownChange() {
-    // Get the selected quarter from the dropdown
     var selectedQuarterDropdown = document.getElementById("id_quarter");
     var selectedQuarter = selectedQuarterDropdown.options[selectedQuarterDropdown.selectedIndex].value;
 
     // Calculate the number of quarters spent
     var quartersSpent = calculateQuartersSpent(selectedQuarter);
-    console.log(quartersSpent);
+    // console.log(quartersSpent);
 
     // Get the goals array passed from the backend
-    var goals = {{ goals|safe }};
-    console.log(goals);
+    var goalsget = {{ goals|safe }};
+    // console.log("aloo", goalsget);
 
     var goalsDiv = document.getElementById("goalsDiv");
     // Clear previous content
     goalsDiv.innerHTML = "";
 
-    if(goals[0].length !=0  && quartersSpent && goalsDiv.innerHTML=="") {
+    if(goalsget[0].length !=0  && quartersSpent && goalsDiv.innerHTML=="") {
       var h3banao = document.createElement("h3");
       h3banao.textContent = "Quarterly Goals";
       goalsDiv.appendChild(h3banao);
       var ulItem = document.createElement("ul");
       ulItem.className = "list-items";
-      for (var i = 0; i < quartersSpent && i < goals[0].length; i++) {
+      for (var i = 0; i < quartersSpent && i < goalsget[0].length; i++) {
       // console.log("Quarter " + (i + 1));
       // console.log(Object.keys(goals[0][i]).length)
         var h2banao = document.createElement("h4");
         h2banao.textContent = "Quarter" + (i+1);
         ulItem.appendChild(h2banao);
-        for (var j = 0; j < Object.keys(goals[0][i]).length; j++) {
+        for (var j = 0; j < Object.keys(goalsget[0][i]).length; j++) {
             // console.log(goals[0][i]);
-            if (goals[0][i]['goal_' + (j+1)].completed === 0) {
+            if (goalsget[0][i]['goal_' + (j+1)].completed === 0) {
                 var listItem = document.createElement("li");
                 listItem.className = "item";
                 // Add class to the span element
                 var checkbox = document.createElement("input");
+                checkbox.value = '{"text": "' + goalsget[0][i]['goal_' + (j + 1)].text + '"","quarter":'+ i + ',"number":' + j+ ',"completed":' + "0}";
                 checkbox.type = "checkbox";
+                checkbox.name = 'checkbox';
                 checkbox.classList.add("checkbox"); // Add your desired class name
                 checkbox.id = "goal_checkbox_" + (j + 1); // Add an id if needed
                 listItem.append(checkbox);
 
                 var label = document.createElement("label");
                 label.setAttribute("for", "goal_checkbox_" + (j + 1)); // Connect the label to the checkbox
-                label.textContent = goals[0][i]['goal_' + (j + 1)].text;
+                label.textContent = goalsget[0][i]['goal_' + (j + 1)].text;
                 listItem.append(label);
 
                 //replace from
@@ -346,8 +369,16 @@
       var msg = "No goals available for the selected quarter.";
       goalsDiv.appendChild(document.createTextNode(msg));
     }
-}
 
+      // Attach event listener to newly created checkboxes
+      var checkboxes = document.querySelectorAll('.checkbox');
+    checkboxes.forEach(function(checkbox) {
+      checkbox.addEventListener('change', function() {
+        // console.log("laga diya");
+        toggleCheckboxValue(checkbox);
+      });
+    });
+  }
 
   // Add event listener to the dropdown for value change
   document.getElementById("id_quarter").addEventListener("change", handleDropdownChange);
