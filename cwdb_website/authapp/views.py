@@ -677,9 +677,15 @@ def revolving_fund_progress_report(request, proposal_unique_id):
         scheme=proposal.project_scheme
         if form.is_valid():
             checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
 
             # Process the checkbox values as needed
-            print(checkbox_values)
+            for di in checkbox_values:
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            proposal.save()
+                
 
             print(form.cleaned_data)
             df = pd.read_excel(form.cleaned_data['wool_procured_sheet'])
