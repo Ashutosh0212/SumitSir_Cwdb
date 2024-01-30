@@ -680,11 +680,14 @@ def revolving_fund_progress_report(request, proposal_unique_id):
             print(checkbox_values)
 
             # Process the checkbox values as needed
+            changes = 0
             for di in checkbox_values:
+                changes = 1
                 goal_edit = json.loads(di)
                 proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
             # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
-            proposal.save()
+            if changes:
+                proposal.save()
                 
 
             print(form.cleaned_data)
