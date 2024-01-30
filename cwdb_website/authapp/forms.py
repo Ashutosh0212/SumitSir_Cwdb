@@ -1114,7 +1114,7 @@ QUARTER_CHOICES=[
         ]
 
 STATUS_CHOICES = [
-        ('', 'ALL'),
+        ('', 'SELECT STATUS'),
         ('Approved', 'Approved'),
         ('Completed', 'Completed'),
 
@@ -1134,5 +1134,6 @@ class ProposalFilterForm(forms.Form):
 
 class BeneficiaryDataFilterForm(forms.Form):
     state = forms.ChoiceField(choices=STATE_CHOICES, required=False)
+    quarter = forms.ChoiceField(choices=QUARTER_CHOICES, required=False)
     financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR_CHOICES, required=False)
     scheme = forms.ChoiceField(choices=SCHEME_CHOICES, required=False)

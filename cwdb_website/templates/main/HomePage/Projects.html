@@ -1,17 +1,21 @@
 <!-- your_template.html -->
 {% extends 'main/HomePage/base_homepage.html' %}
+{% load custom_filters %}
+
+
+
 {% block title %}Projects{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">Filter Proposals</h5>
+            <h5 class="card-title">Proposals Data</h5>
         </div>
         <div class="card-body">
             <form method="get" action="{% url 'authapp:proposal_list' %}" class="mb-4">
                 <div class="row">
-                    <div >
+                   
                         <div class="input-group">
                            {% comment %} <h5> {{ form.scheme.label_tag }}</h5>
                             <div style="margin-right: 10px;"></div> {% endcomment %}
@@ -27,7 +31,7 @@
                             <div style="margin-right: 10px;"></div>
                             <button type="submit" class="btn btn-primary" style="font-size: 12px; padding: 5px 10px;">Apply Filters</button>
 
-                        </div>
+                        
                     </div>
                 </div>
             </form>
@@ -55,12 +59,21 @@
                                     <td>{{ proposal.project_scheme }}</td>
                                     <td>{{ proposal.scheme_component }}</td>
                                     <td>{{ proposal.implementingAgencyState }}</td>
-                                    <td>{{ proposal.total_fund_allocated}}</td>
+                                    <td>{{ proposal.total_fund_allocated }}</td>
+                                    {% with expenditure=expenditure_data|get_by_proposal_id:proposal.unique_id %}
+                                        {% if expenditure %}
+                                            <td>{{ expenditure.total_budget_allocated }}</td>
+                                            <td>{{ expenditure.total_budget_spent }}</td>
+                                        {% else %}
+                                            <td>None</td>
+                                            <td>None</td>
+                                        {% endif %}
+                                    {% endwith %}
                                 </tr>
                             {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="7">No data found for the selected criteria.</td>
+                                <td colspan="8">No data found for the selected criteria.</td>
                             </tr>
                         {% endif %}
                     </tbody>

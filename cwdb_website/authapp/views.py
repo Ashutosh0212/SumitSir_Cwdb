@@ -2508,20 +2508,42 @@ def proposal_list(request):
     
     if form.is_valid():
         proposals = Proposal.objects.all()
+        
 
     # Filter proposals with status 'Approved' or 'Completed'
         status=form.cleaned_data['status']
         scheme = form.cleaned_data['scheme']
         state= form.cleaned_data['state']
+        quarter = form.cleaned_data['quarter']
+        financial_year = form.cleaned_data['financial_year']
+        
+         # Filter proposals with status 'Approved' or 'Completed'
+        proposals = Proposal.objects.filter(status__in=['Approved', 'Completed'])
+
+        
         if status:
              proposals = proposals.filter(status=status)
         if scheme:
             proposals = proposals.filter(project_scheme=scheme)
         if state:
             proposals = proposals.filter(implementingAgencyState=state)
+            
+       # Filter expenditure data based on quarter and financial year
+        expenditure_data = ExpenditureData.objects.values('proposal_unique_id').annotate(
+            total_budget_allocated=Sum('quarterly_budget_allocated'),
+            total_budget_spent=Sum('quarterly_budget_spent')
+        )
+
+        if quarter != '':  # Check if a specific quarter is selected
+            expenditure_data = expenditure_data.filter(quarter=quarter)
+
+        if financial_year != '':  # Check if a specific financial year is selected
+            expenditure_data = expenditure_data.filter(year=financial_year)
+
         context = {
         'proposals': proposals,
         'form': form,
+        'expenditure_data': expenditure_data,
        
     }
 
@@ -2540,11 +2562,14 @@ def beneficiary_data_table(request):
 
     if form.is_valid():
         state = form.cleaned_data.get('state')
+        quarter = form.cleaned_data['quarter']
         financial_year = form.cleaned_data.get('financial_year')
         scheme = form.cleaned_data.get('scheme')
 
         if state:
             queryset = queryset.filter(state_of_beneficiaries=state)
+        if quarter:
+            queryset = queryset.filter(quarter=quarter)
         if financial_year:
             queryset = queryset.filter(year=financial_year)
         if scheme:
