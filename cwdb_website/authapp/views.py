@@ -231,6 +231,8 @@ def index(request):
     total_beneficiaries = BeneficiaryData.objects.aggregate(Sum('num_beneficiaries'))['num_beneficiaries__sum']
     
     
+    
+    
     return render(request, 'main/index.html', {'fund_distribution_data': fund_distribution_data, 'current_financial_year': current_financial_year, 'total_projects_count': total_projects_count, 'total_beneficiaries': total_beneficiaries})
 
 from django.shortcuts import render, redirect
@@ -2615,3 +2617,4 @@ def beneficiary_data_table(request):
     }
 
     return render(request, 'main/HomePage/beneficairy_data.html', context)
+

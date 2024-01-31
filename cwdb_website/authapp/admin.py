@@ -33,7 +33,7 @@ from .models import Proposal
 from .forms import ProposalApprovalForm
 
 class ProposalAdmin(admin.ModelAdmin):
-    list_display = ('project_id', 'project_scheme', 'user', 'created_at','status_change','progress_report_link','submit_installment_sanction_letter','submit_Inspection_letter')
+    list_display = ('project_id', 'project_scheme', 'user', 'created_at','status_change','progress_report_link','submit_installment_sanction_letter','submit_Inspection_letter','Summary_Report_Generation')
     list_filter = ('status', 'user')
     search_fields = ('project_scheme', 'user__username')
     # list_editable = ('status',)
@@ -140,6 +140,14 @@ class ProposalAdmin(admin.ModelAdmin):
         )
 
     submit_Inspection_letter.short_description = 'Submit Inspection Letter'
+    
+    def Summary_Report_Generation(self, obj):
+        return format_html(
+            '<a class="button" href="{}">Summary Report Generation</a>',
+            reverse('authapp:submit_approval', args=[obj.unique_id])
+        )
+
+    Summary_Report_Generation.short_description = 'See Summary Report '
     
     
     
@@ -362,17 +370,11 @@ admin.site.register(ProgressReportDocument, ProgressReportDocumentAdmin)
 from django.contrib import admin
 from .models import SummReportGen
 
-class SummaryReportFormAdmin(admin.ModelAdmin):
-    list_display = ('quarter', 'financial_year', 'get_scheme_names', 'project_name', 'subcomponent', 'created_at')
-    search_fields = ('quarter', 'financial_year', 'scheme__name', 'subcomponent')
-    list_filter = ('quarter', 'financial_year', 'scheme__name', 'subcomponent')
-    date_hierarchy = 'created_at'
+# class SummaryReportFormAdmin(admin.ModelAdmin):\
+    # list_display=
+    
 
-    def get_scheme_names(self, obj):
-        return ", ".join([scheme.name for scheme in obj.scheme.all()])
-    get_scheme_names.short_description = 'Schemes'
-
-admin.site.register(SummReportGen, SummaryReportFormAdmin)
+admin.site.register(SummReportGen)
 
 
 # admin.py

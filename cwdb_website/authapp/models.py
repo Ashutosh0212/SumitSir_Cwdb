@@ -1018,7 +1018,16 @@ class BeneficiaryData(models.Model):
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.year} - {self.quarter} - {self.state_of_beneficiaries}'
+    
 
+
+
+SCHEME_CHOICES = [
+        ('WMS', 'WMS'),
+        ('WPS', 'WPS'),
+        ('HRD', 'HRD'),
+        ('PWDS', 'PWDS'),
+    ]
 class ExpenditureData(models.Model):
     proposal_unique_id = models.ForeignKey(Proposal, to_field='unique_id', on_delete=models.CASCADE)
     quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
@@ -1033,7 +1042,7 @@ class ExpenditureData(models.Model):
         ],
     )
     year = models.CharField(max_length=9)
-    scheme = models.CharField(max_length=100)
+    scheme = models.CharField(max_length=10,choices=SCHEME_CHOICES)
 
     def _str_(self):
         return f'{self.proposal_unique_id} - {self.year} - {self.quarter}'

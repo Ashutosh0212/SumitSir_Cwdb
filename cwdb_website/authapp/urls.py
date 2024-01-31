@@ -98,6 +98,8 @@ path('staff_dashboard/', views.staff_dashboard, name='staff_dashboard'),
 path('staff_dashboard/all-proposals/', views.all_proposal_details, name='all_proposal_details'),
 path('submit-approval/<str:proposal_id>/', views.submit_approval, name='submit_approval'),
 
+    # Add more patterns as needed
+
 ]
 
 if settings.DEBUG:
