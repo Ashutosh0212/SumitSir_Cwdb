@@ -218,7 +218,7 @@
 
         
 
-          <form action="{% url 'authapp:submit_proposal' %}" method="post" id="proposalForm">
+          <form action="{% url 'authapp:submit_proposal' %}" method="post" id="proposalForm" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
                 <label for="textarea1">Name & Full Address of Agency with Telephone No. & Email Address</label>
@@ -285,7 +285,7 @@
           <div class="form-group">
             <label for="outcomeFile">Upload Expected Outcome (Excel)</label>
             <input type="file" id="outcomeFile" name="outcomeFile" accept=".xls, .xlsx" required>
-        </div>
+        </div> 
         
           <div class="form-group">
             <label for="textarea2" >How the scenario will change due to implementation of the project. Please give
@@ -297,16 +297,16 @@
         <div class="form-group">
           <label for="beneficiariesFile">Upload Beneficiaries Information (Excel)</label>
           <input type="file" id="beneficiariesFile" name="beneficiariesFile" accept=".xls, .xlsx" required>
-      </div>
+      </div> 
       
         <div class="form-group">
             <label for="textarea2" >Mode of selection of the beneficiaries.</label>
             <textarea id="textarea2" name="mode" class="fixed-height-textarea" rows="3" required></textarea>
         </div>
-        <div class="form-group">
+         <div class="form-group">
           <label for="projectCostFile">Upload Component Wise Project Cost (Excel)</label>
           <input type="file" id="projectCostFile" name="projectCostFile" accept=".xls, .xlsx" required>
-      </div>
+      </div> 
 
       <div class="form-group">
         <label for="quarters">Total Duration:</label>
@@ -318,10 +318,10 @@
         </div>
       </div>
       
-      <div class="form-group">
+       <div class="form-group">
         <label for="durationFile">Upload Explained Project Duration (Excel)</label>
         <input type="file" id="durationFile" name="durationFile" accept=".xls, .xlsx" required>
-    </div>
+    </div> 
     
             <div class="form-group">
                 <label for="singleLineInput">Location of the Project</label>
@@ -346,14 +346,14 @@
             <div class="form-group">
               <label for="projectReport">Upload Detailed Project Report (PDF)</label>
               <input type="file" id="projectReport" name="projectReport" accept=".pdf" required>
-          </div>
+          </div> 
       
           <div class="form-group">
               <label for="coveringLetter">Upload Covering Letter (PDF)</label>
               <input type="file" id="coveringLetter" name="coveringLetter" accept=".pdf" required>
-          </div>
+          </div> 
           {% comment %} <button type="button" onclick="previewEntries()">Preview</button> {% endcomment %}
-
+          
             <button type="submit">Submit</button>
       </form>
 
@@ -523,7 +523,7 @@
             console.log(subfiles);
     
             // Clear the current subfile list
-            subfileSelect.innerHTML = '<option value="none">Select a Component:</option>';
+            subfileSelect.innerHTML = '<option value="none">Select a Component</option>';
     
             if (selectedFolder !== "none") {
                 for (var i = 0; i < subfiles.length; i++) {

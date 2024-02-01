@@ -14,3 +14,5 @@ django-jazzmin==2.6.0
 pandas==2.1.4
 openpyxl==3.1.2
 crispy-bootstrap5==2023.10
+psycopg2==2.9.9
+psycopg2-binary==2.9.9

@@ -173,6 +173,19 @@ from .models import Proposal
 
 
 # In your views, use the form as usual, and the component choices should update dynamically.
+# forms.py
+#proposal files form
+
+# forms.py
+from django import forms
+
+class FileUploadForm(forms.Form):
+    outcome_file = forms.FileField(label='Upload Expected Outcome (Excel)')
+    beneficiaries_file = forms.FileField(label='Upload Beneficiaries Information (Excel)')
+    project_cost_file = forms.FileField(label='Upload Component Wise Project Cost (Excel)')
+    duration_file = forms.FileField(label='Upload Explained Project Duration (Excel)')
+    project_report_file = forms.FileField(label='Upload Detailed Project Report (PDF)')
+    covering_letter_file = forms.FileField(label='Upload Covering Letter (PDF)')
 
 
 from django import forms

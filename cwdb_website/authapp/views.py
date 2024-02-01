@@ -237,7 +237,7 @@ def index(request):
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-# from .forms import ProposalForm
+from .forms import FileUploadForm
 from .models import Proposal
 import random
 import string
@@ -289,7 +289,7 @@ STATE_CHOICES = [
 @login_required
 def submit_proposal(request):
     if request.method == 'POST':
-        # Handle text fields
+        
         agency_address = request.POST.get('agencyAddress')
         implementingAgencyState=request.POST.get('implementingAgencyState')
         project_scheme = request.POST.get('projectScheme')
@@ -314,7 +314,7 @@ def submit_proposal(request):
         other_info = request.POST.get('otherInfo')
         quarters = request.POST.get('quarters')
         # quarterly_goal_classes = request.POST.getlist('goal_texts')
-
+        
         # Handle file uploads
         expected_outcome_file = request.FILES.get('outcomeFile')
         beneficiaries_file = request.FILES.get('beneficiariesFile')
