@@ -98,8 +98,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'cwdb_data',
         'USER': 'cwdb',
-        'PASSWORD': '12345678',
-        'HOST': 'localhost',
+        'PASSWORD': '1234',
+        'HOST': '172.31.1.84',
         'PORT': '5432',
     }
 }
