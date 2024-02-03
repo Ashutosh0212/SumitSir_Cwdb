@@ -23,6 +23,7 @@ urlpatterns = [
     path('proposal/list/', views.proposal_list, name='proposal_list'),
     path('beneficiary-data/', views.beneficiary_data_table, name='beneficiary_data_table'),
     path('iwdp-view/', views.iwdp_view, name='iwdp_view'),
+    path('wms-data-view/',views.wms_scheme_view,name='wms_scheme_view'),
      
     path('signup/', views.signup, name='register'),
     path('activate/<str:uidb64>/<str:token>/', views.activate, name='activate'),

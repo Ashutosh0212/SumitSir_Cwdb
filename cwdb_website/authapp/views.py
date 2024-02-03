@@ -2625,6 +2625,8 @@ from .models import FundDistribution, ExpenditureData
 from .forms import scheme_filterform
 from django.db.models import Sum
 
+
+
 def iwdp_view(request):
     form = scheme_filterform(request.GET)
     if form.is_valid():
@@ -2663,27 +2665,112 @@ def iwdp_view(request):
         # Initialize data list
             fund_data = []
             for entry in expenditure_data_grouped:
+                admin_exp = FundDistribution.objects.filter(financial_year=entry['year']).values('admin_exp').first()
                 data_entry = {
                 'wms': entry['wms_expenditure'] or 0,
                 'wps': entry['wps_expenditure'] or 0,
                 'hrdpa': entry['hrdpa_expenditure'] or 0,
                 'pwds': entry['pwds_expenditure'] or 0,
-                'admin_exp': 0,  # Assuming administrative expenses are not available in ExpenditureData
+                'admin_exp': admin_exp['admin_exp'] if admin_exp else 0,  # Fetch admin_exp from FundDistribution model, 
                 'financial_year': entry['year'],
-                'iwdp': entry['iwdp_expenditure'],
+                'iwdp': entry['iwdp_expenditure']+admin_exp['admin_exp'] or 0,#also 
             }
                 fund_data.append(data_entry)
+        elif fund_type=='Fund Sanctioned':
+            expenditure_data = ExpenditureData.objects.all()
+            if financial_year:
+                expenditure_data = expenditure_data.filter(year=financial_year)
+
+            expenditure_data_grouped = expenditure_data.values('year').annotate(
+            wms_expenditure=Sum('quarterly_budget_allocated', filter=models.Q(scheme='WMS')),
+            wps_expenditure=Sum('quarterly_budget_allocated', filter=models.Q(scheme='WPS')),
+            hrdpa_expenditure=Sum('quarterly_budget_allocated', filter=models.Q(scheme='HRDPA')),
+            pwds_expenditure=Sum('quarterly_budget_allocated', filter=models.Q(scheme='PWDS')),
+        )
+
+        # Calculate IWDP expenditure for each year
+            for entry in expenditure_data_grouped:
+                entry['iwdp_expenditure'] = (
+                entry['wms_expenditure'] or 0) + (
+                entry['wps_expenditure'] or 0) + (
+                entry['hrdpa_expenditure'] or 0) + (
+                entry['pwds_expenditure'] or 0)
+                
+        # Initialize data list
+            fund_data = []
+            for entry in expenditure_data_grouped:
+                admin_exp = FundDistribution.objects.filter(financial_year=entry['year']).values('admin_exp').first()
+                data_entry = {
+                'wms': entry['wms_expenditure'] or 0,
+                'wps': entry['wps_expenditure'] or 0,
+                'hrdpa': entry['hrdpa_expenditure'] or 0,
+                'pwds': entry['pwds_expenditure'] or 0,
+                'admin_exp': admin_exp['admin_exp'] if admin_exp else 0,  # Fetch admin_exp from FundDistribution model, 
+                'financial_year': entry['year'],
+                'iwdp': entry['iwdp_expenditure']+admin_exp['admin_exp'] or 0,#also add admin exp
+            }
+                fund_data.append(data_entry)
+            
         else:
             fund_data = FundDistribution.objects.none()
             
+        
+
+
         
         context = {
                 'form':form,
                 'financial_year': financial_year,
                 'fund_data':fund_data,
+               
                 
             }
             
         return render(request, 'main/HomePage/iwdp.html', context)
     
 
+from django.shortcuts import render
+from .models import FundDistribution, ExpenditureData
+from .forms import scheme_filterform
+from django.db.models import Sum
+
+def wms_scheme_view(request):
+    form = scheme_filterform(request.GET)
+    if form.is_valid():
+        financial_year = form.cleaned_data.get('financial_year')
+
+        # Fetch Fund Allocated data for WMS scheme
+        fund_allocated=FundDistribution.objects.filter().values('wms', 'financial_year')
+        if financial_year:
+            fund_allocated = FundDistribution.objects.filter(financial_year=financial_year).values('wms', 'financial_year')
+
+        # Fetch Expenditure data for WMS scheme
+        expenditure_data = ExpenditureData.objects.filter(scheme='WMS')
+        if financial_year:
+            expenditure_data = expenditure_data.filter(year=financial_year)
+
+        expenditure_data_grouped = expenditure_data.values('year').annotate(
+            wms_expenditure=Sum('quarterly_budget_spent'),
+            wms_sanctioned=Sum('quarterly_budget_allocated'),
+        )
+        
+        # Initialize data list
+        wms_data = []
+        for entry in expenditure_data_grouped:
+            # Fetch Fund Allocated value for WMS scheme of that year
+            fund_allocated_value = fund_allocated.filter(financial_year=entry['year']).first()
+            data_entry = {
+                'wms_sanctioned': entry['wms_sanctioned'] or 0,
+                'wms_expenditure': entry['wms_expenditure'] or 0,
+                'wms_allocated': fund_allocated_value['wms'] if fund_allocated_value else 0,
+                'financial_year': entry['year'],
+            }
+            wms_data.append(data_entry)
+
+        context = {
+            'form': form,
+            'financial_year': financial_year,
+            'wms_data': wms_data,
+        }
+
+        return render(request, 'main/HomePage/wms_scheme.html', context)
