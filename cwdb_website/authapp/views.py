@@ -2618,6 +2618,8 @@ def beneficiary_data_table(request):
 
     return render(request, 'main/HomePage/beneficairy_data.html', context)
 
+from django.db import models
+
 from django.shortcuts import render
 from .models import FundDistribution, ExpenditureData
 from .forms import scheme_filterform
@@ -2634,12 +2636,47 @@ def iwdp_view(request):
         
         if fund_type=='Fund Allocated':
             fund_data=fund_allocated
+            for data in fund_data:
+                data['iwdp'] = data['wms'] + data['wps'] + data['hrdpa'] + data['pwds'] + data['admin_exp']
+
+            
+        elif fund_type=='Expenditure':
+            expenditure_data = ExpenditureData.objects.all()
+            if financial_year:
+                expenditure_data = expenditure_data.filter(year=financial_year)
+
+            expenditure_data_grouped = expenditure_data.values('year').annotate(
+            wms_expenditure=Sum('quarterly_budget_spent', filter=models.Q(scheme='WMS')),
+            wps_expenditure=Sum('quarterly_budget_spent', filter=models.Q(scheme='WPS')),
+            hrdpa_expenditure=Sum('quarterly_budget_spent', filter=models.Q(scheme='HRDPA')),
+            pwds_expenditure=Sum('quarterly_budget_spent', filter=models.Q(scheme='PWDS')),
+        )
+
+        # Calculate IWDP expenditure for each year
+            for entry in expenditure_data_grouped:
+                entry['iwdp_expenditure'] = (
+                entry['wms_expenditure'] or 0) + (
+                entry['wps_expenditure'] or 0) + (
+                entry['hrdpa_expenditure'] or 0) + (
+                entry['pwds_expenditure'] or 0)
+                
+        # Initialize data list
+            fund_data = []
+            for entry in expenditure_data_grouped:
+                data_entry = {
+                'wms': entry['wms_expenditure'] or 0,
+                'wps': entry['wps_expenditure'] or 0,
+                'hrdpa': entry['hrdpa_expenditure'] or 0,
+                'pwds': entry['pwds_expenditure'] or 0,
+                'admin_exp': 0,  # Assuming administrative expenses are not available in ExpenditureData
+                'financial_year': entry['year'],
+                'iwdp': entry['iwdp_expenditure'],
+            }
+                fund_data.append(data_entry)
         else:
             fund_data = FundDistribution.objects.none()
             
-        for data in fund_data:
-            data['iwdp'] = data['wms'] + data['wps'] + data['hrdpa'] + data['pwds'] + data['admin_exp']
-
+        
         context = {
                 'form':form,
                 'financial_year': financial_year,
