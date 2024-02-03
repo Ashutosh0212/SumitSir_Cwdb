@@ -1030,8 +1030,8 @@ SCHEME_CHOICES = [
     ]
 class ExpenditureData(models.Model):
     proposal_unique_id = models.ForeignKey(Proposal, to_field='unique_id', on_delete=models.CASCADE)
-    quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
-    quarterly_budget_allocated = models.DecimalField(max_digits=10, decimal_places=2)
+    quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)#amount spent 
+    quarterly_budget_allocated = models.DecimalField(max_digits=10, decimal_places=2)#sanctioned amount by cwdb till now
     quarter = models.CharField(
         max_length=10,
         choices=[
@@ -1046,6 +1046,8 @@ class ExpenditureData(models.Model):
 
     def _str_(self):
         return f'{self.proposal_unique_id} - {self.year} - {self.quarter}'
+    
+    
     
 from django.db import models
 

@@ -21,7 +21,9 @@ urlpatterns = [
     #HomePage
     path('',views.index,name='index'),
     path('proposal/list/', views.proposal_list, name='proposal_list'),
-     path('beneficiary-data/', views.beneficiary_data_table, name='beneficiary_data_table'),
+    path('beneficiary-data/', views.beneficiary_data_table, name='beneficiary_data_table'),
+    path('iwdp-view/', views.iwdp_view, name='iwdp_view'),
+     
     path('signup/', views.signup, name='register'),
     path('activate/<str:uidb64>/<str:token>/', views.activate, name='activate'),
     # path('login/',user_login,name='login'),

@@ -2618,3 +2618,35 @@ def beneficiary_data_table(request):
 
     return render(request, 'main/HomePage/beneficairy_data.html', context)
 
+from django.shortcuts import render
+from .models import FundDistribution, ExpenditureData
+from .forms import scheme_filterform
+from django.db.models import Sum
+
+def iwdp_view(request):
+    form = scheme_filterform(request.GET)
+    if form.is_valid():
+        financial_year = form.cleaned_data.get('financial_year')
+        fund_type=form.cleaned_data.get('select_type')
+        fund_allocated=FundDistribution.objects.values('wms', 'wps', 'hrdpa', 'pwds', 'admin_exp', 'financial_year')
+        if financial_year:
+            fund_allocated=FundDistribution.objects.filter(financial_year=financial_year).values('wms', 'wps', 'hrdpa', 'pwds', 'admin_exp', 'financial_year')
+        
+        if fund_type=='Fund Allocated':
+            fund_data=fund_allocated
+        else:
+            fund_data = FundDistribution.objects.none()
+            
+        for data in fund_data:
+            data['iwdp'] = data['wms'] + data['wps'] + data['hrdpa'] + data['pwds'] + data['admin_exp']
+
+        context = {
+                'form':form,
+                'financial_year': financial_year,
+                'fund_data':fund_data,
+                
+            }
+            
+        return render(request, 'main/HomePage/iwdp.html', context)
+    
+

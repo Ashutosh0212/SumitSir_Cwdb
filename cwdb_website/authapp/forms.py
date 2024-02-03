@@ -1188,3 +1188,16 @@ class BeneficiaryDataFilterForm(forms.Form):
     financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR_CHOICES, required=False)
     scheme = forms.ChoiceField(choices=SCHEME_CHOICES, required=False)
 
+Fund_CHOICES = [
+        ('Fund Allocated', 'Fund Allocated'),
+        ('Fund Sanctioned', 'Fund Sanctioned'),
+        ('Expenditure','Expenditure')
+    ]
+#iwdp
+class scheme_filterform(forms.Form):
+    select_type=forms.ChoiceField(choices=Fund_CHOICES, required=False)
+    # scheme = forms.ChoiceField(choices=SCHEME_CHOICES, required=False)
+    financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR_CHOICES, required=False)
+    
+    
+

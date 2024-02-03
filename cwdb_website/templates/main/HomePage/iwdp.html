@@ -1,0 +1,64 @@
+{% extends 'main/HomePage/base_homepage.html' %}
+{% block title %}Beneficiaries{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">IWDP Data</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" action="{% url 'authapp:iwdp_view' %}">
+                <div class="row">
+                    
+                        <div class="input-group">
+                            <h6>{{ form.select_type }}</h6>
+                            <div style="margin-right: 10px;"></div>
+                            <h6>{{ form.financial_year }}</h6>
+                            <div style="margin-right: 10px;"></div>
+                            <button type="submit" class="btn btn-primary" style="font-size: 12px; padding: 5px 10px;">Apply Filters</button>
+
+                        </div>
+
+                </div>
+                
+            </form>
+    
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>WMS</th>
+                <th>WPS</th>
+                <th>HRDPA</th>
+                <th>PWDS</th>
+                <th>Administrative</th>
+                <th>Financial Year</th>
+                <th>IWDP</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if fund_data %}
+            {% for data in fund_data %}
+                <tr>
+                    <td>{{ data.wms }}</td>
+                    <td>{{ data.wps }}</td>
+                    <td>{{ data.hrdpa }}</td>
+                    <td>{{ data.pwds }}</td>
+                    <td>{{ data.admin_exp }}</td>
+                    <td>{{ data.financial_year }}</td>
+                    <td>{{ data.iwdp }}</td>
+                </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="7">No data found</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}
