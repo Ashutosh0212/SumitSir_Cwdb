@@ -1125,6 +1125,7 @@ STATUS_CHOICES = [
     ]
 
 SUBCOMPONENT_CHOICES = [
+    ("", "All Subcomponents"),
     ("WMS: 1.Creation of Revolving Fund for Marketing of Raw Wool", "WMS: 1.Creation of Revolving Fund for Marketing of Raw Wool"),
     ("WMS: 2.E-Portal for Marketing Auction of Wool and Development of MIS", "WMS: 2.E-Portal for Marketing Auction of Wool and Development of MIS"),
     ("WMS: 3.Financial Assistance for Formation of Wool Producers Societies/Self Help Group(SHGs)", "WMS: 3.Financial Assistance for Formation of Wool Producers Societies/Self Help Group(SHGs)"),
@@ -1165,12 +1166,8 @@ class SummaryReportForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(SummaryReportForm, self).__init__(*args, **kwargs)
+        self.fields['project_id'].choices = self.get_project_id_choices()
         self.fields['project_id'].choices = [('all', 'Select All')] + list(self.fields['project_id'].choices)
-        self.fields['scheme'].choices = [('all', 'Select All')] + list(self.fields['scheme'].choices)
-        self.fields['subcomponent'].choices = [('all', 'Select All')] + list(self.fields['subcomponent'].choices)
-        self.fields['quarter'].choices = [('all', 'Select All')] + list(self.fields['quarter'].choices)
-        self.fields['financial_year'].choices = [('all', 'Select All')] + list(self.fields['financial_year'].choices)
-
 
     def get_project_id_choices(self):
         proposal_ids = Proposal.objects.all().values_list('unique_id', flat=True)

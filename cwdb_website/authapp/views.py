@@ -633,6 +633,10 @@ SUBCOMPONENT_CHOICES = [
     ("ShowroomDevelopment", "PWDS: 7.Development of showroom at Dehairing Plant premises at Leh"),
     ("FodderLandDevelopment", "PWDS: 8.Development of fodder land/Govt. farms for pashmina goats")
 ]
+from django.http import HttpResponse
+from docx import Document
+from io import BytesIO
+from datetime import datetime
 
 @user_passes_test(lambda u: u.is_staff or u.is_superuser)
 def summ_report(request, proposal_id):
@@ -641,77 +645,59 @@ def summ_report(request, proposal_id):
     if request.method == 'POST':
         form = SummaryReportForm(request.POST)
         if form.is_valid():
+            # print(form.cleaned_data)
             selected_scheme = form.cleaned_data['scheme']
+            # print(selected_scheme)
 
-            if selected_scheme == 'WMS':
+            if 'WMS' in selected_scheme or 'Select All' in selected_scheme:
                 # Check if selected subcomponents start with "WMS"
-                matching_subcomponents = [subcomponent for subcomponent in SUBCOMPONENT_CHOICES if subcomponent.startswith("WMS")]
+                matching_subcomponents = [subcomponent for subcomponent, description in SUBCOMPONENT_CHOICES if description.startswith("WMS")]
 
                 if not matching_subcomponents:
-                    # If no matching subcomponents found, open an empty PDF in a new tab
-                    response = HttpResponse(content_type='application/pdf')
-                    response['Content-Disposition'] = 'inline; filename="empty_report.pdf"'
+                    # If no matching subcomponents found, return an empty DOCX file
+                    doc = Document()
+                    doc_bytes = BytesIO()
+                    doc.save(doc_bytes)
+                    doc_bytes.seek(0)
+                    response = HttpResponse(doc_bytes, content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+                    response['Content-Disposition'] = 'attachment; filename="empty_report.docx"'
                     return response
 
                 summ_reports = []
+                # print(matching_subcomponents)
 
                 for subcomp in matching_subcomponents:
-                    summ_reports = globals()[subcomp].objects.all()
+                    # Match class name with the string sent and get the reports
+                    summ_reports += globals()[subcomp].objects.all()
 
-                # Generate PDF for each entry in summ_reports
+                doc = Document()
+                doc.add_heading('Summary Report', level=1)
+                doc.add_paragraph(f'Generated at: {datetime.now()}')
+                doc.add_paragraph(f'Scheme: {selected_scheme}')
+                doc.add_paragraph(f'Subcomponents: {matching_subcomponents}')
+
                 for report in summ_reports:
-                    template_path = 'admin/summ_report_pdf.html'
-                    context = {
-                        'report': report,
-                    }
-                    html = get_template(template_path).render(context)
-                    response = HttpResponse(content_type='application/pdf')
-                    response['Content-Disposition'] = f'inline; filename="{report.proposal_unique_id}_report.pdf"'
+                    doc.add_paragraph(f'Proposal Unique ID: {report.proposal_unique_id}')
+                    doc.add_paragraph(f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}')
+                    doc.add_paragraph(f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
 
-                    # Create a PDF from HTML
-                    pisa.CreatePDF(html, dest=response)
-                    return response
+                # Save DOCX to BytesIO
+                doc_bytes = BytesIO()
+                doc.save(doc_bytes)
+                doc_bytes.seek(0)
 
-            elif selected_scheme == 'WPS':
-                summ_reports = WMS_SelfHelpGroup.objects.all()
-            elif selected_scheme == 'HRD':
-                summ_reports = list(WMS_BuyerSellerExpo.objects.all()) + list(WMS_InfrastructureDevelopment.objects.all())
-            elif selected_scheme == 'PWDS':
-                summ_reports = WoolenExpo.objects.all()
-            else:
-                summ_reports = []
-
-            template_path = 'admin/summ_report_pdf.html'
-            context = {
-                'summ_reports': summ_reports,
-                'selected_scheme': selected_scheme,
-            }
-            response = HttpResponse(content_type='application/pdf')
-            response['Content-Disposition'] = 'inline; filename="summ_report.pdf"'
-
-            template = get_template(template_path)
-            html = template.render(context)
-
-            # Create a PDF from HTML
-            pisa_status = pisa.CreatePDF(html, dest=response)
-
-            # If PDF creation failed, return an error
-            if pisa_status.err:
-                return HttpResponse('PDF creation failed')
-
-            return response
-
-
-            # return render(request, 'admin/summ_report.html', context)
+                # Create response with DOCX file
+                response = HttpResponse(doc_bytes, content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+                response['Content-Disposition'] = 'attachment; filename="summary_report.docx"'
+                return response
 
     else:
         form = SummaryReportForm()
 
     proposals = Proposal.objects.filter(status="Approved").values_list('unique_id', flat=True).distinct()
     proposals = list(proposals)
-    # proposals_json = json.dumps(list(proposals.values()))
-    # print(proposals_json)
-    return render(request, 'admin/summ_report.html', {'form': form, 'proposals':proposals})
+    return render(request, 'admin/summ_report.html', {'form': form, 'proposals': proposals})
+
 
 
 
