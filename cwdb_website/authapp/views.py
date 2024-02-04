@@ -623,7 +623,7 @@ SUBCOMPONENT_CHOICES = [
     ("OrganisingSeminar", "HRD: 6.Organizing Seminars, Workshops, Sheep Mela, Fare, Meet"),
     ("WoolSurvey", "HRD: 7.Wool Survey and Study on Wool Sector"),
     ("WoolTestingLab", "HRD: 8.Operating Existing Wool Testing Lab at Bikaner Including Upgradation and WDTC/ISC at Kullu"),
-    ("PublicityMonitoring, Common Visits, Evaluation of Projects/Schemes, and Awareness Program for Swachhta, etc.", "HRD: 9.Publicity of Scheme, Monitoring of Projects, Common Visits, Evaluation of Projects/Schemes, and Awareness Program for Swachhta, etc."),
+    ("PublicityMonitoring", "HRD: 9.Publicity of Scheme, Monitoring of Projects, Common Visits, Evaluation of Projects/Schemes, and Awareness Program for Swachhta, etc."),
     ("PWDS_PashminaRevolvingFund", "PWDS: 1.Revolving fund for pashmina wool marketing (For UT of J&K & UT of Ladakh)"),
     ("PWDS_PashminaCFC", "PWDS: 2.Setting of machines for pashmina wool processing"),
     ("ShelterShedConstruction", "PWDS: 3.Construction of shelter shed with guard rooms for pashmina goat"),
@@ -633,6 +633,7 @@ SUBCOMPONENT_CHOICES = [
     ("ShowroomDevelopment", "PWDS: 7.Development of showroom at Dehairing Plant premises at Leh"),
     ("FodderLandDevelopment", "PWDS: 8.Development of fodder land/Govt. farms for pashmina goats")
 ]
+
 from django.http import HttpResponse
 from docx import Document
 from io import BytesIO
@@ -647,49 +648,133 @@ def summ_report(request, proposal_id):
         if form.is_valid():
             # print(form.cleaned_data)
             selected_scheme = form.cleaned_data['scheme']
-            # print(selected_scheme)
-
-            if 'WMS' in selected_scheme or 'Select All' in selected_scheme:
+            selected_subcomponents = form.cleaned_data['subcomponent']
+            print(form.cleaned_data)
+            doc = Document()
+            doc.add_heading('Summary Report', level=1)
+            ts = datetime.now()
+            doc.add_paragraph(f'Generated at: {datetime.now()}' + '\n' + f'Scheme: {", ".join(selected_scheme) if '' not in selected_scheme else "WMS, WPS, PWDS, HRD"}' + '\n' + f'Subcomponents: {"All subcomponents" if '' in selected_subcomponents else selected_subcomponents.join(', ')}')
+            
+            if 'WMS' in selected_scheme or selected_scheme[0]=='':
                 # Check if selected subcomponents start with "WMS"
-                matching_subcomponents = [subcomponent for subcomponent, description in SUBCOMPONENT_CHOICES if description.startswith("WMS")]
+                matching_subcomponents = []
+                if selected_subcomponents[0] == '':
+                    matching_subcomponents =  [subcomponent for subcomponent, description in SUBCOMPONENT_CHOICES if description.startswith("WMS")]
+                else:
+                    for subcomponent in selected_subcomponents:
+                        if subcomponent.startswith("WMS"):
+                            matching_subcomponents += [sc for sc, description in SUBCOMPONENT_CHOICES if description == subcomponent]
+                        else:
+                            break
 
-                if not matching_subcomponents:
-                    # If no matching subcomponents found, return an empty DOCX file
-                    doc = Document()
-                    doc_bytes = BytesIO()
-                    doc.save(doc_bytes)
-                    doc_bytes.seek(0)
-                    response = HttpResponse(doc_bytes, content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-                    response['Content-Disposition'] = 'attachment; filename="empty_report.docx"'
-                    return response
+                if matching_subcomponents:
+                    summ_reports = []
+                    # print(matching_subcomponents)
 
-                summ_reports = []
-                # print(matching_subcomponents)
+                    for subcomp in matching_subcomponents:
+                        # Match class name with the string sent and get the reports
+                        summ_reports += globals()[subcomp].objects.all()
 
-                for subcomp in matching_subcomponents:
-                    # Match class name with the string sent and get the reports
-                    summ_reports += globals()[subcomp].objects.all()
+                    doc.add_heading('Wool Processing Scheme (WMS)', level=2)
 
-                doc = Document()
-                doc.add_heading('Summary Report', level=1)
-                doc.add_paragraph(f'Generated at: {datetime.now()}')
-                doc.add_paragraph(f'Scheme: {selected_scheme}')
-                doc.add_paragraph(f'Subcomponents: {matching_subcomponents}')
+                    for report in summ_reports:
+                        doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + f'Proposal Unique ID: {report.proposal_unique_id}')
+                        doc.add_paragraph(f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}')
+                        doc.add_paragraph(f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+            
+            if "WPS" in selected_scheme or selected_scheme[0]=='':
+                # Check if selected subcomponents start with "WMS"
+                matching_subcomponents = []
+                if selected_subcomponents[0] == '':
+                    matching_subcomponents =  [subcomponent for subcomponent, description in SUBCOMPONENT_CHOICES if description.startswith("WPS}")]
+                else:
+                    for subcomponent in selected_subcomponents:
+                        if subcomponent.startswith("WPS"):
+                            matching_subcomponents += [sc for sc, description in SUBCOMPONENT_CHOICES if description == subcomponent]
+                        else:
+                            break
 
-                for report in summ_reports:
-                    doc.add_paragraph(f'Proposal Unique ID: {report.proposal_unique_id}')
-                    doc.add_paragraph(f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}')
-                    doc.add_paragraph(f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+                if matching_subcomponents:
+                    summ_reports = []
+                    # print(matching_subcomponents)
 
-                # Save DOCX to BytesIO
-                doc_bytes = BytesIO()
-                doc.save(doc_bytes)
-                doc_bytes.seek(0)
+                    for subcomp in matching_subcomponents:
+                        # Match class name with the string sent and get the reports
+                        summ_reports += globals()[subcomp].objects.all()
 
-                # Create response with DOCX file
-                response = HttpResponse(doc_bytes, content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-                response['Content-Disposition'] = 'attachment; filename="summary_report.docx"'
-                return response
+                    doc.add_heading('Wool Processing Scheme (WPS)', level=2)
+                    doc.add_paragraph(f'Generated at: {datetime.now()}')
+                    doc.add_paragraph(f'Scheme: {selected_scheme}')
+                    doc.add_paragraph(f'Subcomponents: {matching_subcomponents}')
+
+                    for report in summ_reports:
+                        print(report.proposal_unique_id)
+                        doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + f'Proposal Unique ID: {report.proposal_unique_id}')
+                        doc.add_paragraph(f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}')
+                        doc.add_paragraph(f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+
+            if "HRD" in selected_scheme or selected_scheme[0]=='':
+                # Check if selected subcomponents start with "WMS"
+                matching_subcomponents = []
+                if selected_subcomponents[0] == '':
+                    matching_subcomponents =  [subcomponent for subcomponent, description in SUBCOMPONENT_CHOICES if description.startswith("HRD")]
+                else:
+                    for subcomponent in selected_subcomponents:
+                        if subcomponent.startswith("HRD"):
+                            matching_subcomponents += [sc for sc, description in SUBCOMPONENT_CHOICES if description == subcomponent]
+                        else:
+                            break
+
+                if matching_subcomponents:
+                    summ_reports = []
+                    # print(matching_subcomponents)
+
+                    for subcomp in matching_subcomponents:
+                        # Match class name with the string sent and get the reports
+                        summ_reports += globals()[subcomp].objects.all()
+
+                    doc.add_heading('HRD', level=2)
+
+                    for report in summ_reports:
+                        doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + f'Proposal Unique ID: {report.proposal_unique_id}')
+                        doc.add_paragraph(f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}')
+                        doc.add_paragraph(f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+
+            if "PWDS" in selected_scheme or selected_scheme[0]=='':
+                # Check if selected subcomponents start with "WMS"
+                matching_subcomponents = []
+                if selected_subcomponents[0] == '':
+                    matching_subcomponents =  [subcomponent for subcomponent, description in SUBCOMPONENT_CHOICES if description.startswith("PWDS")]
+                else:
+                    for subcomponent in selected_subcomponents:
+                        if subcomponent.startswith("PWDS"):
+                            matching_subcomponents += [sc for sc, description in SUBCOMPONENT_CHOICES if description == subcomponent]
+                        else:
+                            break
+                if matching_subcomponents:
+                    summ_reports = []
+                    # print(matching_subcomponents)
+
+                    for subcomp in matching_subcomponents:
+                        # Match class name with the string sent and get the reports
+                        summ_reports += globals()[subcomp].objects.all()
+
+                    doc.add_heading('Pashmina Wool Development Scheme (PWDS)', level=2)
+
+                    for report in summ_reports:
+                        doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + f'Proposal Unique ID: {report.proposal_unique_id}')
+                        doc.add_paragraph(f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}')
+                        doc.add_paragraph(f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+                        
+            # Save DOCX to BytesIO
+            doc_bytes = BytesIO()
+            doc.save(doc_bytes)
+            doc_bytes.seek(0)
+
+            # Create response with DOCX file
+            response = HttpResponse(doc_bytes, content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+            response['Content-Disposition'] = f'attachment; filename="Admin Custom Summary Report:{ts}.docx"'
+            return response
 
     else:
         form = SummaryReportForm()

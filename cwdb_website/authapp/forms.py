@@ -1167,7 +1167,7 @@ class SummaryReportForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(SummaryReportForm, self).__init__(*args, **kwargs)
         self.fields['project_id'].choices = self.get_project_id_choices()
-        self.fields['project_id'].choices = [('all', 'Select All')] + list(self.fields['project_id'].choices)
+        self.fields['project_id'].choices = [('', 'Select All')] + list(self.fields['project_id'].choices)
 
     def get_project_id_choices(self):
         proposal_ids = Proposal.objects.all().values_list('unique_id', flat=True)
