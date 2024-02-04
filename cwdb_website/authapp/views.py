@@ -671,17 +671,20 @@ def summ_report(request, proposal_id):
                     summ_reports = []
                     # print(matching_subcomponents)
 
+                    doc.add_heading('Wool Processing Scheme (WMS)', level=2)
+
                     for subcomp in matching_subcomponents:
+                        doc.add_heading(f'{subcomp}', level=3)
                         # Match class name with the string sent and get the reports
                         summ_reports += globals()[subcomp].objects.all()
 
-                    doc.add_heading('Wool Processing Scheme (WMS)', level=2)
-
-                    for report in summ_reports:
-                        doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + f'Proposal Unique ID: {report.proposal_unique_id}')
-                        doc.add_paragraph(f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}')
-                        doc.add_paragraph(f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
-            
+                        for report in summ_reports:
+                            doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
+                                              f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
+                                              f'{report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
+                                              f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
+                                              f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+                                        
             if "WPS" in selected_scheme or selected_scheme[0]=='':
                 # Check if selected subcomponents start with "WMS"
                 matching_subcomponents = []
@@ -698,20 +701,20 @@ def summ_report(request, proposal_id):
                     summ_reports = []
                     # print(matching_subcomponents)
 
+                    doc.add_heading('Wool Processing Scheme (WPS)', level=2)
+
                     for subcomp in matching_subcomponents:
+                        doc.add_heading(f'{subcomp}', level=3)
                         # Match class name with the string sent and get the reports
                         summ_reports += globals()[subcomp].objects.all()
 
-                    doc.add_heading('Wool Processing Scheme (WPS)', level=2)
-                    doc.add_paragraph(f'Generated at: {datetime.now()}')
-                    doc.add_paragraph(f'Scheme: {selected_scheme}')
-                    doc.add_paragraph(f'Subcomponents: {matching_subcomponents}')
-
-                    for report in summ_reports:
-                        print(report.proposal_unique_id)
-                        doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + f'Proposal Unique ID: {report.proposal_unique_id}')
-                        doc.add_paragraph(f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}')
-                        doc.add_paragraph(f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+                        for report in summ_reports:
+                            print(report.proposal_unique_id)
+                            doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
+                                              f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
+                                              f'{report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
+                                              f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
+                                              f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
 
             if "HRD" in selected_scheme or selected_scheme[0]=='':
                 # Check if selected subcomponents start with "WMS"
@@ -729,16 +732,16 @@ def summ_report(request, proposal_id):
                     summ_reports = []
                     # print(matching_subcomponents)
 
+                    doc.add_heading('HRD', level=2)
+
                     for subcomp in matching_subcomponents:
+                        doc.add_heading(f'{subcomp}', level=3)
                         # Match class name with the string sent and get the reports
                         summ_reports += globals()[subcomp].objects.all()
 
-                    doc.add_heading('HRD', level=2)
+                        for report in summ_reports:
+                            doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + f'{report.quarter}' + ", " + f'{report.financial_year}' + '\n' + f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
 
-                    for report in summ_reports:
-                        doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + f'Proposal Unique ID: {report.proposal_unique_id}')
-                        doc.add_paragraph(f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}')
-                        doc.add_paragraph(f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
 
             if "PWDS" in selected_scheme or selected_scheme[0]=='':
                 # Check if selected subcomponents start with "WMS"
@@ -755,17 +758,20 @@ def summ_report(request, proposal_id):
                     summ_reports = []
                     # print(matching_subcomponents)
 
+                    doc.add_heading('Pashmina Wool Development Scheme (PWDS)', level=2)
+
                     for subcomp in matching_subcomponents:
+                        doc.add_heading(f'{subcomp}', level=3)
                         # Match class name with the string sent and get the reports
                         summ_reports += globals()[subcomp].objects.all()
 
-                    doc.add_heading('Pashmina Wool Development Scheme (PWDS)', level=2)
-
-                    for report in summ_reports:
-                        doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + f'Proposal Unique ID: {report.proposal_unique_id}')
-                        doc.add_paragraph(f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}')
-                        doc.add_paragraph(f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
-                        
+                        for report in summ_reports:
+                            doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
+                                              f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
+                                              f'{report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
+                                              f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
+                                              f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+                                                    
             # Save DOCX to BytesIO
             doc_bytes = BytesIO()
             doc.save(doc_bytes)
