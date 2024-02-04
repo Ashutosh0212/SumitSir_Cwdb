@@ -679,6 +679,7 @@ def summ_report(request, proposal_id):
                         summ_reports += globals()[subcomp].objects.all()
 
                         for report in summ_reports:
+                            # proposals.filter(unique_id = report.proposal_unique_id, created_at__month__in=(1, 4, 7, 10), created_at__year=current_year).values_list('goals', flat=True)
                             doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
                                               f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
                                               f'{report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
