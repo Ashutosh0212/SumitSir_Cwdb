@@ -603,6 +603,37 @@ from .forms import SummaryReportForm
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 
+SUBCOMPONENT_CHOICES = [
+    ("WMS_RevolvingFund", "WMS: 1.Creation of Revolving Fund for Marketing of Raw Wool"),
+    ("EPortal", "WMS: 2.E-Portal for Marketing Auction of Wool and Development of MIS"),
+    ("WMS_SelfHelpGroup", "WMS: 3.Financial Assistance for Formation of Wool Producers Societies/Self Help Group(SHGs)"),
+    ("WMS_BuyerSellerExpo", "WMS: 4.Organizing Buyers Sellers Meets"),
+    ("WMS_InfrastructureDevelopment", "WMS: 5.Financial Assistance to Strengthening Infrastructure Required for Wool Marketing"),
+    ("WoolenExpo", "WMS: 6.Organization of Domestic Independent Woolen Expo"),
+    ("WoolenExpoHiring", "WMS: 7.Organizing Domestic Expo on Hiring Stall Basis"),
+    ("WPS_CFC", "WPS: 1.Establishing Common Facility Centres (CFCs) for Wool Processing Machines/Facilities"),
+    ("WPS_SheepShearingMaching", "WPS: 2.Financial Assistance for Sheep Shearing Machines"),
+    ("WPS_Equipment", "WPS: 3.Financial Assistance for Other Machines and Equipments"),
+    ("WPSSmallToolsDistribution", "WPS: 4.Financial Assistance for Distribution of Small Tools for Manufacturing of Woolen Items"),
+    ("HRD_ShortTermProgramme", "HRD: 1.Short Term Training Program for Manufacturing and Weaving of Woolen Items"),
+    ("HRD_OnsiteTraining", "HRD: 2.On-Site Training for Industrial Workers"),
+    ("HRD_ShearingMachineTraining", "HRD: 3.Training on Machine Sheep Shearing"),
+    ("RD", "HRD: 4.Research and Development Projects"),
+    ("DomesticMeeting", "HRD: 5.International/Domestic Corporations Stakeholders Meeting/Conference"),
+    ("OrganisingSeminar", "HRD: 6.Organizing Seminars, Workshops, Sheep Mela, Fare, Meet"),
+    ("WoolSurvey", "HRD: 7.Wool Survey and Study on Wool Sector"),
+    ("WoolTestingLab", "HRD: 8.Operating Existing Wool Testing Lab at Bikaner Including Upgradation and WDTC/ISC at Kullu"),
+    ("PublicityMonitoring, Common Visits, Evaluation of Projects/Schemes, and Awareness Program for Swachhta, etc.", "HRD: 9.Publicity of Scheme, Monitoring of Projects, Common Visits, Evaluation of Projects/Schemes, and Awareness Program for Swachhta, etc."),
+    ("PWDS_PashminaRevolvingFund", "PWDS: 1.Revolving fund for pashmina wool marketing (For UT of J&K & UT of Ladakh)"),
+    ("PWDS_PashminaCFC", "PWDS: 2.Setting of machines for pashmina wool processing"),
+    ("ShelterShedConstruction", "PWDS: 3.Construction of shelter shed with guard rooms for pashmina goat"),
+    ("PortableTentDist", "PWDS: 4.Distribution of portable tents with accessories"),
+    ("PredatorProofLightsDist", "PWDS: 5.Distribution of predator-proof corral with LED lights"),
+    ("TestingEquipment", "PWDS: 6.Testing equipment, including DNA analyzer for identification/testing of pashmina products"),
+    ("ShowroomDevelopment", "PWDS: 7.Development of showroom at Dehairing Plant premises at Leh"),
+    ("FodderLandDevelopment", "PWDS: 8.Development of fodder land/Govt. farms for pashmina goats")
+]
+
 @user_passes_test(lambda u: u.is_staff or u.is_superuser)
 def summ_report(request, proposal_id):
     proposal = get_object_or_404(Proposal, unique_id=proposal_id)
@@ -613,7 +644,34 @@ def summ_report(request, proposal_id):
             selected_scheme = form.cleaned_data['scheme']
 
             if selected_scheme == 'WMS':
-                summ_reports = EPortal.objects.all()
+                # Check if selected subcomponents start with "WMS"
+                matching_subcomponents = [subcomponent for subcomponent in SUBCOMPONENT_CHOICES if subcomponent.startswith("WMS")]
+
+                if not matching_subcomponents:
+                    # If no matching subcomponents found, open an empty PDF in a new tab
+                    response = HttpResponse(content_type='application/pdf')
+                    response['Content-Disposition'] = 'inline; filename="empty_report.pdf"'
+                    return response
+
+                summ_reports = []
+
+                for subcomp in matching_subcomponents:
+                    summ_reports = globals()[subcomp].objects.all()
+
+                # Generate PDF for each entry in summ_reports
+                for report in summ_reports:
+                    template_path = 'admin/summ_report_pdf.html'
+                    context = {
+                        'report': report,
+                    }
+                    html = get_template(template_path).render(context)
+                    response = HttpResponse(content_type='application/pdf')
+                    response['Content-Disposition'] = f'inline; filename="{report.proposal_unique_id}_report.pdf"'
+
+                    # Create a PDF from HTML
+                    pisa.CreatePDF(html, dest=response)
+                    return response
+
             elif selected_scheme == 'WPS':
                 summ_reports = WMS_SelfHelpGroup.objects.all()
             elif selected_scheme == 'HRD':
