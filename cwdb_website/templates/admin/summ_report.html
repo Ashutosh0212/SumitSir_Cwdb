@@ -1,0 +1,35 @@
+<!-- submit_approval.html -->
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@2.0.1/dist/css/multi-select-tag.css">
+<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@2.0.1/dist/js/multi-select-tag.js"></script>
+  <div id="content-main">
+    <h1>Generate Custom Report</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+    <script>    
+    var proposals = {{ proposals|safe }};
+    var selectElement = document.getElementById('id_project_id');
+    // var parentParagraph = selectElement.closest('p');
+    // var ulElement = parentParagraph.querySelector('ul');
+
+    // Loop through the proposals list and create <li> tags
+    proposals.forEach(function(proposal) {
+        console.log(proposal);
+        var listItem = document.createElement('option');
+        listItem.textContent = proposal;
+        selectElement.appendChild(listItem);
+    });
+
+    // new MultiSelectTag('id_scheme') 
+    // new MultiSelectTag('id_quarter') 
+    // new MultiSelectTag('id_project_id')
+    // new MultiSelectTag('id_subcomponent')
+    // new MultiSelectTag('id_financial_year') 
+    </script>
+  </div>
+{% endblock %}

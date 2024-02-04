@@ -144,7 +144,7 @@ class ProposalAdmin(admin.ModelAdmin):
     def Summary_Report_Generation(self, obj):
         return format_html(
             '<a class="button" href="{}">Summary Report Generation</a>',
-            reverse('authapp:submit_approval', args=[obj.unique_id])
+            reverse('authapp:summ_report', args=[obj.unique_id])
         )
 
     Summary_Report_Generation.short_description = 'See Summary Report '
