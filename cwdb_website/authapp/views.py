@@ -597,6 +597,7 @@ def generate_progress_report_document(proposal_unique_id, form_data):
     document.save(response)
 
     return response
+
 from django.shortcuts import render
 from .forms import SummaryReportForm
 from django.template.loader import get_template

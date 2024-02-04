@@ -1156,12 +1156,22 @@ SUBCOMPONENT_CHOICES = [
 ]
 
 
-class SummaryReportForm(forms.Form):
-    project_id = forms.ChoiceField(widget=forms.SelectMultiple)
-    scheme = forms.ChoiceField(choices=SCHEME_CHOICES, widget=forms.SelectMultiple)
-    subcomponent = forms.ChoiceField(choices=SUBCOMPONENT_CHOICES, widget=forms.SelectMultiple)
-    quarter = forms.ChoiceField(choices=QUARTER_CHOICES, widget=forms.SelectMultiple)
-    financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR_CHOICES, widget=forms.SelectMultiple)
+class SummaryReportForm(forms.Form): 
+    project_id = forms.MultipleChoiceField(widget=forms.SelectMultiple)
+    scheme = forms.MultipleChoiceField(choices=SCHEME_CHOICES, widget=forms.SelectMultiple)
+    subcomponent = forms.MultipleChoiceField(choices=SUBCOMPONENT_CHOICES, widget=forms.SelectMultiple)
+    quarter = forms.MultipleChoiceField(choices=QUARTER_CHOICES, widget=forms.SelectMultiple)
+    financial_year = forms.MultipleChoiceField(choices=FINANCIAL_YEAR_CHOICES, widget=forms.SelectMultiple)
+
+    def __init__(self, *args, **kwargs):
+        super(SummaryReportForm, self).__init__(*args, **kwargs)
+        self.fields['project_id'].choices = self.get_project_id_choices()
+
+    def get_project_id_choices(self):
+        proposal_ids = Proposal.objects.all().values_list('unique_id', flat=True)
+        choices = [(proposal_id, proposal_id) for proposal_id in proposal_ids]
+        return choices
+
 
 # forms.py
 from django import forms
