@@ -1124,48 +1124,42 @@ STATUS_CHOICES = [
         ('Completed', 'Completed'),
     ]
 
-SUBCOMPONENT_CHOICES = {"WMS": [
-        "1.Creation of Revolving Fund for Marketing of Raw Wool",
-        "2.E-Portal for Marketing Auction of Wool and Development of MIS",
-        "3.Financial Assistance for Formation of Wool Producers Societies/Self Help Group(SHGs)",
-        "4.Organizing Buyers Sellers Meets",
-        "5.Financial Assistance to Strengthening Infrastructure Required for Wool Marketing",
-        "6.Organization of Domestic Independent Woolen Expo",
-        "7.Organizing Domestic Expo on Hiring Stall Basis"
-    ],
-    "WPS": [
-        "1.Establishing Common Facility Centres (CFCs) for Wool Processing Machines/Facilities",
-        "2.Financial Assistance for Sheep Shearing Machines",
-        "3.Financial Assistance for Other Machines and Equipments",
-        "4.Financial Assistance for Distribution of Small Tools for Manufacturing of Woolen Items"
-    ],
-    "HRD": [
-        "1.Short Term Training Program for Manufacturing and Weaving of Woolen Items",
-        "2.On-Site Training for Industrial Workers",
-        "3.Training on Machine Sheep Shearing",
-        "4.Research and Development Projects",
-        "5.International/Domestic Corporations Stakeholders Meeting/Conference",
-        "6.Organizing Seminars, Workshops, Sheep Mela, Fare, Meet",
-        "7.Wool Survey and Study on Wool Sector",
-        "8.Operating Existing Wool Testing Lab at Bikaner Including Upgradation and WDTC/ISC at Kullu",
-        "9.Publicity of Scheme, Monitoring of Projects, Common Visits, Evaluation of Projects/Schemes, and Awareness Program for Swachhta, etc."
-    ],
-    "PWDS": [
-        "1.Revolving fund for pashmina wool marketing (For UT of J&K & UT of Ladakh)",
-        "2.Setting of machines for pashmina wool processing",
-        "3.Construction of shelter shed with guard rooms for pashmina goat",
-        "4.Distribution of portable tents with accessories",
-        "5.Distribution of predator-proof corral with LED lights",
-        "6.Testing equipment, including DNA analyzer for identification/testing of pashmina products",
-        "7.Development of showroom at Dehairing Plant premises at Leh",
-        "8.Development of fodder land/Govt. farms for pashmina goats",
-    ]
-    }
+SUBCOMPONENT_CHOICES = [
+    ("WMS: 1.Creation of Revolving Fund for Marketing of Raw Wool", "WMS: 1.Creation of Revolving Fund for Marketing of Raw Wool"),
+    ("WMS: 2.E-Portal for Marketing Auction of Wool and Development of MIS", "WMS: 2.E-Portal for Marketing Auction of Wool and Development of MIS"),
+    ("WMS: 3.Financial Assistance for Formation of Wool Producers Societies/Self Help Group(SHGs)", "WMS: 3.Financial Assistance for Formation of Wool Producers Societies/Self Help Group(SHGs)"),
+    ("WMS: 4.Organizing Buyers Sellers Meets", "WMS: 4.Organizing Buyers Sellers Meets"),
+    ("WMS: 5.Financial Assistance to Strengthening Infrastructure Required for Wool Marketing", "WMS: 5.Financial Assistance to Strengthening Infrastructure Required for Wool Marketing"),
+    ("WMS: 6.Organization of Domestic Independent Woolen Expo", "WMS: 6.Organization of Domestic Independent Woolen Expo"),
+    ("WMS: 7.Organizing Domestic Expo on Hiring Stall Basis", "WMS: 7.Organizing Domestic Expo on Hiring Stall Basis"),
+    ("WPS: 1.Establishing Common Facility Centres (CFCs) for Wool Processing Machines/Facilities", "WPS: 1.Establishing Common Facility Centres (CFCs) for Wool Processing Machines/Facilities"),
+    ("WPS: 2.Financial Assistance for Sheep Shearing Machines", "WPS: 2.Financial Assistance for Sheep Shearing Machines"),
+    ("WPS: 3.Financial Assistance for Other Machines and Equipments", "WPS: 3.Financial Assistance for Other Machines and Equipments"),
+    ("WPS: 4.Financial Assistance for Distribution of Small Tools for Manufacturing of Woolen Items", "WPS: 4.Financial Assistance for Distribution of Small Tools for Manufacturing of Woolen Items"),
+    ("HRD: 1.Short Term Training Program for Manufacturing and Weaving of Woolen Items", "HRD: 1.Short Term Training Program for Manufacturing and Weaving of Woolen Items"),
+    ("HRD: 2.On-Site Training for Industrial Workers", "HRD: 2.On-Site Training for Industrial Workers"),
+    ("HRD: 3.Training on Machine Sheep Shearing", "HRD: 3.Training on Machine Sheep Shearing"),
+    ("HRD: 4.Research and Development Projects", "HRD: 4.Research and Development Projects"),
+    ("HRD: 5.International/Domestic Corporations Stakeholders Meeting/Conference", "HRD: 5.International/Domestic Corporations Stakeholders Meeting/Conference"),
+    ("HRD: 6.Organizing Seminars, Workshops, Sheep Mela, Fare, Meet", "HRD: 6.Organizing Seminars, Workshops, Sheep Mela, Fare, Meet"),
+    ("HRD: 7.Wool Survey and Study on Wool Sector", "HRD: 7.Wool Survey and Study on Wool Sector"),
+    ("HRD: 8.Operating Existing Wool Testing Lab at Bikaner Including Upgradation and WDTC/ISC at Kullu", "HRD: 8.Operating Existing Wool Testing Lab at Bikaner Including Upgradation and WDTC/ISC at Kullu"),
+    ("HRD: 9.Publicity of Scheme, Monitoring of Projects, Common Visits, Evaluation of Projects/Schemes, and Awareness Program for Swachhta, etc.", "HRD: 9.Publicity of Scheme, Monitoring of Projects, Common Visits, Evaluation of Projects/Schemes, and Awareness Program for Swachhta, etc."),
+    ("PWDS: 1.Revolving fund for pashmina wool marketing (For UT of J&K & UT of Ladakh)", "PWDS: 1.Revolving fund for pashmina wool marketing (For UT of J&K & UT of Ladakh)"),
+    ("PWDS: 2.Setting of machines for pashmina wool processing", "PWDS: 2.Setting of machines for pashmina wool processing"),
+    ("PWDS: 3.Construction of shelter shed with guard rooms for pashmina goat", "PWDS: 3.Construction of shelter shed with guard rooms for pashmina goat"),
+    ("PWDS: 4.Distribution of portable tents with accessories", "PWDS: 4.Distribution of portable tents with accessories"),
+    ("PWDS: 5.Distribution of predator-proof corral with LED lights", "PWDS: 5.Distribution of predator-proof corral with LED lights"),
+    ("PWDS: 6.Testing equipment, including DNA analyzer for identification/testing of pashmina products", "PWDS: 6.Testing equipment, including DNA analyzer for identification/testing of pashmina products"),
+    ("PWDS: 7.Development of showroom at Dehairing Plant premises at Leh", "PWDS: 7.Development of showroom at Dehairing Plant premises at Leh"),
+    ("PWDS: 8.Development of fodder land/Govt. farms for pashmina goats", "PWDS: 8.Development of fodder land/Govt. farms for pashmina goats")
+]
+
 
 class SummaryReportForm(forms.Form):
     project_id = forms.ChoiceField(widget=forms.SelectMultiple)
     scheme = forms.ChoiceField(choices=SCHEME_CHOICES, widget=forms.SelectMultiple)
-    subcomponent = forms.ChoiceField(widget=forms.SelectMultiple)
+    subcomponent = forms.ChoiceField(choices=SUBCOMPONENT_CHOICES, widget=forms.SelectMultiple)
     quarter = forms.ChoiceField(choices=QUARTER_CHOICES, widget=forms.SelectMultiple)
     financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR_CHOICES, widget=forms.SelectMultiple)
 

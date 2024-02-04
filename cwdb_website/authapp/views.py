@@ -597,47 +597,63 @@ def generate_progress_report_document(proposal_unique_id, form_data):
     document.save(response)
 
     return response
-
 from django.shortcuts import render
-from .models import SummReportGen
+from .forms import SummaryReportForm
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
-def summ_report(request):
-    # Filter options
-    quarters = SummReportGen.QUARTER_CHOICES
-    financial_years = SummReportGen.objects.values_list('financial_year', flat=True).distinct()
-    schemes = SummReportGen.objects.values_list('scheme', flat=True).distinct()
-    subcomponents = SummReportGen.objects.values_list('subcomponent', flat=True).distinct()
+@user_passes_test(lambda u: u.is_staff or u.is_superuser)
+def summ_report(request, proposal_id):
+    proposal = get_object_or_404(Proposal, unique_id=proposal_id)
 
-    # Applying filters
-    selected_quarter = request.GET.get('quarter', None)
-    selected_financial_year = request.GET.get('financial_year', None)
-    selected_scheme = request.GET.get('scheme', None)
-    selected_subcomponent = request.GET.get('subcomponent', None)
+    if request.method == 'POST':
+        form = SummaryReportForm(request.POST)
+        if form.is_valid():
+            selected_scheme = form.cleaned_data['scheme']
 
-    summ_reports = SummReportGen.objects.all()
+            if selected_scheme == 'WMS':
+                summ_reports = EPortal.objects.all()
+            elif selected_scheme == 'WPS':
+                summ_reports = WMS_SelfHelpGroup.objects.all()
+            elif selected_scheme == 'HRD':
+                summ_reports = list(WMS_BuyerSellerExpo.objects.all()) + list(WMS_InfrastructureDevelopment.objects.all())
+            elif selected_scheme == 'PWDS':
+                summ_reports = WoolenExpo.objects.all()
+            else:
+                summ_reports = []
 
-    if selected_quarter:
-        summ_reports = summ_reports.filter(quarter=selected_quarter)
-    if selected_financial_year:
-        summ_reports = summ_reports.filter(financial_year=selected_financial_year)
-    if selected_scheme:
-        summ_reports = summ_reports.filter(scheme=selected_scheme)
-    if selected_subcomponent:
-        summ_reports = summ_reports.filter(subcomponent=selected_subcomponent)
+            template_path = 'admin/summ_report_pdf.html'
+            context = {
+                'summ_reports': summ_reports,
+                'selected_scheme': selected_scheme,
+            }
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'inline; filename="summ_report.pdf"'
 
-    context = {
-        'summ_reports': summ_reports,
-        'quarters': quarters,
-        'financial_years': financial_years,
-        'schemes': schemes,
-        'subcomponents': subcomponents,
-        'selected_quarter': selected_quarter,
-        'selected_financial_year': selected_financial_year,
-        'selected_scheme': selected_scheme,
-        'selected_subcomponent': selected_subcomponent,
-    }
+            template = get_template(template_path)
+            html = template.render(context)
 
-    return render(request, 'summ_report.html', context)
+            # Create a PDF from HTML
+            pisa_status = pisa.CreatePDF(html, dest=response)
+
+            # If PDF creation failed, return an error
+            if pisa_status.err:
+                return HttpResponse('PDF creation failed')
+
+            return response
+
+
+            # return render(request, 'admin/summ_report.html', context)
+
+    else:
+        form = SummaryReportForm()
+
+    proposals = Proposal.objects.filter(status="Approved").values_list('unique_id', flat=True).distinct()
+    proposals = list(proposals)
+    # proposals_json = json.dumps(list(proposals.values()))
+    # print(proposals_json)
+    return render(request, 'admin/summ_report.html', {'form': form, 'proposals':proposals})
+
 
 
 def process(df, gender=0, category=0, state=0, beneficiaries=0):
