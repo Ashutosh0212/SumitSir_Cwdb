@@ -1,0 +1,54 @@
+{% extends 'main/HomePage/base_homepage.html' %}
+{% block title %}WPS Scheme Data{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">WPS Scheme Data</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" action="{% url 'authapp:wps_scheme_view' %}">
+                <div class="row">
+                    <div class="input-group">
+                        <h6>{{ form.financial_year }}</h6>
+                        <div style="margin-right: 10px;"></div>
+                        <button type="submit" class="btn btn-primary" style="font-size: 12px; padding: 5px 10px;">Apply Filters</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fund Allocated</th>
+                            <th>Fund Sanctioned</th>
+                            <th>Fund Expenditure</th>
+                            
+                            <th>Financial Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if wps_data %}
+                            {% for data in wps_data %}
+                                <tr>
+                                    <td>{{ data.wps_allocated }}</td>
+                                    <td>{{ data.wps_sanctioned }}</td>
+                                    <td>{{ data.wps_expenditure }}</td>
+                                    
+                                    <td>{{ data.financial_year }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4">No data found</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

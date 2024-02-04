@@ -2766,6 +2766,20 @@ def wms_scheme_view(request):
                 'financial_year': entry['year'],
             }
             wms_data.append(data_entry)
+        
+        # Find financial years in FundDistribution but not in expenditure_data_grouped
+        missing_years = set(entry['financial_year'] for entry in fund_allocated) - set(entry['year'] for entry in expenditure_data_grouped)
+
+        # Add entries for missing financial years
+        for year in missing_years:
+            fund_allocated_value = fund_allocated.filter(financial_year=year).first()
+            data_entry = {
+                'wms_sanctioned': 0,
+                'wms_expenditure': 0,
+                'wms_allocated': fund_allocated_value['wms'] if fund_allocated_value else 0,
+                'financial_year': year,
+            }
+            wms_data.append(data_entry)
 
         context = {
             'form': form,
@@ -2774,3 +2788,187 @@ def wms_scheme_view(request):
         }
 
         return render(request, 'main/HomePage/wms_scheme.html', context)
+
+
+def wps_scheme_view(request):
+    form = scheme_filterform(request.GET)
+    if form.is_valid():
+        financial_year = form.cleaned_data.get('financial_year')
+
+        # Fetch Fund Allocated data for WPS scheme
+        fund_allocated = FundDistribution.objects.filter().values('wps', 'financial_year')
+        if financial_year:
+            fund_allocated = FundDistribution.objects.filter(financial_year=financial_year).values('wps', 'financial_year')
+
+        # Fetch Expenditure data for WPS scheme
+        expenditure_data = ExpenditureData.objects.filter(scheme='WPS')
+        if financial_year:
+            expenditure_data = expenditure_data.filter(year=financial_year)
+
+        expenditure_data_grouped = expenditure_data.values('year').annotate(
+            wps_expenditure=Sum('quarterly_budget_spent'),
+            wps_sanctioned=Sum('quarterly_budget_allocated'),
+        )
+        
+        # Initialize data list
+        wps_data = []
+        for entry in expenditure_data_grouped:
+            # Fetch Fund Allocated value for WPS scheme of that year
+            fund_allocated_value = fund_allocated.filter(financial_year=entry['year']).first()
+            data_entry = {
+                'wps_sanctioned': entry['wps_sanctioned'] or 0,
+                'wps_expenditure': entry['wps_expenditure'] or 0,
+                'wps_allocated': fund_allocated_value['wps'] if fund_allocated_value else 0,
+                'financial_year': entry['year'],
+            }
+            wps_data.append(data_entry)
+        
+        # Find financial years in FundDistribution but not in expenditure_data_grouped
+        missing_years = set(entry['financial_year'] for entry in fund_allocated) - set(entry['year'] for entry in expenditure_data_grouped)
+
+        # Add entries for missing financial years
+        for year in missing_years:
+            fund_allocated_value = fund_allocated.filter(financial_year=year).first()
+            data_entry = {
+                'wps_sanctioned': 0,
+                'wps_expenditure': 0,
+                'wps_allocated': fund_allocated_value['wps'] if fund_allocated_value else 0,
+                'financial_year': year,
+            }
+            wps_data.append(data_entry)
+
+        context = {
+            'form': form,
+            'financial_year': financial_year,
+            'wps_data': wps_data,
+        }
+
+        return render(request, 'main/HomePage/wps_scheme.html', context)
+
+def pwds_scheme_view(request):
+    form = scheme_filterform(request.GET)
+    if form.is_valid():
+        financial_year = form.cleaned_data.get('financial_year')
+
+        # Fetch Fund Allocated data for PWDs scheme
+        fund_allocated = FundDistribution.objects.filter().values('pwds', 'financial_year')
+        if financial_year:
+            fund_allocated = FundDistribution.objects.filter(financial_year=financial_year).values('pwds', 'financial_year')
+
+        # Fetch Expenditure data for PWDs scheme
+        expenditure_data = ExpenditureData.objects.filter(scheme='PWDS')
+        if financial_year:
+            expenditure_data = expenditure_data.filter(year=financial_year)
+
+        expenditure_data_grouped = expenditure_data.values('year').annotate(
+            pwds_expenditure=Sum('quarterly_budget_spent'),
+            pwds_sanctioned=Sum('quarterly_budget_allocated'),
+        )
+        
+        # Initialize data list
+        pwds_data = []
+        for entry in expenditure_data_grouped:
+            # Fetch Fund Allocated value for PWDs scheme of that year
+            fund_allocated_value = fund_allocated.filter(financial_year=entry['year']).first()
+            data_entry = {
+                'pwds_sanctioned': entry['pwds_sanctioned'] or 0,
+                'pwds_expenditure': entry['pwds_expenditure'] or 0,
+                'pwds_allocated': fund_allocated_value['pwds'] if fund_allocated_value else 0,
+                'financial_year': entry['year'],
+            }
+            pwds_data.append(data_entry)
+        
+        # Find financial years in FundDistribution but not in expenditure_data_grouped
+        missing_years = set(entry['financial_year'] for entry in fund_allocated) - set(entry['year'] for entry in expenditure_data_grouped)
+
+        # Add entries for missing financial years
+        for year in missing_years:
+            fund_allocated_value = fund_allocated.filter(financial_year=year).first()
+            data_entry = {
+                'pwds_sanctioned': 0,
+                'pwds_expenditure': 0,
+                'pwds_allocated': fund_allocated_value['pwds'] if fund_allocated_value else 0,
+                'financial_year': year,
+            }
+            pwds_data.append(data_entry)
+
+        context = {
+            'form': form,
+            'financial_year': financial_year,
+            'pwds_data': pwds_data,
+        }
+
+        return render(request, 'main/HomePage/pwds_scheme.html', context)
+
+
+def hrdpa_scheme_view(request):
+    form = scheme_filterform(request.GET)
+    if form.is_valid():
+        financial_year = form.cleaned_data.get('financial_year')
+
+        # Fetch Fund Allocated data for HRDPA scheme
+        fund_allocated = FundDistribution.objects.filter().values('hrdpa', 'financial_year')
+        if financial_year:
+            fund_allocated = FundDistribution.objects.filter(financial_year=financial_year).values('hrdpa', 'financial_year')
+
+        # Fetch Expenditure data for HRDPA scheme
+        expenditure_data = ExpenditureData.objects.filter(scheme='HRD')
+        if financial_year:
+            expenditure_data = expenditure_data.filter(year=financial_year)
+
+        expenditure_data_grouped = expenditure_data.values('year').annotate(
+            hrdpa_expenditure=Sum('quarterly_budget_spent'),
+            hrdpa_sanctioned=Sum('quarterly_budget_allocated'),
+        )
+        
+        # Initialize data list
+        hrdpa_data = []
+        for entry in expenditure_data_grouped:
+            # Fetch Fund Allocated value for HRDPA scheme of that year
+            fund_allocated_value = fund_allocated.filter(financial_year=entry['year']).first()
+            data_entry = {
+                'hrdpa_sanctioned': entry['hrdpa_sanctioned'] or 0,
+                'hrdpa_expenditure': entry['hrdpa_expenditure'] or 0,
+                'hrdpa_allocated': fund_allocated_value['hrdpa'] if fund_allocated_value else 0,
+                'financial_year': entry['year'],
+            }
+            hrdpa_data.append(data_entry)
+        
+        # Find financial years in FundDistribution but not in expenditure_data_grouped
+        missing_years = set(entry['financial_year'] for entry in fund_allocated) - set(entry['year'] for entry in expenditure_data_grouped)
+
+        # Add entries for missing financial years
+        for year in missing_years:
+            fund_allocated_value = fund_allocated.filter(financial_year=year).first()
+            data_entry = {
+                'hrdpa_sanctioned': 0,
+                'hrdpa_expenditure': 0,
+                'hrdpa_allocated': fund_allocated_value['hrdpa'] if fund_allocated_value else 0,
+                'financial_year': year,
+            }
+            hrdpa_data.append(data_entry)
+
+        context = {
+            'form': form,
+            'financial_year': financial_year,
+            'hrdpa_data': hrdpa_data,
+        }
+
+        return render(request, 'main/HomePage/hrdpa_scheme.html', context)
+    
+def admin_exp_view(request):
+    form = scheme_filterform(request.GET)
+    if form.is_valid():
+        financial_year = form.cleaned_data.get('financial_year')
+        fund_allocated=FundDistribution.objects.values('admin_exp', 'financial_year')
+        if financial_year:
+            fund_allocated=FundDistribution.objects.filter(financial_year=financial_year).values( 'admin_exp', 'financial_year')
+        
+        context = {
+            'form': form,
+            'financial_year': financial_year,
+            'fund_data': fund_allocated,
+        }
+
+        return render(request, 'main/HomePage/admin_exp.html', context)
+    
