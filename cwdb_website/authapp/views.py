@@ -210,6 +210,13 @@ def dashboard(request):
         'rejected_proposals_count': rejected_proposals_count,
         'new_notifications': first_three_notifications})
 
+SCHEME_CHOICES = [
+        ('WMS', 'WMS'),
+        ('WPS', 'WPS'),
+        ('HRD', 'HRD'),
+        ('PWDS', 'PWDS'),
+    ]
+
 from django.shortcuts import render
 from .models import FundDistribution,Proposal,BeneficiaryData,ExpenditureData
 from django.db.models import Sum 
@@ -735,7 +742,7 @@ def summ_report(request, proposal_id):
                             num_completed_goals = sum(1 for goal in goals_list if goal['completed'])
 
                             doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
-                                              f'Component: {pr.values_list('scheme_component', flat=True)[0]}' + '\n' 
+                                              f'Component: {pr.values_list("scheme_component", flat=True)[0]}' + '\n' 
                                               f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
                                               f'Quarter: {report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
                                               f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
@@ -782,7 +789,7 @@ def summ_report(request, proposal_id):
                         num_completed_goals = sum(1 for goal in goals_list if goal['completed'])
 
                         doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
-                                            f'Component: {pr.values_list('scheme_component', flat=True)[0]}' + '\n' 
+                                            f'Component: {pr.values_list("scheme_component", flat=True)[0]}' + '\n' 
                                             f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
                                             f'Quarter: {report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
                                             f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
@@ -827,7 +834,7 @@ def summ_report(request, proposal_id):
                         num_completed_goals = sum(1 for goal in goals_list if goal['completed'])
 
                         doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
-                                            f'Component: {pr.values_list('scheme_component', flat=True)[0]}' + '\n' 
+                                            f'Component: {pr.values_list("scheme_component", flat=True)[0]}' + '\n' 
                                             f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
                                             f'Quarter: {report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
                                             f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
@@ -875,7 +882,7 @@ def summ_report(request, proposal_id):
                             num_completed_goals = sum(1 for goal in goals_list if goal['completed'])
 
                             doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
-                                              f'Component: {pr.values_list('scheme_component', flat=True)[0]}' + '\n' 
+                                              f'Component: {pr.values_list("scheme_component", flat=True)[0]}' + '\n' 
                                               f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
                                               f'Quarter: {report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
                                               f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
