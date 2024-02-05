@@ -650,7 +650,7 @@ def summ_report(request, proposal_id):
             # print(form.cleaned_data)
             selected_scheme = form.cleaned_data['scheme']
             selected_subcomponents = form.cleaned_data['subcomponent']
-            print(form.cleaned_data)
+            # print(form.cleaned_data)
             doc = Document()
             doc.add_heading('Summary Report', level=1)
             ts = datetime.now()
@@ -672,23 +672,27 @@ def summ_report(request, proposal_id):
                     summ_reports = []
                     # print(matching_subcomponents)
 
-                    doc.add_heading('Wool Processing Scheme (WMS)', level=2)
+                    doc.add_heading('\n' + 'Wool Processing Scheme (WMS)', level=2)
 
                     for subcomp in matching_subcomponents:
+                        print(subcomp)
                         doc.add_heading(f'{subcomp}', level=3)
                         # Match class name with the string sent and get the reports
-                        summ_reports += globals()[subcomp].objects.all()
+                        # print(globals()[subcomp].objects.all())
+                        summ_reports = list(globals()[subcomp].objects.all())
 
                         for report in summ_reports:
                             pr = Proposal.objects.filter(unique_id = report.proposal_unique_id)
-                            print(pr.values_list('scheme_component', flat=True).distinct(), pr.values_list('goals', flat=True))
+                            # print(pr.values_list('scheme_component', flat=True).distinct(), pr.values_list('goals', flat=True))
                             doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
                                               f'Scheme: '
                                               f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
                                               f'{report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
                                               f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
                                               f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
-                                        
+
+                        # summ_reports = []
+                                       
             if "WPS" in selected_scheme or selected_scheme[0]=='':
                 # Check if selected subcomponents start with "WMS"
                 matching_subcomponents = []
@@ -702,12 +706,12 @@ def summ_report(request, proposal_id):
                         else:
                             break
                             
-                print(matching_subcomponents)
+                # print(matching_subcomponents)
                 if matching_subcomponents:
                     summ_reports = []
                     # print(matching_subcomponents)
 
-                    doc.add_heading('Wool Processing Scheme (WPS)', level=2)
+                    doc.add_heading('\n' + 'Wool Processing Scheme (WPS)', level=2)
 
                     for subcomp in matching_subcomponents:
                         doc.add_heading(f'{subcomp}', level=3)
@@ -715,7 +719,7 @@ def summ_report(request, proposal_id):
                         summ_reports += globals()[subcomp].objects.all()
 
                         for report in summ_reports:
-                            print(report.proposal_unique_id)
+                            # print(report.proposal_unique_id)
                             doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
                                               f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
                                               f'{report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
@@ -738,7 +742,7 @@ def summ_report(request, proposal_id):
                     summ_reports = []
                     # print(matching_subcomponents)
 
-                    doc.add_heading('HRD', level=2)
+                    doc.add_heading('\n' + 'HRD', level=2)
 
                     for subcomp in matching_subcomponents:
                         doc.add_heading(f'{subcomp}', level=3)
@@ -760,11 +764,12 @@ def summ_report(request, proposal_id):
                             matching_subcomponents += [sc for sc, description in SUBCOMPONENT_CHOICES if description == subcomponent]
                         else:
                             break
+                    
+                # print(matching_subcomponents)
                 if matching_subcomponents:
                     summ_reports = []
-                    # print(matching_subcomponents)
 
-                    doc.add_heading('Pashmina Wool Development Scheme (PWDS)', level=2)
+                    doc.add_heading('\n' + 'Pashmina Wool Development Scheme (PWDS)', level=2)
 
                     for subcomp in matching_subcomponents:
                         doc.add_heading(f'{subcomp}', level=3)
