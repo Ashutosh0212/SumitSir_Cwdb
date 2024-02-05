@@ -7,144 +7,189 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title> CWDB: Setting of Machines for Pashmina Wool Processing (CFC)</title>
     <style>
-        body {
-          font-family: Helvetica, sans-serif;
-          margin: 0;
-          padding: 0;
-        }
-    
-        .container {
-          max-width: 100%;
-          margin: 0 auto;
-          padding: 20px;
-        }
-    
-        h1 {
-          font-size: 48px;
-          color: #2aa4fb;
-        }
-    
-        #instructionsList {
-          margin-bottom: 10px;
-          padding-top: 0px;
-          padding: 5px;
-          font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          color: #ffffff;
-          box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
-          background-color: #2aa4fb;
-          line-height: 1.2; 
-        }
-    
-        .form-group {
-          margin-bottom: 20px;
-        }
-    
-        label {
-          font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-          display: block;
-          margin-bottom: 5px;
-          color: #000000;
-        }
-    
-        textarea,
-        input,
-        select {
-          outline: none;
-          width: 99%;
-          padding: 10px;
-          border: 1px solid #000000;
-          border-radius: 4px;
-          font-size: 14px;
-        }
-    
-        select {
-          margin-bottom: 10px;
-        }
-    
-        #otherField {
-          display: none;
-        }
-    
-        .buttons {
-          margin-left: 40%;
-          margin-right: 40%;
+      body {
+        font-family: Helvetica, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+  
+      .container {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 20px;
+      }
+  
+      h1 {
+        font-size: 48px;
+        color: #2aa4fb;
+      }
+  
+      #instructionsList {
+        margin-bottom: 10px;
+        padding-top: 0px;
+        padding: 5px;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #ffffff;
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
+        background-color: #2aa4fb;
+        line-height: 1.2; 
+      }
+  
+      .form-group {
+        margin-bottom: 20px;
+      }
+  
+      label {
+        font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        display: block;
+        margin-bottom: 5px;
+        color: #000000;
+      }
+  
+      textarea,
+      input,
+      select {
+        outline: none;
+        width: 99%;
+        padding: 10px;
+        border: 1px solid #000000;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+  
+      select {
+        margin-bottom: 10px;
+      }
+  
+      #otherField {
+        display: none;
+      }
+  
+      .buttons {
+        margin-left: 40%;
+        margin-right: 40%;
+        display: flex;
+        /* border: 8px solid red; */
+        align-items: center;
+      }
+  
+      button{
+        /* display: block; */
+        margin: 3px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s ease; 
+      }
+  
+      button:hover {
+        background-color: #0056b3;
+      }
+  
+      textarea,
+      input {
+        resize: none;
+        margin-bottom: 30px;
+        transition: border-color 0.3s ease; 
+      }
+  
+      textarea:hover,
+      input:hover {
+        border-color: #007bff; 
+      }
+  
+      textarea:focus,
+      input:focus {
+        border-color: #007bff; 
+        box-shadow:  0 0 4px rgba(81, 183, 255, 0.7);
+      }
+  
+      .content {
+        display: flex;
+        align-items: center;
+        /* justify-content: center; */
+        margin-bottom: 50px;
+        /* border: solid #ff0000; */
+      }
+  
+      .content h1{
+        align-items: center;
+        margin-left: 10%;
+        /* border: solid #ff0000; */
+      }
+  
+      .content img {
+        width: 100px; 
+        height: auto;
+        margin-left: 150px;
+      }
+  
+      .list-items .item{
+      display: flex;
+      align-items: center;
+      list-style: none;
+      height: 50px;
+      cursor: pointer;
+      transition: 0.3s;
+      padding: 0 15px;
+      border-radius: 8px;
+      }
+      
+      .list-items .item:hover{
+          background-color: #e7edfe;
+      }
+      .item .item-text{
+          font-size: 16px;
+          font-weight: 400;
+          color: #333;
+      }
+      .item .checkbox{
           display: flex;
-          /* border: 8px solid red; */
           align-items: center;
-        }
-    
-        button{
-          /* display: block; */
-          margin: 3px;
-          padding: 10px 20px;
-          background-color: #007bff;
+          justify-content: center;
+          height: 16px;
+          width: 16px;
+          border-radius: 4px;
+          margin-right: 12px;
+          border: 1.5px solid #c0c0c0;
+          transition: all 0.3s ease-in-out;
+      }
+      .item.checked .checkbox{
+          background-color: #4070f4;
+          border-color: #4070f4;
+      }
+      .checkbox .check-icon{
           color: #fff;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 14px;
-          transition: background-color 0.3s ease; 
-        }
-    
-        button:hover {
-          background-color: #0056b3;
-        }
-    
-        textarea,
-        input {
-          resize: none;
-          margin-bottom: 30px;
-          transition: border-color 0.3s ease; 
-        }
-    
-        textarea:hover,
-        input:hover {
-          border-color: #007bff; 
-        }
-    
-        textarea:focus,
-        input:focus {
-          border-color: #007bff; 
-          box-shadow:  0 0 4px rgba(81, 183, 255, 0.7);
-        }
-    
-        .content {
+          font-size: 11px;
+          transform: scale(0);
+          transition: all 0.2s ease-in-out;
+      }
+      .item.checked .check-icon{
+          transform: scale(1);
+      }
+  
+  
+      @media (max-width: 768px) {
+          .content {
           display: flex;
-          align-items: center;
-          /* justify-content: center; */
           margin-bottom: 50px;
-          /* border: solid #ff0000; */
         }
-    
+  
         .content h1{
-          align-items: center;
           margin-left: 10%;
-          /* border: solid #ff0000; */
         }
-    
+  
         .content img {
           width: 100px; 
           height: auto;
-          margin-left: 150px;
-        }
-    
-        @media (max-width: 768px) {
-            .content {
-            display: flex;
-            margin-bottom: 50px;
-          }
-    
-          .content h1{
-            margin-left: 10%;
-          }
-    
-          .content img {
-            width: 100px; 
-            height: auto;
-            margin-left: 10%;
-          } 
-        }
-      </style>
+          margin-left: 10%;
+        } 
+      }
+    </style>
 </head>
 
 <body>
@@ -155,6 +200,7 @@
     </div>
   
     <form method="post" enctype="multipart/form-data">
+      <div id="goalsDiv"></div>
       {% csrf_token %}
       {{ form.as_p }}
       <div id="instructionsList">
@@ -183,6 +229,161 @@
       </div>
     </form>
     </div>
+
+    <script>
+      // Function to calculate the number of quarters spent between selectedQuarter (which has values such as 'Q1' till 'Q4')
+      // the yeaer should be taken as the current year
+      // and difference betwen selectedQuarter and createdAtDate
+      function calculateQuartersSpent(selectedQuarter) {
+        // Define quarters in terms of months
+        var quarters = {
+            "Q1": 2,    // Quarter 1 (April-June)
+            "Q2": 3,    // Quarter 2 (July-September)
+            "Q3": 4,    // Quarter 3 (October-December)
+            "Q4": 1  // Quarter 4 (January-March)
+        };
+    
+        // Create the Date object
+        var createdAtDate = new Date("{{ created_at.isoformat }}")
+    
+        // Get the current date
+        var currentDate = new Date();
+        var currentYear = currentDate.getFullYear();
+    
+        // Get quarter and year from createdAtDate
+        var createdAtQuarter = Math.floor((createdAtDate.getMonth() + 3) / 3);
+        // console.log(createdAtQuarter) 
+    
+        var currentQuarter = quarters[selectedQuarter];
+        var createdAtYear = createdAtDate.getFullYear(); // Get year
+        if (selectedQuarter[1] < createdAtQuarter) {
+            currentYear++;
+        } 
+    
+        var quartersSpent = (currentYear - createdAtYear) * 4 + currentQuarter - createdAtQuarter;
+        // console.log("quartersSpent:", quartersSpent);
+        // console.log(currentQuarter, createdAtQuarter, currentYear, createdAtYear, createdAtQuarter);
+    
+        return quartersSpent;
+      }
+    
+    
+      function toggleCheckboxValue(checkbox) {
+      // Split the checkbox value to extract the goal text and completion status
+      // var checkboxValueParts = checkbox.value.slice(0,-1), checkbox.value.slice(-1);
+      // var goalText = checkboxValueParts[0];
+      // var completionStatus = checkboxValueParts[1];
+    
+      // var goalText = checkbox.value.slice(0, -1);
+      var completionStatus = checkbox.value.charAt(checkbox.value.length-2);
+    
+      // console.log(goalText, completionStatus, checkbox.value.slice[-2,-1]);
+      // console.log(completionStatus)
+      // Toggle the completion status
+      var newCompletionStatus = completionStatus === "0" ? "1" : "0";
+    
+      // Update the checkbox value with the new completion status
+      checkbox.value = checkbox.value.slice(0, -2) + newCompletionStatus + checkbox.value.slice(-1);
+      // console.log(checkbox.value)
+    }
+    
+    
+      // Function to update calculations and goals when the dropdown value changes
+      function handleDropdownChange() {
+        var selectedQuarterDropdown = document.getElementById("id_quarter");
+        var selectedQuarter = selectedQuarterDropdown.options[selectedQuarterDropdown.selectedIndex].value;
+    
+        // Calculate the number of quarters spent
+        var quartersSpent = calculateQuartersSpent(selectedQuarter);
+        // console.log(quartersSpent);
+    
+        // Get the goals array passed from the backend
+        var goalsget = {{ goals|safe }};
+        // console.log("aloo", goalsget);
+    
+        var goalsDiv = document.getElementById("goalsDiv");
+        // Clear previous content
+        goalsDiv.innerHTML = "";
+    
+        if(goalsget[0].length !=0  && quartersSpent && goalsDiv.innerHTML=="") {
+          var h3banao = document.createElement("h3");
+          h3banao.textContent = "Quarterly Goals";
+          goalsDiv.appendChild(h3banao);
+          var ulItem = document.createElement("ul");
+          ulItem.className = "list-items";
+          for (var i = 0; i < quartersSpent && i < goalsget[0].length; i++) {
+          // console.log("Quarter " + (i + 1));
+          // console.log(Object.keys(goals[0][i]).length)
+            var h2banao = document.createElement("h4");
+            h2banao.textContent = "Quarter" + (i+1);
+            ulItem.appendChild(h2banao);
+            for (var j = 0; j < Object.keys(goalsget[0][i]).length; j++) {
+                // console.log(goals[0][i]);
+                if (goalsget[0][i]['goal_' + (j+1)].completed === 0) {
+                    var listItem = document.createElement("li");
+                    listItem.className = "item";
+                    // Add class to the span element
+                    var checkbox = document.createElement("input");
+                    checkbox.value = '{"text": "' + goalsget[0][i]['goal_' + (j + 1)].text + '","quarter":'+ i + ',"number":' + j+ ',"completed":' + "0}";
+                    checkbox.type = "checkbox";
+                    checkbox.name = 'checkbox';
+                    checkbox.classList.add("checkbox"); // Add your desired class name
+                    checkbox.id = "goal_checkbox_" + (j + 1); // Add an id if needed
+                    listItem.append(checkbox);
+    
+                    var label = document.createElement("label");
+                    label.setAttribute("for", "goal_checkbox_" + (j + 1)); // Connect the label to the checkbox
+                    label.textContent = goalsget[0][i]['goal_' + (j + 1)].text;
+                    listItem.append(label);
+    
+                    //replace from
+                    // var spanElement = document.createElement("span");
+                    // spanElement.classList.add("checkbox"); // Add your desired class name
+    
+                    // var iconElement = document.createElement("i");
+                    // iconElement.classList.add("fa-solid", "fa-check", "check-icon"); // Add Font Awesome classes
+                    // spanElement.appendChild(iconElement);
+                    // listItem.append(spanElement);
+                    //replace to
+    
+                    // spanElement = document.createElement("span");
+                    // spanElement.classList.add("item-text");
+                    // spanElement.textContent = goals[0][i]['goal_' + (j+1)].text;
+                    // listItem.append(spanElement);
+    
+                    // var checkbox = document.createElement("input");
+                    // checkbox.type = "checkbox";
+                    // listItem.appendChild(checkbox);
+                    // listItem.appendChild(document.createTextNode(goals[0][i]['goal_' + (j+1)].text));
+                    ulItem.appendChild(listItem); // Changed from goalsList to goalsDiv
+                }
+            }
+            goalsDiv.append(ulItem)
+          }
+        }
+    
+    
+        else {
+          var msg = "No goals available for the selected quarter.";
+          goalsDiv.appendChild(document.createTextNode(msg));
+        }
+    
+          // Attach event listener to newly created checkboxes
+          var checkboxes = document.querySelectorAll('.checkbox');
+        checkboxes.forEach(function(checkbox) {
+          checkbox.addEventListener('change', function() {
+            // console.log("laga diya");
+            toggleCheckboxValue(checkbox);
+          });
+        });
+      }
+    
+      // Add event listener to the dropdown for value change
+      document.getElementById("id_quarter").addEventListener("change", handleDropdownChange);
+    
+      // Initial call to handleDropdownChange function to perform calculations and print goals for the initial value of the dropdown
+      handleDropdownChange();
+    </script>
 </body>
 
 </html>
