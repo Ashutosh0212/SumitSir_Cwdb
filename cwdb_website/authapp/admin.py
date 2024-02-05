@@ -178,18 +178,36 @@ from django.contrib import admin
 from .models import (WMS_RevolvingFund, EPortal, WMS_SelfHelpGroup, WMS_BuyerSellerExpo, 
                     WMS_InfrastructureDevelopment, WoolenExpo, WoolenExpoHiring, Proposal)
 import csv
+from datetime import timedelta
+from django.utils import timezone
+import subprocess
+
 
 def backup_data(modeladmin, request, queryset):
+    # Calculate the date 7 days ago
+    seven_days_ago = timezone.now() - timedelta(days=7)
+    
+    # Filter the queryset to include objects created from 7 days ago till now
+    queryset = queryset.filter(created_at__gte=seven_days_ago)
+    
+    # Retrieve the field names dynamically
     fields = [field.name for field in modeladmin.model._meta.fields]
+    
+    # Retrieve data for all fields
     data = queryset.values(*fields)
 
     with open('backup.csv', 'w', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile)
+        writer = csv.DictWriter(csvfile, fieldnames=fields)
         writer.writeheader()
         for row in data:
             writer.writerow(row)
 
+    # Modify the SCP command with your destination IP, username, and directory
+    subprocess.run(['scp', 'backup.csv', 'username@destination_ip:/path/to/destination/directory'])
+
+
 backup_data.short_description = "Backup selected data"
+
 
 
 class WMSRevolvingFundAdmin(admin.ModelAdmin):
