@@ -177,11 +177,26 @@ admin.site.register(Notification)
 from django.contrib import admin
 from .models import (WMS_RevolvingFund, EPortal, WMS_SelfHelpGroup, WMS_BuyerSellerExpo, 
                     WMS_InfrastructureDevelopment, WoolenExpo, WoolenExpoHiring, Proposal)
+import csv
+
+def backup_data(modeladmin, request, queryset):
+    fields = [field.name for field in modeladmin.model._meta.fields]
+    data = queryset.values(*fields)
+
+    with open('backup.csv', 'w', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile)
+        writer.writeheader()
+        for row in data:
+            writer.writerow(row)
+
+backup_data.short_description = "Backup selected data"
+
 
 class WMSRevolvingFundAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
     list_filter = ('quarter', 'financial_year')
+    actions = [backup_data]
 
 admin.site.register(WMS_RevolvingFund, WMSRevolvingFundAdmin)
 
@@ -199,6 +214,7 @@ class EPortalAdmin(admin.ModelAdmin):
     )
 
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
+    actions = [backup_data]
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(EPortalAdmin, self).get_form(request, obj, **kwargs)
@@ -209,50 +225,57 @@ class EPortalAdmin(admin.ModelAdmin):
 class WMSSelfHelpGroupAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'description_shg', 'total_profit_interest', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
+    actions = [backup_data]
 
 @admin.register(WMS_BuyerSellerExpo)
 class WMSBuyerSellerExpoAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'description_event', 'total_profit_interest', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
+    actions = [backup_data]
 
 @admin.register(WMS_InfrastructureDevelopment)
 class WMSInfrastructureDevelopmentAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'development_progress', 'budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
+    actions = [backup_data]
 
 @admin.register(WoolenExpo)
 class WoolenExpoAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'allocated_budget', 'expo_details', 'profit_and_budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
+    actions = [backup_data]
 
 @admin.register(WoolenExpoHiring)
 class WoolenExpoHiringAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'allocated_budget', 'expo_details', 'profit_and_budget_spent_details', 'total_stall_charges', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
+    actions = [backup_data]
 
 from .models import (WPS_CFC,WPS_SheepShearingMaching,WPS_Equipment,WPSSmallToolsDistribution)
 @admin.register(WPS_CFC)
 class WPS_CFCAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'total_machinery_required', 'total_quantity_wool_yarn_fabric_processed', 'total_processing_charge_facility', 'budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
+    actions = [backup_data]
 
 
 @admin.register(WPS_SheepShearingMaching)
 class WPS_SheepShearingMachingAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'machinery_procured', 'wool_sheared', 'sellers_beneficiaries', 'number_of_sheeps', 'shearing_cost_per_kg', 'percentage_budget_spent', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
-
+    actions = [backup_data]
 
 @admin.register(WPS_Equipment)
 class WPS_EquipmentAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'total_tests_carried_out', 'percentage_budget_spent', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
-
+    actions = [backup_data]
 
 @admin.register(WPSSmallToolsDistribution)
 class WPSSmallToolsDistributionAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'total_sellers', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
+    actions = [backup_data]
 
 from django.contrib import admin
 from .models import (HRD_ShortTermProgramme, HRD_OnsiteTraining, HRD_ShearingMachineTraining, RD, DomesticMeeting, OrganisingSeminar, WoolSurvey, WoolTestingLab, PublicityMonitoring)
@@ -261,54 +284,55 @@ from .models import (HRD_ShortTermProgramme, HRD_OnsiteTraining, HRD_ShearingMac
 class HRD_ShortTermProgrammeAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'training_from', 'training_to', 'topic_location', 'budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
-
+    actions = [backup_data]
 
 @admin.register(HRD_OnsiteTraining)
 class HRD_OnsiteTrainingAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'duration_training_from', 'duration_training_to', 'industry_address', 'persons_trained_topic', 'budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
-
+    actions = [backup_data]
 
 @admin.register(HRD_ShearingMachineTraining)
 class HRD_ShearingMachineTrainingAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'duration_training_from', 'duration_training_to', 'location_training', 'agency_address', 'budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
-
+    actions = [backup_data]
 
 @admin.register(RD)
 class RDAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'name_project', 'outcome_project', 'commercialisation_details', 'costing_details', 'budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
-
+    actions = [backup_data]
 
 @admin.register(DomesticMeeting)
 class DomesticMeetingAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'duration_from', 'duration_to', 'topic_location', 'budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
-
+    actions = [backup_data]
 
 @admin.register(OrganisingSeminar)
 class OrganisingSeminarAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'duration_from', 'duration_to', 'topic_location', 'budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
-
+    actions = [backup_data]
 
 @admin.register(WoolSurvey)
 class WoolSurveyAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'duration_from', 'duration_to', 'survey_location', 'budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
-
+    actions = [backup_data]
 
 @admin.register(WoolTestingLab)
 class WoolTestingLabAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'training_details', 'duration_from', 'duration_to', 'budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
-
+    actions = [backup_data]
 
 @admin.register(PublicityMonitoring)
 class PublicityMonitoringAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget', 'budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
+    actions = [backup_data]
 
 from django.contrib import admin
 from .models import (PWDS_PashminaRevolvingFund, PWDS_PashminaCFC, 
@@ -318,34 +342,42 @@ from .models import (PWDS_PashminaRevolvingFund, PWDS_PashminaCFC,
 class PWDS_PashminaRevolvingFundAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
     search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
+    actions = [backup_data]
 
 class PWDS_PashminaCFCAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
     search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
+    actions = [backup_data]
 
 class ShelterShedConstructionAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
     search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
+    actions = [backup_data]
 
 class PortableTentDistAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
     search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
+    actions = [backup_data]
 
 class PredatorProofLightsDistAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
     search_fields = ('proposal_unique_id', 'financial_year', 'quarter')
+    actions = [backup_data]
 
 class TestingEquipmentAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
     search_fields = ('proposal_unique_id', 'financial_year', 'quarter')
+    actions = [backup_data]
 
 class ShowroomDevelopmentAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
     search_fields = ('proposal_unique_id', 'financial_year', 'quarter')
+    actions = [backup_data]
 
 class FodderLandDevelopmentAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
     search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
+    actions = [backup_data]
 
 admin.site.register(PWDS_PashminaRevolvingFund, PWDS_PashminaRevolvingFundAdmin)
 admin.site.register(PWDS_PashminaCFC, PWDS_PashminaCFCAdmin)
