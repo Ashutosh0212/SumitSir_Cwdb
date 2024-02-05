@@ -654,7 +654,7 @@ def summ_report(request, proposal_id):
             doc = Document()
             doc.add_heading('Summary Report', level=1)
             ts = datetime.now()
-            doc.add_paragraph(f'Generated at: {datetime.now()}' + '\n' + f'Scheme: {", ".join(selected_scheme) if '' not in selected_scheme else "WMS, WPS, PWDS, HRD"}' + '\n' + f'Subcomponents: {"All subcomponents" if '' in selected_subcomponents else selected_subcomponents.join(', ')}')
+            doc.add_paragraph(f'Generated at: {datetime.now()}' + '\n' + f'Scheme: {", ".join(selected_scheme) if "" not in selected_scheme else "WMS, WPS, PWDS, HRD"}' + '\n' + f'Subcomponents: {"All subcomponents" if "" in selected_subcomponents else selected_subcomponents.join(", ")}')
             
             if 'WMS' in selected_scheme or selected_scheme[0]=='':
                 # Check if selected subcomponents start with "WMS"
