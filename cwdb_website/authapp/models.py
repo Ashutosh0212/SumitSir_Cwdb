@@ -1047,6 +1047,25 @@ class ExpenditureData(models.Model):
     def _str_(self):
         return f'{self.proposal_unique_id} - {self.year} - {self.quarter}'
     
+    @classmethod
+    def get_quarterly_sums(cls, year, quarter):
+        schemes_data = {scheme[0]: 0 for scheme in SCHEME_CHOICES}
+        queryset = cls.objects.filter(year=year, quarter=quarter)
+        
+        for expenditure_data in queryset:
+            schemes_data[expenditure_data.scheme] += expenditure_data.quarterly_budget_spent
+        
+        return schemes_data
+    @classmethod
+    def get_quarterly_sums_allocated(cls, year, quarter):
+        schemes_data = {scheme[0]: 0 for scheme in SCHEME_CHOICES}
+        queryset = cls.objects.filter(year=year, quarter=quarter)
+        
+        for expenditure_data in queryset:
+            schemes_data[expenditure_data.scheme] += expenditure_data.quarterly_budget_allocated
+        
+        return schemes_data
+    
     
     
 from django.db import models

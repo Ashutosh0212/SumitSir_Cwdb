@@ -246,29 +246,30 @@ def index(request):
         budget_type=form.cleaned_data.get('select_type')
         
         if budget_type == 'Expenditure':
-            schemes_data = {scheme[0]: {quarter: 0 for quarter in ['Q1', 'Q2', 'Q3', 'Q4']} for scheme in ExpenditureData.SCHEME_CHOICES}
+            schemes_data = {scheme[0]: {quarter: 0 for quarter in ['Q1', 'Q2', 'Q3', 'Q4']} for scheme in SCHEME_CHOICES}
             for quarter in schemes_data['WMS']:
                 quarterly_sums = ExpenditureData.get_quarterly_sums(year, quarter)
                 for scheme, value in quarterly_sums.items():
                     schemes_data[scheme][quarter] = value
         elif budget_type == 'Fund Sanctioned':
-            schemes_data = {scheme[0]: {quarter: 0 for quarter in ['Q1', 'Q2', 'Q3', 'Q4']} for scheme in ExpenditureData.SCHEME_CHOICES}
+            schemes_data = {scheme[0]: {quarter: 0 for quarter in ['Q1', 'Q2', 'Q3', 'Q4']} for scheme in SCHEME_CHOICES}
             for quarter in schemes_data['WMS']:
                 quarterly_sums_allocated = ExpenditureData.get_quarterly_sums_allocated(year, quarter)
                 for scheme, value in quarterly_sums_allocated.items():
                     schemes_data[scheme][quarter] = value
 
         # Additional data for more charts
-        quarterlyFunds = {
-            'quarters': ['Q1', 'Q2', 'Q3', 'Q4'],
-            'scheme1Funds': [schemes_data['WMS']['Q1'], schemes_data['WMS']['Q2'], schemes_data['WMS']['Q3'], schemes_data['WMS']['Q4']],
-            'scheme2Funds': [schemes_data['WPS']['Q1'], schemes_data['WPS']['Q2'], schemes_data['WPS']['Q3'], schemes_data['WPS']['Q4']],
-            'scheme3Funds': [schemes_data['HRD']['Q1'], schemes_data['HRD']['Q2'], schemes_data['HRD']['Q3'], schemes_data['HRD']['Q4']],
-            'scheme4Funds': [schemes_data['PWDS']['Q1'], schemes_data['PWDS']['Q2'], schemes_data['PWDS']['Q3'], schemes_data['PWDS']['Q4']],
-        }
+    quarterlyFunds = {
+        'quarters': ['Q1', 'Q2', 'Q3', 'Q4'],
+        'scheme1Funds': [schemes_data.get('WMS', {}).get('Q1', 0), schemes_data.get('WMS', {}).get('Q2', 0), schemes_data.get('WMS', {}).get('Q3', 0), schemes_data.get('WMS', {}).get('Q4', 0)],
+        'scheme2Funds': [schemes_data.get('WPS', {}).get('Q1', 0), schemes_data.get('WPS', {}).get('Q2', 0), schemes_data.get('WPS', {}).get('Q3', 0), schemes_data.get('WPS', {}).get('Q4', 0)],
+        'scheme3Funds': [schemes_data.get('HRD', {}).get('Q1', 0), schemes_data.get('HRD', {}).get('Q2', 0), schemes_data.get('HRD', {}).get('Q3', 0), schemes_data.get('HRD', {}).get('Q4', 0)],
+        'scheme4Funds': [schemes_data.get('PWDS', {}).get('Q1', 0), schemes_data.get('PWDS', {}).get('Q2', 0), schemes_data.get('PWDS', {}).get('Q3', 0), schemes_data.get('PWDS', {}).get('Q4', 0)],
+    }
     
+    print(quarterlyFunds)
     
-    return render(request, 'main/index.html', {'fund_distribution_data': fund_distribution_data, 'current_financial_year': current_financial_year, 'total_projects_count': total_projects_count, 'total_beneficiaries': total_beneficiaries,'quarterlyFunds': quarterlyFunds,'quarter_form':form})
+    return render(request, 'main/index.html', {'fund_distribution_data': fund_distribution_data, 'current_financial_year': current_financial_year, 'total_projects_count': total_projects_count, 'total_beneficiaries': total_beneficiaries,'quarterlyFunds': quarterlyFunds,'quarter_form':form,'schemes_data': schemes_data})
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required

@@ -782,37 +782,47 @@
       }
 
 
-    
-   
+      function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
 
-      if (document.querySelector('#quarterlyFundsChart')) {
+    if (document.querySelector('#quarterlyFundsChart')) {
         var ctx = document.querySelector("#quarterlyFundsChart").getContext("2d");
-    
-        new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: quarterlyFunds.quarters,
-                datasets: [
-                    {% for scheme, funds in schemes_data.items %}
-                    {
-                        label: "{{ scheme }}",
-                        data: [{{ funds.Q1 }}, {{ funds.Q2 }}, {{ funds.Q3 }}, {{ funds.Q4 }}],
-                        borderColor: '{{ '#'+("%06x"%random.randint(0,0xFFFFFF)) }}',
-                        fill: false,
-                    },
-                    {% endfor %}
-                ],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                    },
+
+        var chartData = {
+            labels: quarterlyFunds.quarters,
+            datasets: [],
+        };
+
+        {% for scheme, funds in schemes_data.items %}
+            chartData.datasets.push({
+                label: "{{ scheme }}",
+                data: [{{ funds.Q1 }}, {{ funds.Q2 }}, {{ funds.Q3 }}, {{ funds.Q4 }}],
+                borderColor: getRandomColor(),
+                fill: false,
+            });
+        {% endfor %}
+
+        var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
                 },
             },
+        };
+
+        var myChart = new Chart(ctx, {
+            type: "line",
+            data: chartData,
+            options: chartOptions,
         });
     }
       // Add more chart creation code for additional charts as needed
