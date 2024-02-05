@@ -647,7 +647,7 @@ def summ_report(request, proposal_id):
     if request.method == 'POST':
         form = SummaryReportForm(request.POST)
         if form.is_valid():
-            # print(form.cleaned_data)
+            print(form.cleaned_data)
             selected_scheme = form.cleaned_data['scheme']
             selected_subcomponents = form.cleaned_data['subcomponent']
             # print(form.cleaned_data)
@@ -685,7 +685,7 @@ def summ_report(request, proposal_id):
                             pr = Proposal.objects.filter(unique_id = report.proposal_unique_id)
                             # print(pr.values_list('scheme_component', flat=True).distinct(), pr.values_list('goals', flat=True))
                             doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
-                                              f'Scheme: '
+                                              f'Scheme: ' 
                                               f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
                                               f'{report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
                                               f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
