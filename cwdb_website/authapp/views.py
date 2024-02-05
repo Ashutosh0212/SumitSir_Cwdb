@@ -20,10 +20,19 @@ QUARTER_CHOICES = [
 
 def get_current_quarter():
     now = datetime.now()
-    quarter = (now.month - 1) // 3 + 1
+    mon=now.month
+    if mon>=4 and mon<=6:
+        quarter=1
+    elif mon>=7 and mon<=9:
+        quarter=2
+    elif mon>=10 and mon<=12:
+        quarter=3
+    else:
+        quarter=4
     current_quarter = f'Q{quarter}'
     return current_quarter
 
+# print(get_current_quarter())
 
 from .forms import CustomUserCreationForm
 
@@ -268,7 +277,7 @@ def index(request):
     form1=allocation_form(request.GET)
     # print(f"Current Financial Year: {current_financial_year}")
     if form1.is_valid():
-        year = form1.cleaned_data.get('year')
+        year = form1.cleaned_data.get('financial_year')
         try:
             fund_data = FundDistribution.objects.get(financial_year=year)
         except FundDistribution.DoesNotExist:
@@ -1154,10 +1163,41 @@ def eportal_progress_report(request, proposal_unique_id):
     proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
     return render(request, 'progressReports/WMS/2.EPortal.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+
 @login_required
 def progress_report(request):
     user = request.user
     proposals = Proposal.objects.filter(user=user, status='Approved')
+    
+    for proposal in proposals:
+        # Check if a reminder needs to be sent
+        if not proposal.reminder_sent:
+            # Check if it's a new quarter
+            current_quarter = get_current_quarter()
+            financial_year=get_financial_year()
+            
+            if current_quarter != proposal.reminder_quarter or financial_year!=proposal.reminder_financial_year:
+                proposal.reminder_sent = True  # Set the reminder flag
+                 # Send notification and email to the user to submit the progress report
+                message = f'Reminder: Submit progress report for Project ID {proposal.unique_id} of Quarter {proposal.reminder_quarter} ({proposal.reminder_financial_year}).'
+                notification = Notification(user=user, message=message)
+                notification.save()
+                
+                # Send email to the user
+                subject = 'Progress Report Reminder'
+                email_template = 'email/progress_report_email_template.html'
+                email_content = render_to_string(email_template, {'user': user, 'proposal': proposal})
+                sender_email = EMAIL_HOST_USER;
+                recipient_email = proposal.user
+
+                send_mail(subject, '', sender_email, [recipient_email], html_message=email_content)
+                
+                proposal.reminder_quarter = current_quarter
+                proposal.reminder_financial_year=financial_year
+                proposal.save()
+    
     return render(request, 'progressReports/progressreport.html', {'proposals': proposals})
 
 from django.shortcuts import render, redirect
@@ -3133,7 +3173,12 @@ def submit_approval(request, proposal_id):
         if form.is_valid():
             # Save the form to update the model
             form.save()
-
+            
+            # Save the current quarter and set the reminder for the next quarter
+            proposal.reminder_quarter = get_current_quarter()
+            proposal.reminder_financial_year=get_financial_year()
+            proposal.reminder_sent = True
+            proposal.save()
             # Notify the user about the status change
             send_status_change_notification(proposal.user, proposal.unique_id, proposal.status,proposal.project_sanction_letter)
 

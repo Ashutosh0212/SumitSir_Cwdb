@@ -1235,4 +1235,4 @@ class quarterly_schemes_form(forms.Form):
         self.fields['financial_year'].initial = get_financial_year()
 
 class allocation_form(forms.Form):
-    year = forms.ChoiceField(choices=FINANCIAL_YEAR1_CHOICES, required=False, initial=get_financial_year())
+    financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR1_CHOICES, required=False, initial=get_financial_year())

@@ -379,17 +379,17 @@ class PortableTentDistAdmin(admin.ModelAdmin):
 
 class PredatorProofLightsDistAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
-    search_fields = ('proposal_unique_id', 'financial_year', 'quarter')
+    search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
     actions = [backup_data]
 
 class TestingEquipmentAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
-    search_fields = ('proposal_unique_id', 'financial_year', 'quarter')
+    search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
     actions = [backup_data]
 
 class ShowroomDevelopmentAdmin(admin.ModelAdmin):
     list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'quarterly_allocated_budget')
-    search_fields = ('proposal_unique_id', 'financial_year', 'quarter')
+    search_fields = ('proposal_unique_id__unique_id', 'financial_year', 'quarter')
     actions = [backup_data]
 
 class FodderLandDevelopmentAdmin(admin.ModelAdmin):
