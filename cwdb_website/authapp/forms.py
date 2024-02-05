@@ -1205,5 +1205,18 @@ class scheme_filterform(forms.Form):
     # scheme = forms.ChoiceField(choices=SCHEME_CHOICES, required=False)
     financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR_CHOICES, required=False)
     
-    
+#quarterly schemes form 
+Fund1_CHOICES = [
+        ('Fund Sanctioned', 'Fund Sanctioned'),
+        ('Expenditure','Expenditure')
+    ]
 
+FINANCIAL_YEAR1_CHOICES = [
+    *generate_financial_years(),
+]
+
+class quarterly_schemes_form(forms.Form):
+    select_type=forms.ChoiceField(choices=Fund1_CHOICES, required=False)
+    financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR1_CHOICES, required=False)
+    
+    
