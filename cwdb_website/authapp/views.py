@@ -963,6 +963,18 @@ def eportal_progress_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             expenditure_data_instance = ExpenditureData(
                 proposal_unique_id=proposal,
                                 #added allotted and spent here 
@@ -1008,6 +1020,18 @@ def selfhelpgroup_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             print(form.cleaned_data['quarterly_allocated_budget'], form.cleaned_data['total_quarterly_budget_spent'])
             df = pd.read_excel(form.cleaned_data['shg_members_sheet'])
             analysis = process(df, 1, 1, 1, 1)
@@ -1106,6 +1130,18 @@ def buyersellerexpo_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['wool_sellers_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -1173,6 +1209,18 @@ def infrastructuredevelopment_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             expenditure_data_instance = ExpenditureData(
                 proposal_unique_id=proposal,
                                 #added allotted and spent here 
@@ -1209,6 +1257,18 @@ def woolen_expo(request,proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['stall_allotees_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -1271,6 +1331,18 @@ def woolen_expo_hiring(request,proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['stall_allotees_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -1339,6 +1411,18 @@ def cfc_progress_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['facility_user_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -1403,6 +1487,18 @@ def sheep_shearing_machining(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['beneficiaries_details_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             # print(analysis)
@@ -1467,6 +1563,18 @@ def equipment(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['beneficiaries_details_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -1534,6 +1642,18 @@ def small_tools_distribution(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['beneficiaries_details_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -1599,6 +1719,18 @@ def short_term_programme(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['trainee_details_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -1722,6 +1854,18 @@ def onsite_training_progress_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['trainee_details_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -1789,6 +1933,18 @@ def shearing_machine_training_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['trainee_details_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -1852,6 +2008,18 @@ def rd_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = RDForm(request.POST, request.FILES)
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
@@ -1877,6 +2045,18 @@ def domestic_meeting_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['participants_details_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -1944,6 +2124,18 @@ def organising_seminar_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['participants_details_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -2011,6 +2203,18 @@ def wool_survey_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             expenditure_data_instance = ExpenditureData(
                 proposal_unique_id=proposal,
                                 #added allotted and spent here 
@@ -2049,6 +2253,18 @@ def wool_testing_lab_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['details_of_trainees_wdtc_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -2116,6 +2332,18 @@ def publicity_monitoring_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             expenditure_data_instance = ExpenditureData(
                 proposal_unique_id=proposal,
                                 #added allotted and spent here 
@@ -2156,6 +2384,18 @@ def pashmina_revolving_fund_progress_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['wool_procured_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -2260,6 +2500,18 @@ def pashmina_cfc_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             expenditure_data_instance = ExpenditureData(
                 proposal_unique_id=proposal,
                                 #added allotted and spent here 
@@ -2298,6 +2550,18 @@ def shelter_shed_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['physical_financial_progress_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -2369,6 +2633,18 @@ def portable_tent_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['physical_financial_progress_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -2440,6 +2716,18 @@ def predator_proof_lights_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             df = pd.read_excel(form.cleaned_data['physical_financial_progress_sheet'])
             analysis = process(df, 1, 1, 1, 1)
             print(analysis)
@@ -2511,6 +2799,18 @@ def testing_equipment_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             expenditure_data_instance = ExpenditureData(
                 proposal_unique_id=proposal,
                                 #added allotted and spent here 
@@ -2549,6 +2849,18 @@ def showroom_development_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             expenditure_data_instance = ExpenditureData(
                 proposal_unique_id=proposal,
                                 #added allotted and spent here 
@@ -2587,6 +2899,18 @@ def fodder_land_development_report(request, proposal_unique_id):
         proposal = Proposal.objects.get(unique_id=proposal_unique_id)
         scheme=proposal.project_scheme
         if form.is_valid():
+            checkbox_values = request.POST.getlist('checkbox')
+            print(checkbox_values)
+
+            # Process the checkbox values as needed
+            changes = 0
+            for di in checkbox_values:
+                changes = 1
+                goal_edit = json.loads(di)
+                proposal.goals[goal_edit["quarter"]]["goal_"+ str(goal_edit["number"]+1)]["completed"] = 1
+            # proposal.goals = [{"goal_1": {"text": "a ceq", "completed": 0}, "goal_2": {"text": "cewc ewcw", "completed": 0}}, {"goal_1": {"text": "cewf ", "completed": 0}, "goal_2": {"text": "cewce ewd", "completed": 0}}]
+            if changes:
+                proposal.save()
             expenditure_data_instance = ExpenditureData(
                 proposal_unique_id=proposal,
                                 #added allotted and spent here 
