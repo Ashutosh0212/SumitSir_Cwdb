@@ -239,24 +239,28 @@ def index(request):
     
     #fetch data according to form 
     #quarter expenditure and sanctioned data
-    form=quarterly_schemes_form(request.GET)
+    form = quarterly_schemes_form(request.GET)
+    print(f"Current Financial Year: {current_financial_year}")
     schemes_data = {}
     if form.is_valid():
         year = form.cleaned_data.get('financial_year')
         budget_type=form.cleaned_data.get('select_type')
+    else:
+        year=current_financial_year
+        budget_type='Fund Sanctioned'
         
-        if budget_type == 'Expenditure':
-            schemes_data = {scheme[0]: {quarter: 0 for quarter in ['Q1', 'Q2', 'Q3', 'Q4']} for scheme in SCHEME_CHOICES}
-            for quarter in schemes_data['WMS']:
-                quarterly_sums = ExpenditureData.get_quarterly_sums(year, quarter)
-                for scheme, value in quarterly_sums.items():
-                    schemes_data[scheme][quarter] = value
-        elif budget_type == 'Fund Sanctioned':
-            schemes_data = {scheme[0]: {quarter: 0 for quarter in ['Q1', 'Q2', 'Q3', 'Q4']} for scheme in SCHEME_CHOICES}
-            for quarter in schemes_data['WMS']:
-                quarterly_sums_allocated = ExpenditureData.get_quarterly_sums_allocated(year, quarter)
-                for scheme, value in quarterly_sums_allocated.items():
-                    schemes_data[scheme][quarter] = value
+    if budget_type == 'Expenditure':
+        schemes_data = {scheme[0]: {quarter: 0 for quarter in ['Q1', 'Q2', 'Q3', 'Q4']} for scheme in SCHEME_CHOICES}
+        for quarter in schemes_data['WMS']:
+            quarterly_sums = ExpenditureData.get_quarterly_sums(year, quarter)
+            for scheme, value in quarterly_sums.items():
+                schemes_data[scheme][quarter] = value
+    elif budget_type == 'Fund Sanctioned':
+        schemes_data = {scheme[0]: {quarter: 0 for quarter in ['Q1', 'Q2', 'Q3', 'Q4']} for scheme in SCHEME_CHOICES}
+        for quarter in schemes_data['WMS']:
+            quarterly_sums_allocated = ExpenditureData.get_quarterly_sums_allocated(year, quarter)
+            for scheme, value in quarterly_sums_allocated.items():
+                schemes_data[scheme][quarter] = value
 
         # Additional data for more charts
     quarterlyFunds = {

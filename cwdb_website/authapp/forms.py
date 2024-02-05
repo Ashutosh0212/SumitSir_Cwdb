@@ -1219,4 +1219,8 @@ class quarterly_schemes_form(forms.Form):
     select_type=forms.ChoiceField(choices=Fund1_CHOICES, required=False)
     financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR1_CHOICES, required=False)
     
+   
+    
+class allocation_form(forms.Form):
+    financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR1_CHOICES, required=False)
     
