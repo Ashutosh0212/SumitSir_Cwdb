@@ -638,6 +638,7 @@ from django.http import HttpResponse
 from docx import Document
 from io import BytesIO
 from datetime import datetime
+from .models import WPS_SheepShearingMaching, WPS_Equipment, WPSSmallToolsDistribution, Proposal
 
 @user_passes_test(lambda u: u.is_staff or u.is_superuser)
 def summ_report(request, proposal_id):
@@ -679,8 +680,10 @@ def summ_report(request, proposal_id):
                         summ_reports += globals()[subcomp].objects.all()
 
                         for report in summ_reports:
-                            # proposals.filter(unique_id = report.proposal_unique_id, created_at__month__in=(1, 4, 7, 10), created_at__year=current_year).values_list('goals', flat=True)
+                            pr = Proposal.objects.filter(unique_id = report.proposal_unique_id)
+                            print(pr.values_list('scheme_component', flat=True).distinct(), pr.values_list('goals', flat=True))
                             doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
+                                              f'Scheme: '
                                               f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
                                               f'{report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
                                               f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
@@ -690,14 +693,16 @@ def summ_report(request, proposal_id):
                 # Check if selected subcomponents start with "WMS"
                 matching_subcomponents = []
                 if selected_subcomponents[0] == '':
-                    matching_subcomponents =  [subcomponent for subcomponent, description in SUBCOMPONENT_CHOICES if description.startswith("WPS}")]
+                    # print([subcomponent for subcomponent, description in SUBCOMPONENT_CHOICES])
+                    matching_subcomponents =  [subcomponent for subcomponent, description in SUBCOMPONENT_CHOICES if description.startswith("WPS")]
                 else:
                     for subcomponent in selected_subcomponents:
                         if subcomponent.startswith("WPS"):
                             matching_subcomponents += [sc for sc, description in SUBCOMPONENT_CHOICES if description == subcomponent]
                         else:
                             break
-
+                            
+                print(matching_subcomponents)
                 if matching_subcomponents:
                     summ_reports = []
                     # print(matching_subcomponents)
