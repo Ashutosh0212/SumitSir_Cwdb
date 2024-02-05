@@ -662,6 +662,13 @@ SUBCOMPONENT_CHOICES = [
     ("FodderLandDevelopment", "PWDS: 8.Development of fodder land/Govt. farms for pashmina goats")
 ]
 
+from .forms import generate_financial_years
+
+FINANCIAL_YEAR_CHOICES = [
+    ('', 'All Financial Years'),
+    *generate_financial_years(),
+]
+
 from django.http import HttpResponse
 from docx import Document
 from io import BytesIO
@@ -678,7 +685,18 @@ def summ_report(request, proposal_id):
             print(form.cleaned_data)
             selected_scheme = form.cleaned_data['scheme']
             selected_subcomponents = form.cleaned_data['subcomponent']
-            # print(form.cleaned_data)
+            selected_quarters = []
+            if form.cleaned_data['quarter'][0] == '':
+                selected_quarters = ['Q1', 'Q2', 'Q3', 'Q4']
+            else:
+                selected_quarters = form.cleaned_data['quarter']
+            selected_years = [] 
+            if form.cleaned_data['financial_year'][0] == '':
+                selected_years = [choice[0] for choice in FINANCIAL_YEAR_CHOICES[1:]]  
+            else:
+                selected_years = form.cleaned_data['financial_year']
+
+            # print(selected_years, selected_quarters)
             doc = Document()
             doc.add_heading('Summary Report', level=1)
             ts = datetime.now()
@@ -703,22 +721,35 @@ def summ_report(request, proposal_id):
                     doc.add_heading('\n' + 'Wool Processing Scheme (WMS)', level=2)
 
                     for subcomp in matching_subcomponents:
-                        print(subcomp)
+                        # print(subcomp)
                         doc.add_heading(f'{subcomp}', level=3)
                         # Match class name with the string sent and get the reports
                         # print(globals()[subcomp].objects.all())
-                        summ_reports = list(globals()[subcomp].objects.all())
+                        summ_reports = list(globals()[subcomp].objects.filter(quarter__in = selected_quarters, financial_year__in = selected_years))
 
                         for report in summ_reports:
                             pr = Proposal.objects.filter(unique_id = report.proposal_unique_id)
-                            # print(pr.values_list('scheme_component', flat=True).distinct(), pr.values_list('goals', flat=True))
+                            goals = pr.values_list('goals', flat=True)[0]  # Assuming there's only one proposal
+                            goals_list = [goal for sublist in goals for goal in sublist.values()]
+                            num_goals = len(goals_list)
+                            num_completed_goals = sum(1 for goal in goals_list if goal['completed'])
+
                             doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
-                                              f'Scheme: ' 
+                                              f'Component: {pr.values_list('scheme_component', flat=True)[0]}' + '\n' 
                                               f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
-                                              f'{report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
+                                              f'Quarter: {report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
                                               f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
                                               f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+                            
+                            # Write goals in list bullets format
+                            doc.add_paragraph('Goals:')
+                            for goal in goals_list:
+                                goal_completed = "Completed" if goal["completed"] else "Not Completed"
+                                doc.add_paragraph(f'- {goal["text"]} ({goal_completed})', style='ListBullet')
 
+                            # Calculate project progress
+                            project_progress = num_completed_goals / num_goals if num_goals != 0 else 0
+                            doc.add_paragraph(f'Project Progress: {project_progress:.2%}')
                         # summ_reports = []
                                        
             if "WPS" in selected_scheme or selected_scheme[0]=='':
@@ -741,18 +772,32 @@ def summ_report(request, proposal_id):
 
                     doc.add_heading('\n' + 'Wool Processing Scheme (WPS)', level=2)
 
-                    for subcomp in matching_subcomponents:
-                        doc.add_heading(f'{subcomp}', level=3)
-                        # Match class name with the string sent and get the reports
-                        summ_reports += globals()[subcomp].objects.all()
+                    summ_reports = list(globals()[subcomp].objects.filter(quarter__in = selected_quarters, financial_year__in = selected_years))
 
-                        for report in summ_reports:
-                            # print(report.proposal_unique_id)
-                            doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
-                                              f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
-                                              f'{report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
-                                              f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
-                                              f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+                    for report in summ_reports:
+                        pr = Proposal.objects.filter(unique_id = report.proposal_unique_id)
+                        goals = pr.values_list('goals', flat=True)[0]  # Assuming there's only one proposal
+                        goals_list = [goal for sublist in goals for goal in sublist.values()]
+                        num_goals = len(goals_list)
+                        num_completed_goals = sum(1 for goal in goals_list if goal['completed'])
+
+                        doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
+                                            f'Component: {pr.values_list('scheme_component', flat=True)[0]}' + '\n' 
+                                            f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
+                                            f'Quarter: {report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
+                                            f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
+                                            f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+                        
+                        # Write goals in list bullets format
+                        doc.add_paragraph('Goals:')
+                        for goal in goals_list:
+                            goal_completed = "Completed" if goal["completed"] else "Not Completed"
+                            doc.add_paragraph(f'- {goal["text"]} ({goal_completed})', style='ListBullet')
+
+                        # Calculate project progress
+                        project_progress = num_completed_goals / num_goals if num_goals != 0 else 0
+                        doc.add_paragraph(f'Project Progress: {project_progress:.2%}')
+
 
             if "HRD" in selected_scheme or selected_scheme[0]=='':
                 # Check if selected subcomponents start with "WMS"
@@ -772,13 +817,31 @@ def summ_report(request, proposal_id):
 
                     doc.add_heading('\n' + 'HRD', level=2)
 
-                    for subcomp in matching_subcomponents:
-                        doc.add_heading(f'{subcomp}', level=3)
-                        # Match class name with the string sent and get the reports
-                        summ_reports += globals()[subcomp].objects.all()
+                    summ_reports = list(globals()[subcomp].objects.filter(quarter__in = selected_quarters, financial_year__in = selected_years))
 
-                        for report in summ_reports:
-                            doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + f'{report.quarter}' + ", " + f'{report.financial_year}' + '\n' + f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+                    for report in summ_reports:
+                        pr = Proposal.objects.filter(unique_id = report.proposal_unique_id)
+                        goals = pr.values_list('goals', flat=True)[0]  # Assuming there's only one proposal
+                        goals_list = [goal for sublist in goals for goal in sublist.values()]
+                        num_goals = len(goals_list)
+                        num_completed_goals = sum(1 for goal in goals_list if goal['completed'])
+
+                        doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
+                                            f'Component: {pr.values_list('scheme_component', flat=True)[0]}' + '\n' 
+                                            f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
+                                            f'Quarter: {report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
+                                            f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
+                                            f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+                        
+                        # Write goals in list bullets format
+                        doc.add_paragraph('Goals:')
+                        for goal in goals_list:
+                            goal_completed = "Completed" if goal["completed"] else "Not Completed"
+                            doc.add_paragraph(f'- {goal["text"]} ({goal_completed})', style='ListBullet')
+
+                        # Calculate project progress
+                        project_progress = num_completed_goals / num_goals if num_goals != 0 else 0
+                        doc.add_paragraph(f'Project Progress: {project_progress:.2%}')
 
 
             if "PWDS" in selected_scheme or selected_scheme[0]=='':
@@ -802,14 +865,31 @@ def summ_report(request, proposal_id):
                     for subcomp in matching_subcomponents:
                         doc.add_heading(f'{subcomp}', level=3)
                         # Match class name with the string sent and get the reports
-                        summ_reports += globals()[subcomp].objects.all()
+                        summ_reports = list(globals()[subcomp].objects.filter(quarter__in = selected_quarters, financial_year__in = selected_years))
 
                         for report in summ_reports:
+                            pr = Proposal.objects.filter(unique_id = report.proposal_unique_id)
+                            goals = pr.values_list('goals', flat=True)[0]  # Assuming there's only one proposal
+                            goals_list = [goal for sublist in goals for goal in sublist.values()]
+                            num_goals = len(goals_list)
+                            num_completed_goals = sum(1 for goal in goals_list if goal['completed'])
+
                             doc.add_paragraph(f'----------------------------------------------------------------------------------------------------------------------' + '\n' + 
+                                              f'Component: {pr.values_list('scheme_component', flat=True)[0]}' + '\n' 
                                               f'Proposal Unique ID: {report.proposal_unique_id}' + '\n' + 
-                                              f'{report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
+                                              f'Quarter: {report.quarter}' + ", " + f'{report.financial_year}' + '\n' + 
                                               f'Quarterly Allocated Budget: {report.quarterly_allocated_budget}' + '\n' + 
                                               f'Total Quarterly Budget Spent: {report.total_quarterly_budget_spent}')
+                            
+                            # Write goals in list bullets format
+                            doc.add_paragraph('Goals:')
+                            for goal in goals_list:
+                                goal_completed = "Completed" if goal["completed"] else "Not Completed"
+                                doc.add_paragraph(f'- {goal["text"]} ({goal_completed})', style='ListBullet')
+
+                            # Calculate project progress
+                            project_progress = num_completed_goals / num_goals if num_goals != 0 else 0
+                            doc.add_paragraph(f'Project Progress: {project_progress:.2%}')
                                                     
             # Save DOCX to BytesIO
             doc_bytes = BytesIO()
@@ -827,9 +907,6 @@ def summ_report(request, proposal_id):
     proposals = Proposal.objects.filter(status="Approved").values_list('unique_id', flat=True).distinct()
     proposals = list(proposals)
     return render(request, 'admin/summ_report.html', {'form': form, 'proposals': proposals})
-
-
-
 
 def process(df, gender=0, category=0, state=0, beneficiaries=0):
     """takes all xlsx data and flags of data required
