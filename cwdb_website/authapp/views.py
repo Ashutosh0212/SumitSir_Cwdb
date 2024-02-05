@@ -1,4 +1,28 @@
+def get_financial_year():
+    # Logic to determine the Indian financial year
+    # This is just a sample logic, you can adjust it as per your needs
+    from datetime import datetime
+    today = datetime.today()
+    if today.month >= 4:
+        return f'{today.year}-{today.year + 1}'
+    else:
+        return f'{today.year - 1}-{today.year}'
 
+
+from datetime import datetime
+
+QUARTER_CHOICES = [
+    ('Q1', 'Quarter 1 (April-June)'),
+    ('Q2', 'Quarter 2 (July-September)'),
+    ('Q3', 'Quarter 3 (October-December)'),
+    ('Q4', 'Quarter 4 (January-March)'),
+]
+
+def get_current_quarter():
+    now = datetime.now()
+    quarter = (now.month - 1) // 3 + 1
+    current_quarter = f'Q{quarter}'
+    return current_quarter
 
 
 from .forms import CustomUserCreationForm
@@ -220,7 +244,8 @@ SCHEME_CHOICES = [
 from django.shortcuts import render
 from .models import FundDistribution,Proposal,BeneficiaryData,ExpenditureData
 from django.db.models import Sum 
-from .forms import quarterly_schemes_form
+from .forms import quarterly_schemes_form,allocation_form
+
 def index(request):
     current_financial_year = get_financial_year()
 
@@ -240,7 +265,17 @@ def index(request):
     #fetch data according to form 
     #quarter expenditure and sanctioned data
     form = quarterly_schemes_form(request.GET)
-    print(f"Current Financial Year: {current_financial_year}")
+    form1=allocation_form(request.GET)
+    # print(f"Current Financial Year: {current_financial_year}")
+    if form1.is_valid():
+        year = form1.cleaned_data.get('year')
+        try:
+            fund_data = FundDistribution.objects.get(financial_year=year)
+        except FundDistribution.DoesNotExist:
+            fund_data = None  # Handle the case where data for the current year does not exist
+    else:
+        fund_data=fund_distribution_data
+        
     schemes_data = {}
     if form.is_valid():
         year = form.cleaned_data.get('financial_year')
@@ -271,9 +306,11 @@ def index(request):
         'scheme4Funds': [schemes_data.get('PWDS', {}).get('Q1', 0), schemes_data.get('PWDS', {}).get('Q2', 0), schemes_data.get('PWDS', {}).get('Q3', 0), schemes_data.get('PWDS', {}).get('Q4', 0)],
     }
     
-    print(quarterlyFunds)
+    # print(quarterlyFunds)
+    context={'fund_distribution_data': fund_distribution_data, 'current_financial_year': current_financial_year, 'total_projects_count': total_projects_count, 'total_beneficiaries': total_beneficiaries,'quarterlyFunds': quarterlyFunds,'quarter_form':form,'schemes_data': schemes_data
+                                               ,'fund_data_allocated':fund_data,'allocation_form':form1}
     
-    return render(request, 'main/index.html', {'fund_distribution_data': fund_distribution_data, 'current_financial_year': current_financial_year, 'total_projects_count': total_projects_count, 'total_beneficiaries': total_beneficiaries,'quarterlyFunds': quarterlyFunds,'quarter_form':form,'schemes_data': schemes_data})
+    return render(request, 'main/index.html',context )
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -478,15 +515,7 @@ from .models import WMS_RevolvingFund
 from .forms import WMSRevolvingFundForm
 from django.http import HttpResponse
 
-def get_financial_year():
-    # Logic to determine the Indian financial year
-    # This is just a sample logic, you can adjust it as per your needs
-    from datetime import datetime
-    today = datetime.today()
-    if today.month >= 4:
-        return f'{today.year}-{today.year + 1}'
-    else:
-        return f'{today.year - 1}-{today.year}'
+
 
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string

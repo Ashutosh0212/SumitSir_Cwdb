@@ -34,7 +34,7 @@
     <script>
         var fundData = {
           schemeNames: ['Wool Marketing Scheme', 'Wool Processing Scheme', 'HRDPA', 'PWDS','Administrative Expenses'],
-          fundAllocations: [{{fund_distribution_data.wms}},{{fund_distribution_data.wps}},{{fund_distribution_data.hrdpa}},{{fund_distribution_data.pwds}},{{fund_distribution_data.admin_exp}}],
+          fundAllocations: [{{fund_data_allocated.wms}},{{fund_data_allocated.wps}},{{fund_data_allocated.hrdpa}},{{fund_data_allocated.pwds}},{{fund_data_allocated.admin_exp}}],
           // Add more data as needed
         };
     
@@ -397,289 +397,71 @@
           </div>
       </div>
       
-            <div class="row mt-4 removable">
-                {% comment %} all the other graphs will be in it  {% endcomment %}
-                
-               
-                <div class="col-lg-8 col-sm-6 mt-sm-0 mt-4">
-                  <div class="card mb-4">
-                      <div class="card-header pb-0 p-3">
-                          <div class="d-flex justify-content-between">
-                              <h6 class="mb-0">Quarterly Schemes Fund Allocated </h6>
-                              <button type="button" class="btn btn-icon-only btn-rounded btn-outline-secondary mb-0 ms-2 btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="See Fund Allocated for Current Financial Year">
-                                  <i class="material-icons text-sm">priority_high</i>
-                              </button>
-                          </div>
-                      </div>
-                      <div class="card-body p-3">
-                          <!-- Add the form here -->
-                          <form method="get" action="">
-                              {{ quarter_form.as_p }}
-                              <button type="submit" class="btn btn-primary">Apply Filter</button>
-                          </form>
-              
-                          <div class="chart">
-                              <canvas id="quarterlyFundsChart" class="chart-canvas chart-line" height="600" style="display: block; box-sizing: border-box; height: 500px; width: 770.3px;" width="770"></canvas>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-4 col-sm-6">
-                <div class="card mb-4">
-                    <div class="card-header pb-0 p-3">
-                        <div class="d-flex justify-content-between">
-                            <h6 class="mb-0">Distribution of funds Between Schemes</h6>
-                            <button type="button" class="btn btn-icon-only btn-rounded btn-outline-secondary mb-0 ms-2 btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Distribution of funds given to CWDB">
-                                <i class="material-icons text-sm">priority_high</i>
-                            </button>
-                        </div>
+      <div class="row mt-4 removable">
+        <!-- First Graph -->
+        <div class="col-lg-8 col-sm-12 mt-sm-0 mt-4">
+            <div class="card mb-4">
+                <div class="card-header pb-0 p-3">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="mb-0">Quarterly Schemes Fund Allocated </h6>
+                        <button type="button" class="btn btn-icon-only btn-rounded btn-outline-secondary mb-0 ms-2 btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="See Fund Allocated for Current Financial Year">
+                            <i class="material-icons text-sm">priority_high</i>
+                        </button>
                     </div>
-                    <div class="card-body pb-0 p-3 mt-4">
+                </div>
+                <div class="card-body p-3">
+                    <!-- Add the form here -->
+                    <form method="get" action="{% url 'authapp:index' %}">
                         <div class="row">
-                            <div class="col-7 text-start">
-                                <div class="chart">
-                                    <canvas id="fundDistributionChart" class="chart-canvas chart-pie" height="400" style="display: block; box-sizing: border-box; height: 400px; width: 191.8px;" width="191"></canvas>
+                            <div class="input-group">
+                                <h6>{{ quarter_form.select_type }}</h6>
+                                <div style="margin-right: 10px;"></div>
+                                <h6>{{ quarter_form.financial_year }}</h6>
+                                <div style="margin-right: 10px;"></div>
+                                <button type="submit" class="btn btn-primary" style="font-size: 12px; padding: 5px 10px;">Apply Filters</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="chart">
+                        <canvas id="quarterlyFundsChart" class="chart-canvas chart-line" height="600" style="display: block; box-sizing: border-box; height: 500px; width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Second Graph -->
+        <div class="col-lg-4 col-sm-12">
+            <div class="card mb-4">
+                <div class="card-header pb-0 p-3">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="mb-0">Distribution of funds Between Schemes</h6>
+                        <button type="button" class="btn btn-icon-only btn-rounded btn-outline-secondary mb-0 ms-2 btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Distribution of funds given to CWDB">
+                            <i class="material-icons text-sm">priority_high</i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body pb-0 p-3 mt-4">
+                    <div class="row">
+                        <div class="col-12 text-start">
+                            <form method="get" action="{% url 'authapp:index' %}">
+                                <div class="input-group">
+                                    <h6>{{ allocation_form.year }}</h6>
+                                    <div style="margin-right: 10px;"></div>
+                                    <button type="submit" class="btn btn-primary" style="font-size: 12px; padding: 5px 10px;">Apply Filters</button>
                                 </div>
+                            </form>
+                            <div class="chart">
+                                <canvas id="fundDistributionChart" class="chart-canvas chart-pie" height="600" style="display: block; box-sizing: border-box; height: 500px; width: 100%;"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-              </div>
-                   <div class="card">
-                      <div class="card-header pb-0">
-                          <div class="row">
-                              <div class="col-lg-6 col-7">
-                                  <h6>Projects</h6>
-                                  <p class="text-sm mb-0">
-                                      <i class="fa fa-check text-info" aria-hidden="true"></i>
-                                      <span class="font-weight-bold ms-1">30 Ongoing Projects</span> 
-                                  </p>
-                              </div>
-                              <div class="col-lg-6 col-5 my-auto text-end">
-                                  <div class="dropdown float-lg-end pe-4">
-                                      <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
-                                          <i class="fa fa-ellipsis-v text-secondary" aria-hidden="true"></i>
-                                      </a>
-                                      <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                                          <li><a class="dropdown-item border-radius-md" href="javascript:;">More</a></li>
-                                         
-                                      </ul>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  <div class="card-body px-0 pb-2">
-                      <div class="table-responsive">
-                          <table class="table align-items-center mb-0">
-                              <thead>
-                                  <tr>
-                                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Implementing Agency</th>
-                                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Scheme</th>
-                                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SubComponent</th>
-                                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Fund Sanctioned (in Lakh Rs.)</th>
-                                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Expenditure (in Lakh Rs.)</th>
-                                      
-                                      
-                                      
-                                      
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <tr>
-                                      <td>
-                                          <div class="d-flex px-2 py-1">
-                                              <div>
-                                                  {% comment %} <img src="https://demos.creative-tim.com/material-dashboard/assets/img/small-logos/logo-xd.svg" class="avatar avatar-sm me-3" alt="xd"> {% endcomment %}
-                                              </div>
-                                              <div class="d-flex flex-column justify-content-center">
-                                                  <h6 class="mb-0 text-sm">Director, Industries & Commerce, UT of Ladakh.</h6>
-                                              </div>
-                                          </div>
-                                      </td>
-                                      <td>
-                                         
-                                          <div class="d-flex px-2 py-1">
-                                              <div>
-                                                  {% comment %} <img src="https://demos.creative-tim.com/material-dashboard/assets/img/small-logos/logo-xd.svg" class="avatar avatar-sm me-3" alt="xd"> {% endcomment %}
-                                              </div>
-                                              <div class="d-flex flex-column justify-content-center">
-                                                  <h6 class="mb-0 text-sm">WMS</h6>
-                                              </div>
-                                          </div>
-
-                                      </td>
-                                      <td class="align-middle text-center text-sm">
-                                          <span class="text-xs font-weight-bold"> For the Organizing 03 domestic  woollen expo on hiring stall basis during winter season.   </span>
-                                      </td>
-                                      <td class="align-middle">
-                                          <div class="progress-wrapper w-75 mx-auto">
-                                              <div class="progress-info">
-                                                  <div class="progress-percentage">
-                                                      <span class="text-xs font-weight-bold">22.5</span>
-                                                  </div>
-                                              </div>
-                                             
-                                          </div>
-                                      </td>
-                                      <td class="align-middle text-center text-sm">
-                                        <span class="text-xs font-weight-bold"> 0 </span>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                        <div class="d-flex px-2 py-1">
-                                            <div>
-                                                {% comment %} <img src="https://demos.creative-tim.com/material-dashboard/assets/img/small-logos/logo-xd.svg" class="avatar avatar-sm me-3" alt="xd"> {% endcomment %}
-                                            </div>
-                                            <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="mb-0 text-sm">Director, Industries & Commerce, UT of Ladakh.</h6>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                       
-                                        <div class="d-flex px-2 py-1">
-                                            <div>
-                                                {% comment %} <img src="https://demos.creative-tim.com/material-dashboard/assets/img/small-logos/logo-xd.svg" class="avatar avatar-sm me-3" alt="xd"> {% endcomment %}
-                                            </div>
-                                            <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="mb-0 text-sm">WMS</h6>
-                                            </div>
-                                        </div>
-
-                                    </td>
-                                    <td class="align-middle text-center text-sm">
-                                        <span class="text-xs font-weight-bold"> For the Organizing 03 domestic  woollen expo on hiring stall basis during winter season.   </span>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-wrapper w-75 mx-auto">
-                                            <div class="progress-info">
-                                                <div class="progress-percentage">
-                                                    <span class="text-xs font-weight-bold">22.5</span>
-                                                </div>
-                                            </div>
-                                           
-                                        </div>
-                                    </td>
-                                    <td class="align-middle text-center text-sm">
-                                      <span class="text-xs font-weight-bold"> 0 </span>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td>
-                                      <div class="d-flex px-2 py-1">
-                                          <div>
-                                              {% comment %} <img src="https://demos.creative-tim.com/material-dashboard/assets/img/small-logos/logo-xd.svg" class="avatar avatar-sm me-3" alt="xd"> {% endcomment %}
-                                          </div>
-                                          <div class="d-flex flex-column justify-content-center">
-                                              <h6 class="mb-0 text-sm">Director, Industries & Commerce, UT of Ladakh.</h6>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td>
-                                     
-                                      <div class="d-flex px-2 py-1">
-                                          <div>
-                                              {% comment %} <img src="https://demos.creative-tim.com/material-dashboard/assets/img/small-logos/logo-xd.svg" class="avatar avatar-sm me-3" alt="xd"> {% endcomment %}
-                                          </div>
-                                          <div class="d-flex flex-column justify-content-center">
-                                              <h6 class="mb-0 text-sm">WMS</h6>
-                                          </div>
-                                      </div>
-
-                                  </td>
-                                  <td class="align-middle text-center text-sm">
-                                      <span class="text-xs font-weight-bold"> For the Organizing 03 domestic  woollen expo on hiring stall basis during winter season.   </span>
-                                  </td>
-                                  <td class="align-middle">
-                                      <div class="progress-wrapper w-75 mx-auto">
-                                          <div class="progress-info">
-                                              <div class="progress-percentage">
-                                                  <span class="text-xs font-weight-bold">22.5</span>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td class="align-middle text-center text-sm">
-                                    <span class="text-xs font-weight-bold"> 0 </span>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                    <div class="d-flex px-2 py-1">
-                                        <div>
-                                            {% comment %} <img src="https://demos.creative-tim.com/material-dashboard/assets/img/small-logos/logo-xd.svg" class="avatar avatar-sm me-3" alt="xd"> {% endcomment %}
-                                        </div>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="mb-0 text-sm">Director, Industries & Commerce, UT of Ladakh.</h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                   
-                                    <div class="d-flex px-2 py-1">
-                                        <div>
-                                            {% comment %} <img src="https://demos.creative-tim.com/material-dashboard/assets/img/small-logos/logo-xd.svg" class="avatar avatar-sm me-3" alt="xd"> {% endcomment %}
-                                        </div>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="mb-0 text-sm">WMS</h6>
-                                        </div>
-                                    </div>
-
-                                </td>
-                                <td class="align-middle text-center text-sm">
-                                    <span class="text-xs font-weight-bold"> For the Organizing 03 domestic  woollen expo on hiring stall basis during winter season.   </span>
-                                </td>
-                                <td class="align-middle">
-                                    <div class="progress-wrapper w-75 mx-auto">
-                                        <div class="progress-info">
-                                            <div class="progress-percentage">
-                                                <span class="text-xs font-weight-bold">22.5</span>
-                                            </div>
-                                        </div>
-                                       
-                                    </div>
-                                </td>
-                                <td class="align-middle text-center text-sm">
-                                  <span class="text-xs font-weight-bold"> 0 </span>
-                              </td>
-                            </tr>
-                                 
-                                 
-                              </tbody>
-                          </table>
-                      </div>
-                  </div> 
-                   
-                    </div> 
-                    
-                </div>
-               
-                    <div class="card mb-4">
-                      <div class="card-header pb-0 p-3">
-                          <div class="d-flex justify-content-between">
-                              <h6 class="mb-0">Beneficiary Data</h6>
-                              <button type="button" class="btn btn-icon-only btn-rounded btn-outline-secondary mb-0 ms-2 btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Distribution of funds given to CWDB">
-                                  <i class="material-icons text-sm">priority_high</i>
-                              </button>
-                          </div>
-                      </div>
-                      <div class="card-body pb-0 p-3 mt-8">
-                          <div class="row">
-                              <div class="text-start">
-                                  <div class="chart">
-                                      <canvas id="fundDistributionChart2" class="chart-canvas chart-pie" height="400" style="display: block; box-sizing: border-box; height: 400px; width: 191.8px;" width="191"></canvas>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                </div>              
             </div>
+        </div>
+    </div>
+    
             
-
-        
-    </div> 
+    
   </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">

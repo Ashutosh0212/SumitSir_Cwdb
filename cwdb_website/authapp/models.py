@@ -19,7 +19,7 @@ def generate_financial_year_choices():
 
     return financial_year_choices
     
-    
+
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     AGENCY_NATURE_CHOICES = [
@@ -81,6 +81,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 from django.conf import settings
 from django.db import models
 
+QUARTER_CHOICES=[
+            ('Q1', 'Quarter 1 (April-June)'),
+            ('Q2', 'Quarter 2 (July-September)'),
+            ('Q3', 'Quarter 3 (October-December)'),
+            ('Q4', 'Quarter 4 (January-March)'),
+        ]
 
 class Proposal(models.Model):
     STATUS_CHOICES = [
@@ -124,6 +130,10 @@ class Proposal(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     total_duration = models.IntegerField(blank=True, null=True)
     goals = models.JSONField(default=dict)
+    #for progress report reminder
+    reminder_financial_year = models.CharField(max_length=10,choices=generate_financial_year_choices(), blank=True, null=True)
+    reminder_quarter = models.CharField(max_length=5,choices=QUARTER_CHOICES, blank=True, null=True)
+    reminder_sent = models.BooleanField(default=False)
     
     def __str__(self):
         return self.unique_id

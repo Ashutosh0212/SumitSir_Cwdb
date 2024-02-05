@@ -1215,12 +1215,24 @@ FINANCIAL_YEAR1_CHOICES = [
     *generate_financial_years(),
 ]
 
+from datetime import date
+
+def get_financial_year():
+    today = date.today()
+    current_year = today.year
+    if today.month < 4:  # Financial year starts from April
+        return f"{current_year - 1}-{current_year}"
+    else:
+        return f"{current_year}-{current_year + 1}"
+
 class quarterly_schemes_form(forms.Form):
-    select_type=forms.ChoiceField(choices=Fund1_CHOICES, required=False)
+    select_type = forms.ChoiceField(choices=Fund1_CHOICES, required=False)
     financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR1_CHOICES, required=False)
-    
-   
-    
+
+    def __init__(self, *args, **kwargs):
+        super(quarterly_schemes_form, self).__init__(*args, **kwargs)
+        self.fields['select_type'].initial = 'Fund Sanctioned'
+        self.fields['financial_year'].initial = get_financial_year()
+
 class allocation_form(forms.Form):
-    financial_year = forms.ChoiceField(choices=FINANCIAL_YEAR1_CHOICES, required=False)
-    
+    year = forms.ChoiceField(choices=FINANCIAL_YEAR1_CHOICES, required=False, initial=get_financial_year())
