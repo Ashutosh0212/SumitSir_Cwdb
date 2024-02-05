@@ -1000,8 +1000,8 @@ def eportal_progress_report(request, proposal_unique_id):
         }
         form = EPortalForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/WMS/2.EPortal.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/WMS/2.EPortal.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 @login_required
 def progress_report(request):
@@ -1195,8 +1195,8 @@ def buyersellerexpo_report(request, proposal_unique_id):
         }
         form = WMSBuyerSellerExpoForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/WMS/4.BuyerSellerExpo.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/WMS/4.BuyerSellerExpo.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import WMS_InfrastructureDevelopment, ExpenditureData
@@ -1245,8 +1245,8 @@ def infrastructuredevelopment_report(request, proposal_unique_id):
         }
         form = WMSInfrastructureDevelopmentForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/WMS/5.infrastructureDevelopment.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/WMS/5.infrastructureDevelopment.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from .models import WoolenExpo, WoolenExpoHiring, ExpenditureData
 from .forms import WoolenExpoForm, WoolenExpoHiringForm
@@ -1322,8 +1322,8 @@ def woolen_expo(request,proposal_unique_id):
         }
         form = WoolenExpoForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/WMS/6.WoolenExpo.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/WMS/6.WoolenExpo.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
     
 def woolen_expo_hiring(request,proposal_unique_id):
     if request.method == 'POST':
@@ -1396,8 +1396,8 @@ def woolen_expo_hiring(request,proposal_unique_id):
         }
         form = WoolenExpoHiringForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/WMS/7.WoolenExpoHiring.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/WMS/7.WoolenExpoHiring.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 # views.py
 from django.shortcuts import render, redirect
@@ -1476,8 +1476,8 @@ def cfc_progress_report(request, proposal_unique_id):
         }
         form = WPSCFCForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/WPS/1.CFC.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/WPS/1.CFC.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from .forms import WPSSheepShearingMachingForm
 from .models import ExpenditureData
@@ -1552,8 +1552,8 @@ def sheep_shearing_machining(request, proposal_unique_id):
         }
         form = WPSSheepShearingMachingForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/WPS/2.SheepShearingMaching.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/WPS/2.SheepShearingMaching.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from .forms import WPSEquipmentForm
 from .models import ExpenditureData
@@ -1628,8 +1628,8 @@ def equipment(request, proposal_unique_id):
         }
         form = WPSEquipmentForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/WPS/3.Equipment.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/WPS/3.Equipment.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -1707,8 +1707,8 @@ def small_tools_distribution(request, proposal_unique_id):
         }
         form = WPSSmallToolsDistributionForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/WPS/4.SmallToolsDistribution.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/WPS/4.SmallToolsDistribution.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from .models import HRD_ShortTermProgramme, ExpenditureData
 from .forms import HRDShortTermProgrammeForm
@@ -1842,8 +1842,8 @@ def short_term_programme(request, proposal_unique_id):
         }
         form = HRDShortTermProgrammeForm(initial=initial_data)
 
-    context = {'form': form}
-    return render(request, 'progressReports/HRD/1.ShortTermProgramme.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/HRD/1.ShortTermProgramme.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from .models import HRD_OnsiteTraining, ExpenditureData
 from .forms import HRDOnsiteTrainingForm
@@ -1919,8 +1919,8 @@ def onsite_training_progress_report(request, proposal_unique_id):
         }
         form = HRDOnsiteTrainingForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/HRD/2.OnsiteTraining.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/HRD/2.OnsiteTraining.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import HRD_ShearingMachineTraining
@@ -1998,8 +1998,8 @@ def shearing_machine_training_report(request, proposal_unique_id):
         }
         form = HRDShearingMachineTrainingForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/HRD/3.ShearingMachineTraining.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/HRD/3.ShearingMachineTraining.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from .models import RD
 from .forms import RDForm
@@ -2031,8 +2031,8 @@ def rd_report(request, proposal_unique_id):
         }
         form = RDForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/HRD/4.R&D.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/HRD/4.R&D.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import DomesticMeeting, ExpenditureData
@@ -2110,8 +2110,8 @@ def domestic_meeting_report(request, proposal_unique_id):
         }
         form = DomesticMeetingForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/HRD/5.DomesticMeeting.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/HRD/5.DomesticMeeting.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import OrganisingSeminar
@@ -2189,8 +2189,8 @@ def organising_seminar_report(request, proposal_unique_id):
         }
         form = OrganisingSeminarForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/HRD/6.OrganisingSeminar.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/HRD/6.OrganisingSeminar.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import WoolSurvey, ExpenditureData
@@ -2239,8 +2239,8 @@ def wool_survey_report(request, proposal_unique_id):
         }
         form = WoolSurveyForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/HRD/7.WoolSurvey.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/HRD/7.WoolSurvey.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import WoolTestingLab, ExpenditureData
@@ -2318,8 +2318,8 @@ def wool_testing_lab_report(request, proposal_unique_id):
         }
         form = WoolTestingLabForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/HRD/8.WoolTestingLab.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/HRD/8.WoolTestingLab.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import PublicityMonitoring, ExpenditureData
@@ -2368,8 +2368,8 @@ def publicity_monitoring_report(request, proposal_unique_id):
         }
         form = PublicityMonitoringForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/HRD/9.PublicityMonitoring.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/HRD/9.PublicityMonitoring.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 # pwds
 from django.shortcuts import render, redirect
@@ -2486,8 +2486,8 @@ def pashmina_revolving_fund_progress_report(request, proposal_unique_id):
         }
         form = PWDS_PashminaRevolvingFundForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/PWDS/1.PashminaRevolvingFund.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/PWDS/1.PashminaRevolvingFund.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import PWDS_PashminaCFC, ExpenditureData
@@ -2536,8 +2536,8 @@ def pashmina_cfc_report(request, proposal_unique_id):
         }
         form = PWDS_PashminaCFCForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/PWDS/2.PashminaCFC.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/PWDS/2.PashminaCFC.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import ShelterShedConstruction, ExpenditureData
@@ -2619,8 +2619,8 @@ def shelter_shed_report(request, proposal_unique_id):
         }
         form = ShelterShedConstructionForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/PWDS/3.ShelterShedConstruction.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/PWDS/3.ShelterShedConstruction.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import PortableTentDist, ExpenditureData
@@ -2702,8 +2702,8 @@ def portable_tent_report(request, proposal_unique_id):
         }
         form = PortableTentDistForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/PWDS/4.PortableTentDist.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/PWDS/4.PortableTentDist.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import PredatorProofLightsDist, ExpenditureData
@@ -2785,8 +2785,8 @@ def predator_proof_lights_report(request, proposal_unique_id):
         }
         form = PredatorProofLightsDistForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/PWDS/5.PredatorProofLightsDist.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/PWDS/5.PredatorProofLightsDist.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import TestingEquipment, ExpenditureData
@@ -2835,8 +2835,8 @@ def testing_equipment_report(request, proposal_unique_id):
         }
         form = TestingEquipmentForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/PWDS/6.TestingEquipment.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/PWDS/6.TestingEquipment.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import ShowroomDevelopment, ExpenditureData
@@ -2885,8 +2885,8 @@ def showroom_development_report(request, proposal_unique_id):
         }
         form = ShowroomDevelopmentForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/PWDS/7.ShowroomDevelopment.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/PWDS/7.ShowroomDevelopment.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 from django.shortcuts import render, redirect
 from .models import FodderLandDevelopment, ExpenditureData
@@ -2935,8 +2935,8 @@ def fodder_land_development_report(request, proposal_unique_id):
         }
         form = FodderLandDevelopmentForm(initial=initial_data)
     
-    context = {'form': form}
-    return render(request, 'progressReports/PWDS/8.FodderLandDevelopmen.html', context)
+    proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
+    return render(request, 'progressReports/PWDS/8.FodderLandDevelopmen.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
 
 #staff view
