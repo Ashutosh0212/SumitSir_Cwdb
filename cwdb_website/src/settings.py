@@ -46,9 +46,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'django_otp',
-    'authapp',
+    # 'authapp',
      "crispy_forms",
      "crispy_bootstrap5",
+     'authapp.apps.UsersConfig',
 ]
 
 

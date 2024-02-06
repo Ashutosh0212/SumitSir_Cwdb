@@ -133,7 +133,7 @@ class Proposal(models.Model):
     #for progress report reminder
     reminder_financial_year = models.CharField(max_length=10,choices=generate_financial_year_choices(), blank=True, null=True)
     reminder_quarter = models.CharField(max_length=5,choices=QUARTER_CHOICES, blank=True, null=True)
-    reminder_sent = models.BooleanField(default=False)
+    # reminder_sent = models.BooleanField(default=False)
     
     def __str__(self):
         return self.unique_id

@@ -1163,6 +1163,36 @@ def eportal_progress_report(request, proposal_unique_id):
     proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
     return render(request, 'progressReports/WMS/2.EPortal.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
 
+def send_progress_report_reminders():
+    proposals = Proposal.objects.filter(status='Approved')
+    # print("done")
+    for proposal in proposals:
+        current_quarter = get_current_quarter()
+        financial_year = get_financial_year()
+        
+        # Skip if reminder_quarter and reminder_financial_year are None
+        if proposal.reminder_quarter is None and proposal.reminder_financial_year is None:
+            proposal.reminder_quarter = current_quarter
+            proposal.reminder_financial_year = financial_year
+            proposal.save()
+            continue
+        
+        if current_quarter != proposal.reminder_quarter or financial_year != proposal.reminder_financial_year:
+            message = f'Reminder: Submit progress report for Project ID {proposal.unique_id} of Quarter {proposal.reminder_quarter} ({proposal.reminder_financial_year}).'
+            notification = Notification(user=proposal.user, message=message)
+            notification.save()
+
+            subject = 'Progress Report Reminder'
+            email_template = 'email/progress_report_email_template.html'
+            email_content = render_to_string(email_template, {'user': proposal.user, 'proposal': proposal})
+            sender_email = settings.EMAIL_HOST_USER
+            recipient_email = proposal.user.email
+            send_mail(subject, '', sender_email, [recipient_email], html_message=email_content)
+
+            proposal.reminder_quarter = current_quarter
+            proposal.reminder_financial_year = financial_year
+            proposal.save()
+
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
@@ -1171,34 +1201,11 @@ def progress_report(request):
     user = request.user
     proposals = Proposal.objects.filter(user=user, status='Approved')
     
-    for proposal in proposals:
-        # Check if a reminder needs to be sent
-        if not proposal.reminder_sent:
-            # Check if it's a new quarter
-            current_quarter = get_current_quarter()
-            financial_year=get_financial_year()
+    # send_progress_report_reminders()
             
-            if current_quarter != proposal.reminder_quarter or financial_year!=proposal.reminder_financial_year:
-                proposal.reminder_sent = True  # Set the reminder flag
-                 # Send notification and email to the user to submit the progress report
-                message = f'Reminder: Submit progress report for Project ID {proposal.unique_id} of Quarter {proposal.reminder_quarter} ({proposal.reminder_financial_year}).'
-                notification = Notification(user=user, message=message)
-                notification.save()
-                
-                # Send email to the user
-                subject = 'Progress Report Reminder'
-                email_template = 'email/progress_report_email_template.html'
-                email_content = render_to_string(email_template, {'user': user, 'proposal': proposal})
-                sender_email = EMAIL_HOST_USER;
-                recipient_email = proposal.user
-
-                send_mail(subject, '', sender_email, [recipient_email], html_message=email_content)
-                
-                proposal.reminder_quarter = current_quarter
-                proposal.reminder_financial_year=financial_year
-                proposal.save()
     
     return render(request, 'progressReports/progressreport.html', {'proposals': proposals})
+
 
 from django.shortcuts import render, redirect
 from .models import WMS_SelfHelpGroup, BeneficiaryData, ExpenditureData
@@ -1515,7 +1522,7 @@ def woolen_expo(request,proposal_unique_id):
     
     proposal = Proposal.objects.filter(unique_id=proposal_unique_id)
     return render(request, 'progressReports/WMS/6.WoolenExpo.html', {'form': form, 'goals': json.dumps(list(proposal.values_list('goals', flat=True))), 'created_at': proposal.first().created_at})
-    
+
 def woolen_expo_hiring(request,proposal_unique_id):
     if request.method == 'POST':
         form = WoolenExpoHiringForm(request.POST, request.FILES)
@@ -3177,7 +3184,7 @@ def submit_approval(request, proposal_id):
             # Save the current quarter and set the reminder for the next quarter
             proposal.reminder_quarter = get_current_quarter()
             proposal.reminder_financial_year=get_financial_year()
-            proposal.reminder_sent = True
+            proposal.reminder_sent = False
             proposal.save()
             # Notify the user about the status change
             send_status_change_notification(proposal.user, proposal.unique_id, proposal.status,proposal.project_sanction_letter)

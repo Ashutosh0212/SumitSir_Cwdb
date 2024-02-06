@@ -17,3 +17,5 @@ crispy-bootstrap5==2023.10
 psycopg2==2.9.9
 psycopg2-binary==2.9.9
 # matplotlib==3.8.2
+# celery==5.3.6
+apscheduler==3.10.4
