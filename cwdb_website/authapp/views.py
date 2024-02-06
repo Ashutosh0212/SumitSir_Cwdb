@@ -1193,6 +1193,93 @@ def send_progress_report_reminders():
             proposal.reminder_financial_year = financial_year
             proposal.save()
 
+from django.http import HttpResponse
+from datetime import datetime, timedelta
+from django.apps import apps
+from django.core import serializers
+
+import requests
+import json
+from datetime import datetime, timedelta
+from django.apps import apps
+from django.core import serializers
+# import urllib3
+import ssl
+# from urllib3.util.ssl_ import create_urllib3_context
+from requests.adapters import HTTPAdapter
+
+def take_backup():
+    try:
+        # Define the time range for backup (past 7 days)
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=7)
+
+        # Get all models from installed apps
+        models = apps.get_models()
+
+        # List to store serialized data
+        backup_data = []
+
+        # Loop through each model
+        for model in models:
+            if model._meta.abstract:
+                continue  # Skip abstract models
+
+            # Check if the model has 'updated_at' field (assuming it's a timestamp of last modification)
+            if 'updated_at' in [field.name for field in model._meta.fields]:
+                # Fetch all objects updated in the last 7 days
+                updated_objects = model.objects.filter(updated_at__gte=start_date, updated_at__lte=end_date)
+
+                # Serialize the queryset and add it to the backup data
+                serialized_objects = serializers.serialize('json', updated_objects)
+                backup_data.append(serialized_objects)
+
+        # Merge all serialized data into a single JSON string
+        backup_json = '[' + ','.join(backup_data) + ']'
+
+        # Create a custom SSL context to specify the SSL/TLS version
+        ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+        ssl_context.options |= ssl.OP_NO_SSLv2
+        ssl_context.options |= ssl.OP_NO_SSLv3
+        ssl_context.options |= ssl.OP_NO_TLSv1
+        ssl_context.options |= ssl.OP_NO_TLSv1_1
+
+
+        # Create a requests Session and mount the custom SSL context
+        session = requests.Session()
+        session.mount('https://', HTTPAdapter(max_retries=3))
+        session.mount('https://', HTTPAdapter(max_retries=3))
+        session.mount('https://', HTTPAdapter(max_retries=3))
+
+        # Specify the target IP address and the endpoint
+        target_ip = '192.168.56.101:5000'  # Replace with the actual IP address
+        endpoint = '/receive_backup'
+
+        # Construct the URL
+        url = f'https://{target_ip}{endpoint}'
+
+        # Prepare the data payload
+        data = {
+            'backup_data': backup_json
+        }
+
+        # Convert data to JSON
+        payload = json.dumps(data)
+
+        # Example of authentication headers (replace with actual authentication method)
+        headers = {
+            'Authorization': 'Bearer 0a8eadf7a3523a918a7fb775a06fb71f',
+            'Content-Type': 'application/json'
+        }
+
+        # Send the POST request securely
+        response = requests.post(url, data=payload, headers=headers, verify=True, ssl_context=ssl_context)  # Set verify to True to validate SSL certificate
+        response.raise_for_status()  # Raise an exception for 4xx or 5xx status codes
+        return 'Backup sent successfully'
+    except requests.exceptions.RequestException as e:
+        # Handle exceptions such as network errors, timeouts, etc.
+        raise RuntimeError(f'Error during backup: {str(e)}')
+
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 

@@ -128,6 +128,7 @@ class Proposal(models.Model):
     covering_letter = models.FileField(upload_to='covering_letters/',blank=True, null=True)
     unique_id = models.CharField(max_length=100, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True) # This field will automatically update whenever the model is saved
     total_duration = models.IntegerField(blank=True, null=True)
     goals = models.JSONField(default=dict)
     #for progress report reminder
@@ -137,6 +138,12 @@ class Proposal(models.Model):
     
     def __str__(self):
         return self.unique_id
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:  # If the object is being created
+            self.created_at = timezone.now()
+        self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 #sanction letter
 from django.db import models
