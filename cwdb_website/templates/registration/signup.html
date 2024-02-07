@@ -24,6 +24,11 @@
      <link rel="stylesheet" href="{% static 'css/index_style.css' %}">
 	 <link rel="stylesheet" href="{%static 'css/theme.css'%}">
     <link rel="stylesheet" href="{%static 'css/loopple/loopple.css'%}">  
+    <style>
+      .form-control-dark {
+        border: 2px solid #343a40; /* Dark border color */
+      }
+    </style>
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -117,8 +122,8 @@
       </div>
     </nav>
     <!-- End Navbar -->
-     <div class="container-fluid pt-3">
-       {% comment %} login  {% endcomment %}
+     {% comment %} <div class="container-fluid pt-3">
+       
        <div class="row justify-content-center">
         <div class="col-md-6">
           <div class="card">
@@ -127,8 +132,7 @@
             </div>
             <div class="card-body">
               <form method="post" enctype="multipart/form-data">
-                {% comment %} {% csrf_token %}
-                {{ form.as_p }} {% endcomment %}
+               
                 {% csrf_token %}
                 {{ form|crispy }}
                 <div class="buttons">
@@ -138,7 +142,40 @@
             </div>
           </div>
         </div>
+      </div> {% endcomment %}
+      <div class="container-fluid pt-3">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header bg-primary text-white">
+                <h2>Registration Form</h2>
+              </div>
+              <div class="card-body">
+                <form method="post" enctype="multipart/form-data" class="form-horizontal">
+                  {% csrf_token %}
+                  {% for field in form %}
+                  <div class="form-group row">
+                    <label for="{{ field.id_for_label }}" class="col-sm-5">{{ field.label }}{% if field.field.required %}<span class="text-danger">*</span>{% endif %}:</label>
+                    <div class="col-sm-7">
+                      {{ field }}
+                      
+                      
+                    </div>
+                  </div>
+                  {% endfor %}
+                  <div class="form-group row">
+                    <div class="col-sm-offset-5 col-sm-7">
+                      <button type="submit" class="btn btn-primary">Sign Up</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      
+      
             
             
     </div> 
