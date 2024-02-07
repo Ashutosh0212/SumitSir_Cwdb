@@ -63,7 +63,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     agency_nature = models.CharField(
         max_length=100, choices=AGENCY_NATURE_CHOICES, default='Central Federations')
     registration_number = models.CharField(max_length=100, blank=True, null=True)
-    address = models.CharField(max_length=500,default="",blank=False,null=False)
+    address = models.TextField(max_length=500,default="",blank=False,null=False)
     pincode = models.CharField(max_length=10,blank=False,null=False,default="")
     contact_person_name = models.CharField(max_length=100,blank=False,null=False,default="")
     contact_person_designation = models.CharField(max_length=100,blank=False,null=False,default="")
