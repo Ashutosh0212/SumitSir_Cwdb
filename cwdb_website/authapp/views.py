@@ -3744,3 +3744,11 @@ def admin_exp_view(request):
 
         return render(request, 'main/HomePage/admin_exp.html', context)
     
+from api.serializers import ProposalSerializer
+from django.http import JsonResponse
+from .models import Proposal
+
+def proposal_api(request):
+    proposal = Proposal.objects.all()
+    serializer = ProposalSerializer(proposal, many = True)
+    return JsonResponse(serializer.data, safe=False)

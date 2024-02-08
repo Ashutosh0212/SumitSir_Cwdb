@@ -105,6 +105,10 @@ path('staff_dashboard/', views.staff_dashboard, name='staff_dashboard'),
 path('staff_dashboard/all-proposals/', views.all_proposal_details, name='all_proposal_details'),
 path('submit-approval/<str:proposal_id>/', views.submit_approval, name='submit_approval'),
 path('generate-summary/<str:proposal_id>/', views.summ_report, name='summ_report'),
+
+#API url
+path('apicall/', views.proposal_api),
+    
     # Add more patterns as needed
 
 ]
