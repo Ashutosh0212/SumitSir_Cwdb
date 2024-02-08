@@ -104,7 +104,7 @@ def activate(request, uidb64, token):
         return render(request, 'registration/activation_confirmation.html')  
     else:
         if user is not None:
-            user.delete()  # Remove the user from the database  
+            user.delete()  #
         return HttpResponse('Activation link is invalid!')  
     
 # views.py
