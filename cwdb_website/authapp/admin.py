@@ -29,7 +29,7 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 from django.http import HttpResponseRedirect
-from .models import Proposal
+from cwdb_admin.models import Proposal
 from .forms import ProposalApprovalForm
 
 class ProposalAdmin(admin.ModelAdmin):
@@ -156,7 +156,7 @@ class ProposalAdmin(admin.ModelAdmin):
 admin.site.register(Proposal, ProposalAdmin)
 
 from django.contrib import admin
-from .models import SanctionLetter, InspectionReport
+from cwdb_admin.models import SanctionLetter, InspectionReport
 
 @admin.register(SanctionLetter)
 class SanctionLetterAdmin(admin.ModelAdmin):
@@ -417,14 +417,14 @@ class ProgressReportDocumentAdmin(admin.ModelAdmin):
 
 admin.site.register(ProgressReportDocument, ProgressReportDocumentAdmin)
 
-from django.contrib import admin
-from .models import SummReportGen
+# from django.contrib import admin
+# from .models import SummReportGen
 
-# class SummaryReportFormAdmin(admin.ModelAdmin):\
-    # list_display=
+# # class SummaryReportFormAdmin(admin.ModelAdmin):\
+#     # list_display=
     
 
-admin.site.register(SummReportGen)
+# admin.site.register(SummReportGen)
 
 
 # admin.py
@@ -444,7 +444,7 @@ class ExpenditureDataAdmin(admin.ModelAdmin):
     search_fields = ['proposal_unique_id', 'quarter', 'year', 'scheme','state_of_beneficiaries']
     
 from django.contrib import admin
-from .models import FundDistribution
+from cwdb_admin.models import FundDistribution
 
 class FundDistributionAdmin(admin.ModelAdmin):
     list_display = ('financial_year', 'wms', 'wps', 'pwds', 'hrdpa', 'admin_exp', 'iwdp')

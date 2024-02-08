@@ -8,7 +8,8 @@ def get_financial_year():
     else:
         return f'{today.year - 1}-{today.year}'
 
-
+from cwdb_admin.models import Proposal,SanctionLetter,InspectionReport,FundDistribution
+# from datetime import datetime
 from datetime import datetime
 
 QUARTER_CHOICES = [
@@ -151,7 +152,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import user_passes_test
 from .forms import ProposalApprovalForm
-from .models import Proposal
+
 
 
 

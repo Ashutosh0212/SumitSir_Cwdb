@@ -47,10 +47,11 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'rest_framework',
     'django_otp',
-    # 'authapp',
+    'authapp',
      "crispy_forms",
      "crispy_bootstrap5",
-     'authapp.apps.UsersConfig',
+    #  'authapp.apps.UsersConfig',
+    "cwdb_admin",
 ]
 
 
@@ -106,6 +107,12 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 
