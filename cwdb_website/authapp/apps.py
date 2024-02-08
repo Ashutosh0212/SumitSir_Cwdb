@@ -31,7 +31,7 @@ class UsersConfig(AppConfig):
         scheduler = BackgroundScheduler()
         if settings.DEBUG:
             scheduler.add_job(schedule_progress_report_reminders, trigger='interval', minutes=1, id='progress_report_reminders_job')  # Run every minute in debug mode
-            scheduler.add_job(schedule_backup, trigger='interval', minutes=1, id='take_backup_job')  # Run every minute in debug mode
+            scheduler.add_job(schedule_backup, trigger='interval', minutes=30, id='take_backup_job')  # Run every minute in debug mode
         else:
             scheduler.add_job(schedule_progress_report_reminders, trigger='cron', hour='*/6', id='progress_report_reminders_job')  # Run every 6 hours in production mode
             scheduler.add_job(schedule_backup, trigger='cron', day_of_week='sat', hour=4, id='take_backup_job')  # Run every Saturday at 4 am
