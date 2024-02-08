@@ -22,6 +22,18 @@
      <link rel="stylesheet" href="{% static 'css/index_style.css' %}">
 	 <link rel="stylesheet" href="{%static 'css/theme.css'%}">
     <link rel="stylesheet" href="{%static 'css/loopple/loopple.css'%}">  
+
+    <style>
+      /* Custom CSS */
+.light-color {
+  color: #f8f9fa; /* Light color, adjust as needed */
+}
+
+.custom-font {
+  font-family: Arial, Helvetica, sans-serif; /* Standard font stack */
+}
+    </style>
+
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -131,16 +143,16 @@
       </div>
     </nav>
     <!-- End Navbar -->
-     <div class="container-fluid py-4">
-       {% comment %} login  {% endcomment %}
-       <div class="row justify-content-center">
+    <div class="container-fluid py-4">
+      {% comment %} login {% endcomment %}
+      <div class="row justify-content-center">
         <div class="col-md-4">
           <div class="card">
-            <div class="card-header bg-primary text-white card-text-center ">
-              <h2>Login</h2>
+            <div class="card-header bg-primary text-white card-text-center">
+              <h2 class="light-color custom-font">Login Form</h2>
             </div>
             <div class="card-body">
-              <form method="post" class="form-horizontal">
+              <form method="post" class="form-horizontal" id="loginForm">
                 {% csrf_token %}
                 {% for field in form %}
                 <div class="form-group row">
@@ -150,11 +162,17 @@
                   </div>
                 </div>
                 {% endfor %}
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">Sign In</button>
               </form>
+              <div class="forgot-password">
+                <a href="{% url 'forgot_password' %}">Forgot Password?</a>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    
       </div>
             
             
@@ -235,13 +253,16 @@
     {% comment %} <script src="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/material-dashboard-2-builder/v3.0.4/assets/js/core/bootstrap.min.js"></script> {% endcomment %}
     {% comment %} <script src="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/material-dashboard-2-builder/v3.0.4/assets/js/plugins/chartjs.min.js"></script> {% endcomment %}
     {% comment %} <script src="https://cdn.jsdelivr.net/gh/creativetimofficial/public-assets@master/material-dashboard-2-builder/v3.0.4/assets/js/material-dashboard.min.js"></script>   {% endcomment %}
-     
   
-  <!-- Github buttons -->
- 
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  
- 
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        var passwordField = document.getElementById('id_password');
+        if (passwordField.value.length < 8) {
+            alert('Password must be at least 8 characters long.');
+            event.preventDefault();
+        }
+    });
+  </script>
 </body>
 
 </html>
