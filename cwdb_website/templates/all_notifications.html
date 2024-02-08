@@ -1,12 +1,77 @@
 {% extends 'base_dashboard.html' %}
 
 {% block content %}
-  <div class="container mt-5">
-    <h2>All Notifications</h2>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+
+  header {
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    padding: 1em 0;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.5em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .card {
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 20px;
+  }
+
+  .card-title {
+    font-size: 1em; /* Smaller font size for date */
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .card-content {
+    font-size: 1.2em; /* Larger font size for content */
+  }
+
+  .no-data {
+    text-align: center;
+    color: #777;
+    padding: 20px;
+  }
+</style>
+
+<div class="container mt-5">
+  <header>
+    <h1>All Notifications</h1>
+  </header>
+
+  {% if all_notifications %}
     {% for notification in all_notifications %}
-      <div class="alert alert-info" role="alert">
-        <strong>{{ notification.created_at|date:"F d, Y" }}</strong>: {{ notification.message }}
+      <div class="card">
+        <div class="card-title">
+          <strong>{{ notification.created_at|date:"F d, Y" }}</strong>
+        </div>
+        <div class="card-content">
+          {{ notification.message }}
+        </div>
       </div>
     {% endfor %}
-  </div>
+  {% else %}
+    <div class="no-data">
+      <p>No notifications found.</p>
+    </div>
+  {% endif %}
+</div>
 {% endblock %}

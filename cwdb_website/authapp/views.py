@@ -79,7 +79,7 @@ def signup(request):
             print(message) 
               
             # print(email)
-            return HttpResponse('Please confirm your email address to complete the registration')  
+            return render(request, 'registration/registration_confirmation.html')  
     else:  
         form = CustomUserCreationForm()  
     return render(request, 'registration/signup.html', {'form': form})  
@@ -101,8 +101,10 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):  
         user.is_active = True  
         user.save()  
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')  
-    else:  
+        return render(request, 'registration/activation_confirmation.html')  
+    else:
+        if user is not None:
+            user.delete()  # Remove the user from the database  
         return HttpResponse('Activation link is invalid!')  
     
 # views.py
