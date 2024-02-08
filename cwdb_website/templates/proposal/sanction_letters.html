@@ -1,8 +1,9 @@
+<!-- sanction_letters.html -->
 {% extends 'base_dashboard.html' %}
-{% block title %}Proposal Documents{% endblock %}
+{% block title %}Sanction Letters{% endblock %}
+
 
 {% block content %}
-
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -60,46 +61,30 @@
         padding: 20px;
     }
 </style>
-
 <header>
-    <h1>View Sanction Letter and Inspection Letter</h1> <!-- Improved heading -->
+<h1>Sanction Letters</h1>
 </header>
 
-
-    <table>
-        <tr>
-            <th>Proposal ID</th>
-            <th>Scheme</th>
-            <th>Component</th>
-            <th>Project Sanction letter
-            </th>
-            <th>Installment Sanction letter</th>
-            <th>Inspection Letter</th>
-        </tr>
-        {% if proposals %}
-        {% for proposal in proposals %}
-            <tr>
-                <td>{{ proposal.unique_id }}</td>
-                <td>{{ proposal.project_scheme }}</td>
-                <td>{{ proposal.scheme_component }}</td>
-                <td> {% if proposal.project_sanction_letter %}
-                    <a href="{{ proposal.project_sanction_letter.url }}" target="_blank">View Sanction Letter</a>
-                {% else %}
-                    No Sanction Letter Available
-                {% endif %}</td>
-                <td><a href="{% url 'authapp:sanction_letters_view' proposal.unique_id %}" target="_blank">View Installment Sanction Letter</a></td>
-<td><a href="{% url 'authapp:inspection_letters_view' proposal.unique_id %}" target="_blank">View Inspection Letter</a></td>
-
-            </tr>
-        {% endfor %}
-        {% else %}
-        <tr>
-            <td colspan="6">No Data Found</td>
-        </tr>
-        {% endif %}
-    </table>
-
-    
-
-
+<table>
+    <tr>
+        <th>Proposal ID</th>
+        <th>Installment Number</th>
+        <th>Fund Sanctioned</th>
+        <th>Sanction Letter</th>
+    </tr>
+    {% if sanction_letters %}
+    {% for letter in sanction_letters %}
+    <tr>
+        <td>{{ letter.proposal.unique_id }}</td>
+        <td>{{ letter.installment_number }}</td>
+        <td>{{ letter.fund_sanctioned }}</td>
+        <td><a href="{{ letter.sanction_letter.url }}" target="_blank">View Sanction Letter</a></td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+        <td colspan="4">No Data Found</td>
+    </tr>
+    {% endif %} 
+</table>
 {% endblock %}

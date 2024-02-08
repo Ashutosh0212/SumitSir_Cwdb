@@ -1,8 +1,8 @@
+<!-- inspection_letters.html -->
 {% extends 'base_dashboard.html' %}
-{% block title %}Proposal Documents{% endblock %}
+{% block title %}Inspection Letters{% endblock %}
 
 {% block content %}
-
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -62,44 +62,27 @@
 </style>
 
 <header>
-    <h1>View Sanction Letter and Inspection Letter</h1> <!-- Improved heading -->
+<h1>Inspection Letters</h1>
 </header>
 
-
-    <table>
-        <tr>
-            <th>Proposal ID</th>
-            <th>Scheme</th>
-            <th>Component</th>
-            <th>Project Sanction letter
-            </th>
-            <th>Installment Sanction letter</th>
-            <th>Inspection Letter</th>
-        </tr>
-        {% if proposals %}
-        {% for proposal in proposals %}
-            <tr>
-                <td>{{ proposal.unique_id }}</td>
-                <td>{{ proposal.project_scheme }}</td>
-                <td>{{ proposal.scheme_component }}</td>
-                <td> {% if proposal.project_sanction_letter %}
-                    <a href="{{ proposal.project_sanction_letter.url }}" target="_blank">View Sanction Letter</a>
-                {% else %}
-                    No Sanction Letter Available
-                {% endif %}</td>
-                <td><a href="{% url 'authapp:sanction_letters_view' proposal.unique_id %}" target="_blank">View Installment Sanction Letter</a></td>
-<td><a href="{% url 'authapp:inspection_letters_view' proposal.unique_id %}" target="_blank">View Inspection Letter</a></td>
-
-            </tr>
-        {% endfor %}
-        {% else %}
-        <tr>
-            <td colspan="6">No Data Found</td>
-        </tr>
-        {% endif %}
-    </table>
-
-    
-
-
+<table>
+    <tr>
+        <th>Proposal ID</th>
+        <th>Inspection Letter</th>
+        <th>Recieved At</th>
+    </tr>
+    {% if inspection_reports %}
+    {% for report in inspection_reports %}
+    <tr>
+        <td>{{ report.proposal.unique_id }}</td>
+        <td><a href="{{ report.inspection_letter.url }}" target="_blank">View Inspection Letter</a></td>
+        <td>{{ report.created_at }}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+        <td colspan="3">No Data Found</td>
+    </tr>
+    {% endif %} 
+</table>
 {% endblock %}

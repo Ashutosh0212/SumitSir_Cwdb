@@ -71,7 +71,7 @@
     <h1>Submit Progress Report</h1>
 </header>
 
-{% if proposals %}
+
     <table>
         <tr>
             <th>Proposal ID</th>
@@ -81,6 +81,7 @@
             {% comment %} <th>Project Sanction Letter</th> {% endcomment %}
             <th>Action</th>
         </tr>
+        {% if proposals %}
         {% for proposal in proposals %}
             <tr>
                 <td>{{ proposal.unique_id }}</td>
@@ -157,11 +158,12 @@
                 </td>
             </tr>
         {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="5">No Data Found</td>
+        </tr>
+        {% endif %}
     </table>
-{% else %}
-    <div class="no-data">
-        No Proposals Found.
-    </div>
-{% endif %}
+
 
 {% endblock %}

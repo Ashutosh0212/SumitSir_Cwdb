@@ -65,7 +65,7 @@
     <h1>Proposal Status</h1> <!-- Improved heading -->
 </header>
 
-{% if proposals %}
+
     <table>
         <tr>
             <th>Proposal ID</th>
@@ -73,6 +73,7 @@
             <th>Component</th>
             <th>Status</th>
         </tr>
+        {% if proposals %}
         {% for proposal in proposals %}
             <tr>
                 <td>{{ proposal.unique_id }}</td>
@@ -81,11 +82,14 @@
                 <td>{{ proposal.status }}</td>
             </tr>
         {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="4">No Data Found</td>
+        </tr>
+        {% endif %}
     </table>
-{% else %}
-    <div class="no-data">
-        No Proposals Found.
-    </div>
-{% endif %}
+
+   
+
 
 {% endblock %}

@@ -3760,6 +3760,23 @@ from .models import Proposal  # Import the Proposal model
 def proposal_documents(request):
     # Query all proposals
     user=request.user
-    proposals = Proposal.objects.filter(user=user, status='Approved')
+    proposals = Proposal.objects.filter(user=user).exclude(status='Pending')
+
     # Render the template with the proposals data
     return render(request, 'proposal/proposal_documents.html', {'proposals': proposals})
+
+# documents proposal
+from django.shortcuts import render, get_object_or_404
+from .models import Proposal, SanctionLetter, InspectionReport
+
+def sanction_letters_view(request, proposal_id):
+    proposal = get_object_or_404(Proposal, unique_id=proposal_id)
+    sanction_letters = SanctionLetter.objects.filter(proposal=proposal).order_by('installment_number')
+    context = {'sanction_letters': sanction_letters, 'proposal': proposal}
+    return render(request, 'proposal/sanction_letters.html', context)
+
+def inspection_letters_view(request, proposal_id):
+    proposal = get_object_or_404(Proposal, unique_id=proposal_id)
+    inspection_reports = InspectionReport.objects.filter(proposal=proposal).order_by('-created_at')
+    context = {'inspection_reports': inspection_reports, 'proposal': proposal}
+    return render(request, 'proposal/inspection_letters.html', context)

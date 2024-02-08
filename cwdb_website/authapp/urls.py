@@ -40,6 +40,9 @@ urlpatterns = [
     path('dashboard/admin_proposal_detail/<int:proposal_id>/', views.admin_proposal_detail, name='admin_proposal_detail'),
     path('dashboard/proposal_status/', views.proposal_status, name='proposal_status'),
     path('dashboard/proposal_documents/', views.proposal_documents, name='proposal_documents'),
+     path('dashboard/sanction-letters/<str:proposal_id>/', views.sanction_letters_view, name='sanction_letters_view'),
+    path('dashboard/inspection-letters/<str:proposal_id>/', views.inspection_letters_view, name='inspection_letters_view'),
+
     # path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('login/', CustomLoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', LogoutView.as_view(next_page='authapp:index'), name='logout'),
