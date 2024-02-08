@@ -1193,20 +1193,13 @@ def send_progress_report_reminders():
             proposal.reminder_financial_year = financial_year
             proposal.save()
 
-from django.http import HttpResponse
-from datetime import datetime, timedelta
-from django.apps import apps
-from django.core import serializers
 
-import requests
 import json
 from datetime import datetime, timedelta
 from django.apps import apps
 from django.core import serializers
-# import urllib3
-import ssl
-# from urllib3.util.ssl_ import create_urllib3_context
-from requests.adapters import HTTPAdapter
+import requests
+
 
 def take_backup():
     try:
@@ -1237,26 +1230,16 @@ def take_backup():
         # Merge all serialized data into a single JSON string
         backup_json = '[' + ','.join(backup_data) + ']'
 
-        # Create a custom SSL context to specify the SSL/TLS version
-        ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-        ssl_context.options |= ssl.OP_NO_SSLv2
-        ssl_context.options |= ssl.OP_NO_SSLv3
-        ssl_context.options |= ssl.OP_NO_TLSv1
-        ssl_context.options |= ssl.OP_NO_TLSv1_1
-
-
-        # Create a requests Session and mount the custom SSL context
-        session = requests.Session()
-        session.mount('https://', HTTPAdapter(max_retries=3))
-        session.mount('https://', HTTPAdapter(max_retries=3))
-        session.mount('https://', HTTPAdapter(max_retries=3))
-
-        # Specify the target IP address and the endpoint
-        target_ip = '192.168.56.101:5000'  # Replace with the actual IP address
-        endpoint = '/receive_backup'
+        # Specify the target IP address and the endpoint on the Ubuntu VM
+        target_ip = '127.0.0.1:8080'  # Replace with the actual IP address of your Ubuntu VM
+        endpoint = '/receive_backup'   # Replace with the actual endpoint on your Ubuntu VM
 
         # Construct the URL
-        url = f'https://{target_ip}{endpoint}'
+        url = f'http://{target_ip}{endpoint}'
+        cert_path = 'D:/IITJodhpur/MTP/CWDB/pems/cert.pem'  # Path to your SSL certificate
+        key_path = 'D:/IITJodhpur/MTP/CWDB/pems/key.pem'    # Path to your private key
+        # passphrase = read_passphrase_from_config()
+        # print(passphrase)
 
         # Prepare the data payload
         data = {
@@ -1268,15 +1251,30 @@ def take_backup():
 
         # Example of authentication headers (replace with actual authentication method)
         headers = {
-            'Authorization': 'Bearer 0a8eadf7a3523a918a7fb775a06fb71f',
+            'Authorization': 'Bearer 0a8eadf7a3523a918a7fb775a06fb71f',  # Replace with actual access token or authentication method
             'Content-Type': 'application/json'
         }
 
-        # Send the POST request securely
-        response = requests.post(url, data=payload, headers=headers, verify=True, ssl_context=ssl_context)  # Set verify to True to validate SSL certificate
-        response.raise_for_status()  # Raise an exception for 4xx or 5xx status codes
-        return 'Backup sent successfully'
-    except requests.exceptions.RequestException as e:
+        # # Create a custom SSL context to specify the SSL/TLS version and use the passphrase
+        # ssl_context = create_urllib3_context()
+        # ssl_context.load_cert_chain(cert_path, key_path, password=passphrase)
+
+        # # Create a PoolManager with the custom SSL context
+        # http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=cert_path, ssl_context=ssl_context)
+
+        # # Send the POST request securely
+        # response = http.request('POST', url, body=payload.encode('utf-8'), headers=headers, timeout=10)
+        # response = requests.post(url, data=payload, headers=headers, verify=cert_path, cert=(cert_path, key_path), timeout=10, allow_redirects=True)
+        response = requests.post(url, data=payload, headers=headers, timeout=10)
+        # print(response)
+        if response.status_code == 200:
+            return 'Backup sent successfully'
+        else:
+            response_json = response.json()
+            error_message = response_json.get('message') or response_json.get('error') or response.content
+            raise RuntimeError(f'Error sending backup: {error_message}')
+
+    except Exception as e:
         # Handle exceptions such as network errors, timeouts, etc.
         raise RuntimeError(f'Error during backup: {str(e)}')
 
