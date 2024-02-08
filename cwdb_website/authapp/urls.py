@@ -39,6 +39,7 @@ urlpatterns = [
     path('dashboard/admin_proposal_list/', views.admin_proposal_list, name='admin_proposal_list'),
     path('dashboard/admin_proposal_detail/<int:proposal_id>/', views.admin_proposal_detail, name='admin_proposal_detail'),
     path('dashboard/proposal_status/', views.proposal_status, name='proposal_status'),
+    path('dashboard/proposal_documents/', views.proposal_documents, name='proposal_documents'),
     # path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('login/', CustomLoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', LogoutView.as_view(next_page='authapp:index'), name='logout'),

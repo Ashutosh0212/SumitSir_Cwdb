@@ -1,5 +1,5 @@
 {% extends 'base_dashboard.html' %}
-{% block title %}Proposal Status{% endblock %}
+{% block title %}Proposal Documents{% endblock %}
 
 {% block content %}
 
@@ -62,7 +62,7 @@
 </style>
 
 <header>
-    <h1>Proposal Status</h1> <!-- Improved heading -->
+    <h1>View Sanction Letter and Inspection Letter</h1> <!-- Improved heading -->
 </header>
 
 {% if proposals %}
@@ -71,14 +71,23 @@
             <th>Proposal ID</th>
             <th>Scheme</th>
             <th>Component</th>
-            <th>Status</th>
+            <th>Project Sanction letter
+            </th>
+            <th>Installment Sanction letter</th>
+            <th>Inspection Letter</th>
         </tr>
         {% for proposal in proposals %}
             <tr>
                 <td>{{ proposal.unique_id }}</td>
                 <td>{{ proposal.project_scheme }}</td>
                 <td>{{ proposal.scheme_component }}</td>
-                <td>{{ proposal.status }}</td>
+                <td> {% if proposal.project_sanction_letter %}
+                    <a href="{{ proposal.project_sanction_letter.url }}" target="_blank">View Sanction Letter</a>
+                {% else %}
+                    No Sanction Letter Available
+                {% endif %}</td>
+                <td><a href="#" target="_blank">View Installment Sanction Letter</a></td>
+                <td><a href="#" target="_blank">View Inspection Letter</a></td>
             </tr>
         {% endfor %}
     </table>

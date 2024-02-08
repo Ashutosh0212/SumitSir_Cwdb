@@ -1,66 +1,99 @@
 {% extends 'base_dashboard.html' %}
 
-{% block title %}Submit Progress Report {% endblock %}
+{% block title %}Submit Progress Report{% endblock %}
 
-{% block content%}
+{% block content %}
 
-    
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        header {
-            
-            color: #2aa4fb;
-            text-align: center;
-            padding: 1em 0;
-        }
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #007BFF;
-            padding: 8px;
-            text-align: left;
-            color:black;
-        }
-        th {
-            background-color: #007BFF;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        a {
-            text-decoration: none;
-            color: #007BFF;
-        }
-    </style>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
 
-    <header>
-        <h1>Submit Progress</h1>
-    </header>
+    header {
+        background-color: #007BFF;
+        color: white;
+        text-align: center;
+        padding: 1em 0;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
 
+    h1 {
+        margin: 0;
+        font-size: 1.5em;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    table {
+        width: 90%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    th, td {
+        border: 1px solid #007BFF;
+        padding: 12px;
+        text-align: left;
+        color: black;
+    }
+
+    th {
+        background-color: #007BFF;
+        color: white;
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .no-data {
+        text-align: center;
+        color: #777;
+        padding: 20px;
+    }
+
+    a {
+        text-decoration: none;
+        color: #007BFF;
+    }
+</style>
+
+<header>
+    <h1>Submit Progress Report</h1>
+</header>
+
+{% if proposals %}
     <table>
         <tr>
             <th>Proposal ID</th>
             <th>Scheme</th>
             <th>SubComponent</th>
             <th>Status</th>
-
+            {% comment %} <th>Project Sanction Letter</th> {% endcomment %}
             <th>Action</th>
         </tr>
         {% for proposal in proposals %}
             <tr>
                 <td>{{ proposal.unique_id }}</td>
                 <td>{{ proposal.project_scheme }}</td>
-                <td>{{proposal.scheme_component}}</td>
+                <td>{{ proposal.scheme_component }}</td>
                 <td>{{ proposal.status }}</td>
+                {% comment %}  
+                <td> {% if proposal.project_sanction_letter %}
+                    <a href="{{ proposal.project_sanction_letter.url }}" target="_blank">View Sanction Letter</a>
+                {% else %}
+                    No Sanction Letter Available
+                {% endif %}</td> {% endcomment %}
+
                 <td>
                     {% if proposal.status == 'Approved' %}
                         {% if proposal.scheme_component == '1.Creation of Revolving Fund for Marketing of Raw Wool' %}
@@ -125,7 +158,10 @@
             </tr>
         {% endfor %}
     </table>
-    
+{% else %}
+    <div class="no-data">
+        No Proposals Found.
+    </div>
+{% endif %}
 
 {% endblock %}
-

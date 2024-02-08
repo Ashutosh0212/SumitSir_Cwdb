@@ -5,11 +5,12 @@
 
     {% comment %} <title>CWDB Project Proposal Application</title> {% endcomment %}
     <style>
-        body {
-          font-family: Helvetica, sans-serif;
-          margin: 0;
-          padding: 0;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
     
         .container {
           max-width: 100%;
@@ -18,9 +19,11 @@
         }
     
         h1 {
-          font-size: 48px;
-          color: #2aa4fb;
-        }
+          margin: 0;
+          font-size: 1.5em;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+      }
     
         #instructionsList {
           margin-bottom: 10px;
@@ -208,19 +211,36 @@
           margin-left: 5px;
       }
       
+      header {
+        background-color: #007BFF; /* Change background color to blue */
+        color: white; /* Set text color to white */
+        text-align: center; /* Center align text */
+        padding: 1em 0; /* Reduce padding to make the background smaller */
+        margin-bottom: 20px; /* Add margin bottom */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add box shadow */
+        border-top-left-radius: 10px; /* Add border radius */
+        border-top-right-radius: 10px; /* Add border radius */
+    }
+    
+    
       </style>
+      
 
     <div class="container">
-        <div class="content">
+      <header>
+        <div >
             {% comment %} <img src="{%static 'img/cwdb_logo.jpg'%}" alt="Image Description"> {% endcomment %}
+            
             <h1 >CWDB Project Proposal Application</h1>
+           
           </div>
+        </header>
 
         
 
           <form action="{% url 'authapp:submit_proposal' %}" method="post" id="proposalForm" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="form-group">
+            <div class="form-group ">
                 <label for="textarea1">Name & Full Address of Agency with Telephone No. & Email Address</label>
                 <textarea id="textarea1" name="agencyAddress" class="fixed-height-textarea" rows="3" required></textarea>
             </div>

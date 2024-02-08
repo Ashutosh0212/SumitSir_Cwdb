@@ -3752,3 +3752,14 @@ def proposal_api(request):
     proposal = Proposal.objects.all()
     serializer = ProposalSerializer(proposal, many = True)
     return JsonResponse(serializer.data, safe=False)
+
+
+from django.shortcuts import render
+from .models import Proposal  # Import the Proposal model
+
+def proposal_documents(request):
+    # Query all proposals
+    user=request.user
+    proposals = Proposal.objects.filter(user=user, status='Approved')
+    # Render the template with the proposals data
+    return render(request, 'proposal/proposal_documents.html', {'proposals': proposals})
