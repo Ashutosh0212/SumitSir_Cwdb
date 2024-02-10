@@ -94,17 +94,31 @@ class SanctionLetter(models.Model):
     sanction_letter = models.FileField(upload_to='sanction_letters/')
     installment_number = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f"Sanction Letter for {self.proposal.unique_id}, Installment {self.installment_number}"
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:  # If the object is being created
+            self.created_at = timezone.now()
+        self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 class InspectionReport(models.Model):  # Updated class name to follow PEP 8 naming conventions
     proposal = models.ForeignKey(Proposal, on_delete=models.CASCADE)
     inspection_letter = models.FileField(upload_to='inspection_letters/')
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f"Inspection Report for {self.proposal.unique_id}"
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:  # If the object is being created
+            self.created_at = timezone.now()
+        self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 class FundDistribution(models.Model):
     wms = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="WMS (in lakhs)", default=0)

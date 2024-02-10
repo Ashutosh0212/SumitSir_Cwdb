@@ -320,6 +320,7 @@ def index(request):
     context={'fund_distribution_data': fund_distribution_data, 'current_financial_year': current_financial_year, 'total_projects_count': total_projects_count, 'total_beneficiaries': total_beneficiaries,'quarterlyFunds': quarterlyFunds,'quarter_form':form,'schemes_data': schemes_data
                                                ,'fund_data_allocated':fund_data,'allocation_form':form1}
     
+    print("yolo")
     return render(request, 'main/index.html',context )
 
 from django.shortcuts import render, redirect

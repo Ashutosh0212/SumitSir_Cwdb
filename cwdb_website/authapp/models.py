@@ -71,11 +71,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     contact_person_mobile = models.CharField(max_length=12,blank=False,null=False,default="")
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     objects = CustomUserManager()
 
     def __str__(self):
         return self.email
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 
 
@@ -143,9 +149,15 @@ class WMS_RevolvingFund(models.Model):
     wool_sold_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 class EPortal(models.Model):
     proposal_unique_id = models.ForeignKey(Proposal, to_field='unique_id', on_delete=models.CASCADE)
@@ -166,9 +178,15 @@ class EPortal(models.Model):
     total_quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
     component_wise_budget_sheet = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
     from django.db import models
 
@@ -191,9 +209,15 @@ class WMS_SelfHelpGroup(models.Model):
     shg_members_sheet = models.FileField(upload_to='documents/')
     component_wise_budget_sheet = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 
@@ -217,9 +241,15 @@ class WMS_BuyerSellerExpo(models.Model):
     component_wise_budget_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 
@@ -241,9 +271,15 @@ class WMS_InfrastructureDevelopment(models.Model):
     total_quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
     component_wise_budget_sheet = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 
@@ -268,9 +304,15 @@ class WoolenExpo(models.Model):
     daily_stall_wise_sale_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 
@@ -295,9 +337,15 @@ class WoolenExpoHiring(models.Model):
     daily_stall_wise_sale_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 # models.py
 from django.db import models
@@ -325,9 +373,15 @@ class WPS_CFC(models.Model):
     facility_user_sheet = models.FileField(upload_to='documents/')
     payment_proofs_machine_procured = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 class WPS_SheepShearingMaching(models.Model):
     proposal_unique_id = models.ForeignKey(Proposal, to_field='unique_id', on_delete=models.CASCADE)
@@ -354,9 +408,15 @@ class WPS_SheepShearingMaching(models.Model):
     beneficiaries_details_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 class WPS_Equipment(models.Model):
     proposal_unique_id = models.ForeignKey(Proposal, to_field='unique_id', on_delete=models.CASCADE)
@@ -379,9 +439,15 @@ class WPS_Equipment(models.Model):
     beneficiaries_details_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 
@@ -405,9 +471,15 @@ class WPSSmallToolsDistribution(models.Model):
     beneficiaries_details_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 
@@ -436,9 +508,15 @@ class HRD_ShortTermProgramme(models.Model):
     office_assistant_details_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 
@@ -465,9 +543,15 @@ class HRD_OnsiteTraining(models.Model):
     trainee_details_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 
@@ -494,9 +578,15 @@ class HRD_ShearingMachineTraining(models.Model):
     trainee_details_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 
@@ -521,9 +611,15 @@ class RD(models.Model):
     total_quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
     milestone_achievement_sheet = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 
 class DomesticMeeting(models.Model):
@@ -547,9 +643,15 @@ class DomesticMeeting(models.Model):
     component_budget_sheet = models.FileField(upload_to='documents/')
     participants_details_sheet = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 
@@ -575,9 +677,15 @@ class OrganisingSeminar(models.Model):
     participants_details_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 
@@ -602,9 +710,15 @@ class WoolSurvey(models.Model):
     survey_data_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 
@@ -631,9 +745,15 @@ class WoolTestingLab(models.Model):
     details_of_trainees_wdtc_sheet = models.FileField(upload_to='documents/')
     payment_proofs_trainees = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 
@@ -657,9 +777,15 @@ class PublicityMonitoring(models.Model):
     details_of_trainees_wdtc_sheet = models.FileField(upload_to='documents/')
     payment_proofs_trainees = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 #pwds
 from django.db import models
@@ -687,9 +813,15 @@ class PWDS_PashminaRevolvingFund(models.Model):
     wool_sold_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 from .models import Proposal  # Assuming Proposal is in main app
@@ -717,9 +849,15 @@ class PWDS_PashminaCFC(models.Model):
     facility_user_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 from .models import Proposal
@@ -744,9 +882,15 @@ class ShelterShedConstruction(models.Model):
     physical_financial_progress_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 from .models import Proposal
@@ -772,9 +916,15 @@ class PortableTentDist(models.Model):
     physical_financial_progress_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 from .models import Proposal
@@ -799,9 +949,15 @@ class PredatorProofLightsDist(models.Model):
     physical_financial_progress_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 from .models import Proposal
@@ -827,9 +983,15 @@ class TestingEquipment(models.Model):
     physical_financial_progress_sheet = models.FileField(upload_to='documents/')
     payment_proofs = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 from django.db import models
 from .models import Proposal
@@ -852,9 +1014,15 @@ class ShowroomDevelopment(models.Model):
     total_quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
     component_wise_budget_sheet = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
     
 from django.db import models
 from .models import Proposal
@@ -877,9 +1045,15 @@ class FodderLandDevelopment(models.Model):
     total_quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
     component_wise_budget_sheet = models.FileField(upload_to='documents/')
     other_documents = models.FileField(upload_to='documents/', blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
 
 #document store
 from django.db import models
@@ -898,6 +1072,7 @@ class ProgressReportDocument(models.Model):
     financial_year = models.CharField(max_length=9)
     document = models.FileField(upload_to='progress_report_documents/')
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f'{self.proposal_unique_id} - {self.financial_year} - {self.quarter}'
@@ -918,6 +1093,7 @@ class BeneficiaryData(models.Model):
     num_males = models.PositiveIntegerField(default=0)
     num_females = models.PositiveIntegerField(default=0)
     num_other_gender = models.PositiveIntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
     quarter = models.CharField(
         max_length=10,
         choices=[
@@ -942,6 +1118,9 @@ class BeneficiaryData(models.Model):
 
         # Set the value of num_beneficiaries
         self.num_beneficiaries = sum_beneficiaries
+
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
 
         # Call the original save method
         super().save(*args, **kwargs)
@@ -973,9 +1152,15 @@ class ExpenditureData(models.Model):
     )
     year = models.CharField(max_length=9)
     scheme = models.CharField(max_length=10,choices=SCHEME_CHOICES)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def _str_(self):
         return f'{self.proposal_unique_id} - {self.year} - {self.quarter}'
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # If the object is already created
+            self.updated_at = timezone.now()  # Always update the updated_at timestamp
+        super().save(*args, **kwargs)
     
     @classmethod
     def get_quarterly_sums(cls, year, quarter):
