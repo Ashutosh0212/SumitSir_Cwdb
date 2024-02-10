@@ -103,6 +103,7 @@ DATABASES = {
         'USER': 'cwdb',
         'PASSWORD': '1234',
         'HOST': '192.168.1.63',
+        # 'HOST': '172.31.1.84',
         'PORT': '5432',
     }
 }

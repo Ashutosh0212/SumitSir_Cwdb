@@ -9,7 +9,17 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ["email", "agency_name", "agency_nature", "registration_number", "address", "pincode", "contact_person_name", "contact_person_designation", "contact_person_mobile"]
-
+        
+        def clean_email(self):
+            email = self.cleaned_data['email']
+            try:
+                user = CustomUser.objects.get(email=email)
+                if user.is_active:
+                    raise forms.ValidationError("This email address is already in use.")
+            except CustomUser.DoesNotExist:
+                pass
+            return email
+        
     def __init__(self, *args, **kwargs):
         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
