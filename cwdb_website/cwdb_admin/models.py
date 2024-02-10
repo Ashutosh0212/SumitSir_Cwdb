@@ -49,7 +49,7 @@ class Proposal(models.Model):
     brief_of_project = models.TextField()
     justification_of_project = models.TextField()
     methodology_of_project = models.TextField()
-    expected_outcome = models.FileField(upload_to='expected_outcomes/',blank=True, null=True)
+    expected_outcome = models.TextField(null=True)
     scenario_change = models.TextField()
     beneficiaries = models.FileField(upload_to='beneficiaries/',blank=True, null=True)
     mode_of_selection = models.TextField()

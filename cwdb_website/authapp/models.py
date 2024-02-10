@@ -295,7 +295,7 @@ class WoolenExpo(models.Model):
         ],
     )
     financial_year = models.CharField(max_length=9)
-    allocated_budget = models.DecimalField(max_digits=10, decimal_places=2)
+    quarterly_allocated_budget = models.DecimalField(max_digits=10, decimal_places=2)
     expo_details = models.TextField()
     profit_and_budget_spent_details = models.TextField()
     total_quarterly_budget_spent = models.DecimalField(max_digits=10, decimal_places=2)
@@ -328,7 +328,7 @@ class WoolenExpoHiring(models.Model):
         ],
     )
     financial_year = models.CharField(max_length=9)
-    allocated_budget = models.DecimalField(max_digits=10, decimal_places=2)
+    quarterly_allocated_budget = models.DecimalField(max_digits=10, decimal_places=2)
     expo_details = models.TextField()
     profit_and_budget_spent_details = models.TextField()
     total_stall_charges = models.DecimalField(max_digits=10, decimal_places=2)

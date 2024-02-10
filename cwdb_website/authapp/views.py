@@ -406,7 +406,7 @@ def submit_proposal(request):
         # quarterly_goal_classes = request.POST.getlist('goal_texts')
         
         # Handle file uploads
-        expected_outcome_file = request.FILES.get('outcomeFile')
+        expected_outcome_file = request.POST.get('outcomeFile')
         beneficiaries_file = request.FILES.get('beneficiariesFile')
         component_wise_cost_file = request.FILES.get('projectCostFile')
         total_duration_file = request.FILES.get('durationFile')
@@ -683,7 +683,6 @@ def generate_progress_report_document(proposal_unique_id, form_data):
 from django.shortcuts import render
 from .forms import SummaryReportForm
 from django.template.loader import get_template
-from xhtml2pdf import pisa
 
 SUBCOMPONENT_CHOICES = [
     ("WMS_RevolvingFund", "WMS: 1.Creation of Revolving Fund for Marketing of Raw Wool"),
@@ -1235,7 +1234,7 @@ def take_backup():
         backup_json = '[' + ','.join(backup_data) + ']'
 
         # Specify the target IP address and the endpoint on the Ubuntu VM
-        target_ip = '127.0.0.1:8080'  # Replace with the actual IP address of your Ubuntu VM
+        target_ip = '192.168.1.57:5000'  # Replace with the actual IP address of your Ubuntu VM
         endpoint = '/receive_backup'   # Replace with the actual endpoint on your Ubuntu VM
 
         # Construct the URL

@@ -259,13 +259,13 @@ class WMSInfrastructureDevelopmentAdmin(admin.ModelAdmin):
 
 @admin.register(WoolenExpo)
 class WoolenExpoAdmin(admin.ModelAdmin):
-    list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'allocated_budget', 'expo_details', 'profit_and_budget_spent_details', 'total_quarterly_budget_spent')
+    list_display = ('proposal_unique_id', 'quarter', 'financial_year',  'quarterly_allocated_budget', 'expo_details', 'profit_and_budget_spent_details', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
     
 
 @admin.register(WoolenExpoHiring)
 class WoolenExpoHiringAdmin(admin.ModelAdmin):
-    list_display = ('proposal_unique_id', 'quarter', 'financial_year', 'allocated_budget', 'expo_details', 'profit_and_budget_spent_details', 'total_stall_charges', 'total_quarterly_budget_spent')
+    list_display = ('proposal_unique_id', 'quarter', 'financial_year',  'quarterly_allocated_budget', 'expo_details', 'profit_and_budget_spent_details', 'total_stall_charges', 'total_quarterly_budget_spent')
     search_fields = ('proposal_unique_id__unique_id', 'quarter', 'financial_year')
     
 
