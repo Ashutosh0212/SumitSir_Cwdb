@@ -82,7 +82,7 @@ select ,textarea{
        
         
         <li class="nav-item">
-          <a class="nav-link text-white " href="#">
+          <a class="nav-link text-white " href="{% url 'authapp:index_notification_view' %}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">notifications</i>
             </div>
@@ -140,7 +140,7 @@ select ,textarea{
             </a>
           </li>
           <li class="nav-item dropdown pe-2 d-flex align-items-center">
-            <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            <a href="{% url 'authapp:index_notification_view' %}" class="nav-link text-body p-0" >
               <i class="fa fa-bell cursor-pointer"></i>
             </a>
       
@@ -232,39 +232,6 @@ select ,textarea{
   </div>
   
     
-      {% comment %} <div class="container-fluid pt-3">
-        <div class="row justify-content-center">
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-header bg-primary text-white">
-                <h2>Registration Form</h2>
-              </div>
-              <div class="card-body">
-                <form method="post" enctype="multipart/form-data" class="form-horizontal">
-                  {% csrf_token %}
-                  {% for field in form %}
-                  <div class="form-group row">
-                    <label for="{{ field.id_for_label }}" class="col-sm-5">{{ field.label }}{% if field.field.required %}<span class="text-danger">*</span>{% endif %}:</label>
-                    <div class="col-sm-7">
-                      {{ field }}
-                      
-                      
-                    </div>
-                  </div>
-                  {% endfor %}
-                  <div class="form-group row">
-                    <div class="col-sm-offset-5 col-sm-7">
-                      <button type="submit" class="btn btn-primary">Sign Up</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-       {% endcomment %}
             
             
     </div> 

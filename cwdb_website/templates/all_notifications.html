@@ -61,7 +61,7 @@
     {% for notification in all_notifications %}
       <div class="card">
         <div class="card-title">
-          <strong>{{ notification.created_at|date:"F d, Y" }}</strong>
+          <strong>{{ notification.created_at|date:"F d, Y H:i a" }}</strong>
         </div>
         <div class="card-content">
           {{ notification.message }}

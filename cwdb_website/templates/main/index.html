@@ -43,7 +43,7 @@
        
         
         <li class="nav-item">
-          <a class="nav-link text-white " href="#">
+          <a class="nav-link text-white " href="{% url 'authapp:index_notification_view' %}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">notifications</i>
             </div>
@@ -102,7 +102,7 @@
             </a>
           </li>
           <li class="nav-item dropdown pe-2 d-flex align-items-center">
-            <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            <a href="{% url 'authapp:index_notification_view' %}" class="nav-link text-body p-0"  >
               <i class="fa fa-bell cursor-pointer"></i>
             </a>
       
@@ -375,7 +375,7 @@
             <div class="card mb-4">
                 <div class="card-header pb-0 p-3">
                     <div class="d-flex justify-content-between">
-                        <h6 class="mb-0">Quarterly Schemes Fund Allocated </h6>
+                        <h6 class="mb-0">Quarterly Schemes Fund Distribution </h6>
                         <button type="button" class="btn btn-icon-only btn-rounded btn-outline-secondary mb-0 ms-2 btn-sm d-flex align-items-center justify-content-center" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="See Fund Allocated for Current Financial Year">
                             <i class="material-icons text-sm">priority_high</i>
                         </button>

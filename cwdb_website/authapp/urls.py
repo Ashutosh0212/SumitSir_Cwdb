@@ -30,6 +30,9 @@ urlpatterns = [
     path('admin_Expenses',views.admin_exp_view,name='admin_exp_view'),
      
     path('signup/', views.signup, name='register'),
+    
+    
+    path('notifications/', views.index_notification_view, name='index_notification_view'),
     path('activate/<str:uidb64>/<str:token>/', views.activate, name='activate'),
     # path('login/',user_login,name='login'),
     path('dashboard/', views.dashboard, name='dashboard'),

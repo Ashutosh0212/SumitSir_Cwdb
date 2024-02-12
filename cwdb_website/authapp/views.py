@@ -73,16 +73,20 @@ def signup(request):
             })  
             to_email = form.cleaned_data.get('email')  
             send_mail(mail_subject, message, EMAIL_HOST_USER, [to_email])
-            print(EMAIL_HOST_USER)
-            print(to_email)
-            print("Email Content:")
-            print(message) 
+            # print(EMAIL_HOST_USER)
+            # print(to_email)
+            # print("Email Content:")
+            # print(message) 
               
             # print(email)
             return render(request, 'registration/registration_confirmation.html')  
     else:  
         form = CustomUserCreationForm()  
-    return render(request, 'registration/signup.html', {'form': form})  
+    return render(request, 'registration/signup.html', {'form': form})
+
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+
 
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
@@ -3238,6 +3242,10 @@ class CustomLoginView(LoginView):
             return reverse_lazy('admin:index')  # Use reverse_lazy to avoid URL resolution issues
         return reverse_lazy('authapp:dashboard') 
     
+    def form_invalid(self, form):
+        messages.error(self.request, 'Invalid email or password. Please try again.')
+        return super().form_invalid(form)
+    
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='/login/')
 def staff_dashboard(request):
     # Count the number of proposals for each status
@@ -3783,3 +3791,10 @@ def inspection_letters_view(request, proposal_id):
     inspection_reports = InspectionReport.objects.filter(proposal=proposal).order_by('-created_at')
     context = {'inspection_reports': inspection_reports, 'proposal': proposal}
     return render(request, 'proposal/inspection_letters.html', context)
+
+
+from cwdb_admin.models import Index_Notification 
+
+def index_notification_view(request):
+    notifications = Index_Notification.objects.order_by('-created_at')
+    return render(request, 'main/HomePage/index_notifications.html', {'notifications': notifications})
