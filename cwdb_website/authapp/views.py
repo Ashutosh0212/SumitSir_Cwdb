@@ -2293,6 +2293,8 @@ from .forms import RDForm
 def rd_report(request, proposal_unique_id):
     if request.method == 'POST':
         form = RDForm(request.POST, request.FILES)
+        proposal = Proposal.objects.get(unique_id=proposal_unique_id)
+        scheme=proposal.project_scheme
         if form.is_valid():
             checkbox_values = request.POST.getlist('checkbox')
             print(checkbox_values)
