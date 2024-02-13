@@ -1283,12 +1283,12 @@ def take_backup():
         else:
             response_json = response.json()
             error_message = response_json.get('message') or response_json.get('error') or response.content
-            raise RuntimeError(f'Error sending backup: {error_message}')
+            raise RuntimeError()
 
     except Exception as e:
         # Handle exceptions such as network errors, timeouts, etc.
-        raise RuntimeError(f'Error during backup: {str(e)}')
-
+        raise RuntimeError(f'Error during backup: { str(error_message) + "\n" + str(e)}')
+    
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
