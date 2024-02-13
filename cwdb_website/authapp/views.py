@@ -1209,6 +1209,7 @@ import requests
 
 
 def take_backup():
+    error_message = ""
     try:
         # Define the time range for backup (past 7 days)
         end_date = datetime.now()
