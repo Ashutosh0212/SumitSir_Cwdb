@@ -1255,10 +1255,14 @@ def take_backup():
 
         # Convert data to JSON
         payload = json.dumps(data)
+        bearer_token = 0
+        bearer_token_file = "./scripts/bearer_token.txt"
+        with open(bearer_token_file, "r") as file:
+            bearer_token = file.read().strip()
 
         # Example of authentication headers (replace with actual authentication method)
         headers = {
-            'Authorization': 'Bearer 0a8eadf7a3523a918a7fb775a06fb71f',  # Replace with actual access token or authentication method
+            'Authorization': f'Bearer {bearer_token}',  # Replace with actual access token or authentication method
             'Content-Type': 'application/json'
         }
 
