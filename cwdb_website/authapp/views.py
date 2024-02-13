@@ -467,7 +467,7 @@ def submit_proposal(request):
         # Generate a unique proposal_id
     
         proposal.unique_id = generate_unique_id(project_scheme)
-        print(proposal)
+        # print(proposal)
         proposal.save()
 
         return redirect('authapp:proposal_status')
@@ -1209,7 +1209,6 @@ import requests
 
 
 def take_backup():
-    error_message = ""
     try:
         # Define the time range for backup (past 7 days)
         end_date = datetime.now()
@@ -1257,7 +1256,7 @@ def take_backup():
         # Convert data to JSON
         payload = json.dumps(data)
         bearer_token = 0
-        bearer_token_file = "./scripts/bearer_token.txt"
+        bearer_token_file = "bearer_token.txt"
         with open(bearer_token_file, "r") as file:
             bearer_token = file.read().strip()
 
@@ -1284,12 +1283,12 @@ def take_backup():
         else:
             response_json = response.json()
             error_message = response_json.get('message') or response_json.get('error') or response.content
-            raise RuntimeError()
+            raise RuntimeError(f'Error sending backup: {error_message}')
 
     except Exception as e:
         # Handle exceptions such as network errors, timeouts, etc.
-        raise RuntimeError(f'Error during backup: { str(error_message) + "\n" + str(e)}')
-    
+        raise RuntimeError(f'Error during backup: {str(e)}')
+
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
