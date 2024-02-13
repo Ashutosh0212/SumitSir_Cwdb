@@ -1,0 +1,5 @@
+No changes detected
+Operations to perform:
+  Apply all migrations: admin, auth, authapp, contenttypes, cwdb_admin, sessions
+Running migrations:
+  No migrations to apply.
