@@ -45,6 +45,7 @@ urlpatterns = [
     path('dashboard/proposal_documents/', views.proposal_documents, name='proposal_documents'),
      path('dashboard/sanction-letters/<str:proposal_id>/', views.sanction_letters_view, name='sanction_letters_view'),
     path('dashboard/inspection-letters/<str:proposal_id>/', views.inspection_letters_view, name='inspection_letters_view'),
+    path('dashboard/form-submitted/', views.form_submitted_successfully, name='form_submitted_successfully'),
 
     # path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('login/', CustomLoginView.as_view(template_name='registration/login.html'), name='login'),

@@ -1,0 +1,68 @@
+<!-- form_submitted_successfully.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Submitted Successfully</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+            margin-bottom: 10px; /* Added margin bottom */
+        }
+        
+        .btn:last-child {
+            margin-right: 0; /* Remove margin right for the last button */
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Form Submitted Successfully!</h1>
+        <p>Your form has been submitted successfully.</p>
+        <a href="{% url 'authapp:dashboard' %}" class="btn">Go back to dashboard</a>
+        <a href="{% url 'authapp:logout' %}" class="btn">Logout</a>
+    </div>
+</body>
+</html>

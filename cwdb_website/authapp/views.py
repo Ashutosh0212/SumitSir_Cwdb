@@ -204,17 +204,6 @@ from django.shortcuts import render
 from .models import Notification
 from django.contrib.auth.decorators import login_required
 
-# @login_required
-# def show_notifications(request):
-#     # Retrieve all notifications for the logged-in user
-#     notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
-#     first_three_notifications = notifications[:3]
-
-#     # # Mark all new notifications as read
-#     # first_three_notifications = notifications.filter(is_read=False)
-#     # first_three_notifications.update(is_read=True)
-#     # print(first_three_notifications)
-#     return render(request, 'main/dashboard.html', {'new_notifications': first_three_notifications})
 
 @login_required
 def show_all_notifications(request):
@@ -326,7 +315,7 @@ def index(request):
     context={'fund_distribution_data': fund_distribution_data, 'current_financial_year': current_financial_year, 'total_projects_count': total_projects_count, 'total_beneficiaries': total_beneficiaries,'quarterlyFunds': quarterlyFunds,'quarter_form':form,'schemes_data': schemes_data
                                                ,'fund_data_allocated':fund_data,'allocation_form':form1}
     
-    print("yolo")
+   
     return render(request, 'main/index.html',context )
 
 from django.shortcuts import render, redirect
@@ -380,6 +369,10 @@ STATE_CHOICES = [
     ('Lakshadweep', 'Lakshadweep'),
     ('Puducherry', 'Puducherry'),
 ]
+
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+
 @login_required
 def submit_proposal(request):
     if request.method == 'POST':
@@ -470,7 +463,7 @@ def submit_proposal(request):
         # print(proposal)
         proposal.save()
 
-        return redirect('authapp:proposal_status')
+        return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     
     # Pass STATE_CHOICES to the context
     context = {
@@ -480,7 +473,7 @@ def submit_proposal(request):
     return render(request, 'proposal/submit_proposal.html', context)
 
 
-    return render(request, 'proposal/submit_proposal.html')
+    
 
 import uuid
 from datetime import datetime
@@ -1053,7 +1046,7 @@ def revolving_fund_progress_report(request, proposal_unique_id):
 
             df = pd.read_excel(form.cleaned_data['wool_sold_sheet'])
             analysis = process(df, 1, 1, 1, 1)
-            print(analysis)
+            
             
             # print(form.cleaned_data['proposal_unique_id'], len(df), form.cleaned_data['quarter'], form.cleaned_data['financial_year']) 
             # # #scheme bhi bhejo idhar
@@ -1102,7 +1095,7 @@ def revolving_fund_progress_report(request, proposal_unique_id):
             form_instance.save()
             # Generate and save progress report document
             generate_progress_report_document(proposal_unique_id, form.cleaned_data)
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -1159,7 +1152,7 @@ def eportal_progress_report(request, proposal_unique_id):
             form_instance.financial_year = get_financial_year()
             form_instance.save()
             generate_progress_report_document(proposal_unique_id, form.cleaned_data)
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -1376,7 +1369,7 @@ def selfhelpgroup_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -1481,7 +1474,7 @@ def buyersellerexpo_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -1531,7 +1524,7 @@ def infrastructuredevelopment_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -1608,7 +1601,7 @@ def woolen_expo(request,proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -1682,7 +1675,7 @@ def woolen_expo_hiring(request,proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -1762,7 +1755,7 @@ def cfc_progress_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -1838,7 +1831,7 @@ def sheep_shearing_machining(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -1914,7 +1907,7 @@ def equipment(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -1993,7 +1986,7 @@ def small_tools_distribution(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -2056,7 +2049,7 @@ def short_term_programme(request, proposal_unique_id):
 
             df = pd.read_excel(form.cleaned_data['master_trainer_details_sheet'])
             analysis = process(df, 1, 1, 1, 1)
-            print(analysis)
+            # print(analysis)
             
             # Iterate through the state-wise analysis data
             for state_name, state_data in analysis['state'].items():
@@ -2128,7 +2121,7 @@ def short_term_programme(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -2205,7 +2198,7 @@ def onsite_training_progress_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -2284,7 +2277,7 @@ def shearing_machine_training_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -2319,7 +2312,7 @@ def rd_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -2398,7 +2391,7 @@ def domestic_meeting_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -2477,7 +2470,7 @@ def organising_seminar_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -2527,7 +2520,7 @@ def wool_survey_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -2606,7 +2599,7 @@ def wool_testing_lab_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -2656,7 +2649,7 @@ def publicity_monitoring_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -2774,7 +2767,7 @@ def pashmina_revolving_fund_progress_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Automatically fill the financial year
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -2824,7 +2817,7 @@ def pashmina_cfc_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()  # Assuming get_financial_year is defined elsewhere
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -2907,7 +2900,7 @@ def shelter_shed_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -2990,7 +2983,7 @@ def portable_tent_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -3073,7 +3066,7 @@ def predator_proof_lights_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -3123,7 +3116,7 @@ def testing_equipment_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -3173,7 +3166,7 @@ def showroom_development_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -3223,7 +3216,7 @@ def fodder_land_development_report(request, proposal_unique_id):
             form_instance = form.save(commit=False)
             form_instance.financial_year = get_financial_year()
             form_instance.save()
-            return HttpResponse('Form submitted successfully!')
+            return HttpResponseRedirect(reverse('authapp:form_submitted_successfully'))
     else:
         initial_data = {
             'proposal_unique_id': proposal_unique_id,
@@ -3802,3 +3795,10 @@ from cwdb_admin.models import Index_Notification
 def index_notification_view(request):
     notifications = Index_Notification.objects.order_by('-created_at')
     return render(request, 'main/HomePage/index_notifications.html', {'notifications': notifications})
+
+# views.py
+
+from django.shortcuts import render
+@login_required
+def form_submitted_successfully(request):
+    return render(request, 'main/form_submitted_sucessfully.html')
