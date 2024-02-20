@@ -1231,7 +1231,8 @@ def take_backup():
         backup_json = '[' + ','.join(backup_data) + ']'
 
         # Specify the target IP address and the endpoint on the Ubuntu VM
-        target_ip = '192.168.1.57:5000'  # Replace with the actual IP address of your Ubuntu VM
+        # target_ip = '192.168.1.57:5000'  # Replace with the actual IP address of your Ubuntu VM
+        target_ip = '127.0.0.1:5000'  # Replace with the actual IP address of your Ubuntu VM
         endpoint = '/receive_backup'   # Replace with the actual endpoint on your Ubuntu VM
 
         # Construct the URL

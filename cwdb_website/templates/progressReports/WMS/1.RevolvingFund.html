@@ -202,6 +202,11 @@
       <form method="post" enctype="multipart/form-data">
         <div id="goalsDiv"></div>
 
+        <select id="id_year" onchange="handleDropdownChange()">
+          <!-- Options for selecting year from createdAt year to current year -->
+        </select>
+        
+        
         {% csrf_token %}
         {{ form.as_p }}
 
@@ -233,6 +238,19 @@
   </div>
 
 <script>
+  // Add this function to generate options for selecting years from createdAt year to current year
+  function populateYearDropdown() {
+    var yearDropdown = document.getElementById("id_year");
+    var createdAtDate = new Date("{{ created_at.isoformat }}");
+    var currentYear = new Date().getFullYear();
+    for (var year = createdAtDate.getFullYear(); year <= currentYear; year++) {
+      var option = document.createElement("option");
+      option.value = year;
+      option.text = year;
+      yearDropdown.appendChild(option);
+    }
+  }
+
   // Function to calculate the number of quarters spent between selectedQuarter (which has values such as 'Q1' till 'Q4')
   // the yeaer should be taken as the current year
   // and difference betwen selectedQuarter and createdAtDate
@@ -294,9 +312,16 @@
   function handleDropdownChange() {
     var selectedQuarterDropdown = document.getElementById("id_quarter");
     var selectedQuarter = selectedQuarterDropdown.options[selectedQuarterDropdown.selectedIndex].value;
+    var selectedYear = document.getElementById("id_year").value;
 
     // Calculate the number of quarters spent
-    var quartersSpent = calculateQuartersSpent(selectedQuarter);
+    // Calculate the difference between selected year and createdAt year
+    var createdAtDate = new Date("{{ created_at.isoformat }}");
+    var createdAtYear = createdAtDate.getFullYear();
+    var yearsDifference = selectedYear - createdAtYear;
+
+    // Calculate the number of quarters spent
+    var quartersSpent = yearsDifference * 4 + calculateQuartersSpent(selectedQuarter);
     // console.log(quartersSpent);
 
     // Get the goals array passed from the backend
