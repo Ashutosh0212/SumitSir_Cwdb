@@ -256,12 +256,12 @@ class WMSRevolvingFundForm(forms.ModelForm):
             'financial_year': forms.HiddenInput(),
         }
         labels = {
-            'quarterly_allocated_budget': "Quarterly allocated budget (in ₹):",
+            'quarterly_allocated_budget': "Quarterly allocated budget (in Lakhs):",
             'organization_name': "Organization Name which approved the purchase price:",
             'description_sheep_breeders': "Description of Sheep Breeders and their respective society/SHG/Group.",
             'fixed_purchase_price': 'Fixed Purchase Price of raw wool (Mention grade-wise prices if required, in ₹):',
             'total_profit': 'Total Profit, Percentage of budget spent, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB:',
-            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in ₹):',
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
         }
     
     def __init__(self, *args, **kwargs):
@@ -290,7 +290,16 @@ class EPortalForm(forms.ModelForm):
             'financial_year': forms.HiddenInput(),
             # Removed 'quarter': forms.HiddenInput(),
         }
-    
+        
+        labels={
+            'current_progress':"Current Progress of E-Portal, Number of Modules Completed/In Progress:",
+            'quarterly_allocated_budget':"Quarterly allocated budget (in Lakhs)",
+            'total_profit_and_budget_spent':"Total Profit, Percentage of budget spent, Professional Help Costs (if Opted), Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB, Percentage of Budget Spent (Monthly & total allocation):",
+            'total_quarterly_budget_spent':"Total quarterly budget spent (in Lakhs)"
+            
+
+        }
+        
     def __init__(self, *args, **kwargs):
         super(EPortalForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -326,8 +335,8 @@ class WMSSelfHelpGroupForm(forms.ModelForm):
         labels = {
             'total_profit_interest': "Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB, Percentage of Budget Spent (Monthly & total allocation):",
             'description_shg': "Description of SHG made, Group Registration number, Total Members Count:",
-            'quarterly_allocated_budget': "Quarterly allocated budget (in ₹):",
-            "total_quarterly_budget_spent": "Total Quarterly Budget Spent (in ₹):"
+            'quarterly_allocated_budget': "Quarterly allocated budget (in Lakhs):",
+            "total_quarterly_budget_spent": "Total Quarterly Budget Spent (in Lakhs):"
         }
     
     def __init__(self, *args, **kwargs):
@@ -362,6 +371,13 @@ class WMSBuyerSellerExpoForm(forms.ModelForm):
                 ('Q4', 'Quarter 4 (January-March)'),
             ]),
         }
+        
+        labels = {
+            'description_event':"Description of event, Total sellers/stalls",
+            'quarterly_allocated_budget':"Total Quarterly Budget Allocated (in Lakhs)",
+            'total_profit_interest':" Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB, Percentage of Budget Spent (Monthly & total allocation):",
+            'total_quarterly_budget_spent': "Total Quarterly Budget Spent (in Lakhs):",
+        }
     
     def __init__(self, *args, **kwargs):
         super(WMSBuyerSellerExpoForm, self).__init__(*args, **kwargs)
@@ -394,6 +410,13 @@ class WMSInfrastructureDevelopmentForm(forms.ModelForm):
                 ('Q3', 'Quarter 3 (October-December)'),
                 ('Q4', 'Quarter 4 (January-March)'),
             ]),
+        }
+        
+        labels = {
+            'quarterly_allocated_budget':"Total Quarterly Budget Allocated (in Lakhs)",
+            "total_quarterly_budget_spent": "Total Quarterly Budget Spent (in Lakhs)",
+            'development_progress':"Current development progress",
+            'budget_spent_details':"Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB:",
         }
     
     def __init__(self, *args, **kwargs):
@@ -428,6 +451,14 @@ class WoolenExpoForm(forms.ModelForm):
                 ('Q4', 'Quarter 4 (January-March)'),
             ]),
         }
+        
+        labels = {
+            'quarterly_allocated_budget':"Total Quarterly Budget Allocated (in Lakhs)",
+            "total_quarterly_budget_spent": "Total Quarterly Budget Spent (in Lakhs)",
+            'expo_details':"Details of Expo Conducted (Duration of Expo, Location, Number of Stalls, and more):",
+            'profit_and_budget_spent_details':"Total Profit, Percentage of budget spent, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB:",
+            
+        }
     
     def __init__(self, *args, **kwargs):
         super(WoolenExpoForm, self).__init__(*args, **kwargs)
@@ -460,7 +491,14 @@ class WoolenExpoHiringForm(forms.ModelForm):
                 ('Q4', 'Quarter 4 (January-March)'),
             ]),
         }
-    
+        
+        labels = {
+            'quarterly_allocated_budget':"Total Quarterly Budget Allocated (in Lakhs)",
+            "total_quarterly_budget_spent": "Total Quarterly Budget Spent (in Lakhs)",
+            'expo_details':"Details of Expo Conducted (Duration of Expo, Location, Number of Stalls, and more)",
+            'profit_and_budget_spent_details':"Total Profit, Percentage of budget spent, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB:",
+            'total_stall_charges':"Total Stall Charges (in ₹)"
+        }
     def __init__(self, *args, **kwargs):
         super(WoolenExpoHiringForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -487,7 +525,15 @@ class WPSCFCForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
-    
+        
+        labels = {
+            'quarterly_allocated_budget':"Total Quarterly Budget Allocated (in Lakhs)",
+            "total_quarterly_budget_spent": "Total Quarterly Budget Spent (in Lakhs)",
+            "total_machinery_required":'Total Machinery Required, Description and Updates of the same:',
+            'total_quantity_wool_yarn_fabric_processed':"Total Quantity wool/yarn/fabric processed (in kg./kilos)",
+            'total_processing_charge_facility':"Total Processing Charge of Facility (in ₹)",
+            'budget_spent_details':"Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB",
+        }
     def __init__(self, *args, **kwargs):
         super(WPSCFCForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -512,7 +558,19 @@ class WPSSheepShearingMachingForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
-    
+        
+        labels = {
+            'quarterly_allocated_budget':"Total Quarterly Budget Allocated (in Lakhs)",
+            "total_quarterly_budget_spent": "Total Quarterly Budget Spent (in Lakhs)",
+            "machinery_procured":"Total Machinery procured",
+            "wool_sheared":"Total Wool Sheared",
+            "sellers_beneficiaries":"Total Sellers/Beneficiaries",
+            "number_of_sheeps":"Total Number of Sheeps",
+            "shearing_cost_per_kg":"Shearing Cost (per kg.)",
+            "percentage_budget_spent":"Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB"
+                
+                    
+        }
     def __init__(self, *args, **kwargs):
         super(WPSSheepShearingMachingForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -537,7 +595,14 @@ class WPSEquipmentForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
-    
+        
+        labels = {
+            'quarterly_allocated_budget':"Total Quarterly Budget Allocated (in Lakhs)",
+            "total_quarterly_budget_spent": "Total Quarterly Budget Spent (in Lakhs)",
+            "total_tests_carried_out":"Total No. of Tests Carried Out",
+            "percentage_budget_spent":"Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB",
+        }
+            
     def __init__(self, *args, **kwargs):
         super(WPSEquipmentForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -565,9 +630,10 @@ class WPSSmallToolsDistributionForm(forms.ModelForm):
             'financial_year': forms.HiddenInput(),
         }
         labels = {
-            'total_sellers' : 'Total Sellers, Total Equipment Shared, any other information if required.',
-            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in ₹):',
-            'quarterly_allocated_budget': 'Quarterly Allocated Budget (in ₹):'
+            'total_sellers' : 'Total Sellers, Total Equipment Shared, any other information if required:',
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            # "total_sellers":"Total Sellers, Total Equipment Shared, any other information if required:"
         }
     
     def __init__(self, *args, **kwargs):
@@ -598,6 +664,17 @@ class HRDShortTermProgrammeForm(forms.ModelForm):
             'training_from': forms.DateInput(attrs={'type': 'date'}),
             'training_to': forms.DateInput(attrs={'type': 'date'}),
         }
+        
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'training_from':'Duration of Training From:',
+            'training_to':'Duration of Training To:',
+            'topic_location':'Topic, Location of Training',
+            'budget_spent_details':'Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB'
+            
+        }
+        
 
     def __init__(self, *args, **kwargs):
         super(HRDShortTermProgrammeForm, self).__init__(*args, **kwargs)
@@ -626,7 +703,18 @@ class HRDOnsiteTrainingForm(forms.ModelForm):
             'duration_training_from': forms.DateInput(attrs={'type': 'date'}),
             'duration_training_to': forms.DateInput(attrs={'type': 'date'}),
         }
-    
+        
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'duration_training_from':'Duration of Training From:',
+            'duration_training_to':'Duration of Training To:',
+            'industry_address':'Name, Address of the Industry',
+            'persons_trained_topic':'Number of Persons Trained, Topic of Training',
+            'budget_spent_details':'Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB'
+                
+         }
+         
     def __init__(self, *args, **kwargs):
         super(HRDOnsiteTrainingForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -655,6 +743,16 @@ class HRDShearingMachineTrainingForm(forms.ModelForm):
             'duration_training_from': forms.DateInput(attrs={'type': 'date'}),
             'duration_training_to': forms.DateInput(attrs={'type': 'date'}),
         }
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'duration_training_from':'Duration of Training From:',
+            'duration_training_to':'Duration of Training To:',
+            'location_training':'Location of Training',
+            'agency_address':'Name, Address of the Agency imparting the training',
+            'budget_spent_details':'Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB'
+                
+         }
     
     def __init__(self, *args, **kwargs):
         super(HRDShearingMachineTrainingForm, self).__init__(*args, **kwargs)
@@ -682,7 +780,15 @@ class RDForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
-    
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'name_project':'Name of the Project',
+            'outcome_project':'Outcome of the Project',
+            'commercialisation_details':'Commercialisation of the Developed product/Technology/Process with the Industry Partner',
+            'costing_details':'Costing Details along with the Incoming Process Details of the Developed Product',
+            'budget_spent_details':'Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB'
+          }
     def __init__(self, *args, **kwargs):
         super(RDForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -711,7 +817,16 @@ class DomesticMeetingForm(forms.ModelForm):
             'duration_from': forms.DateInput(attrs={'type': 'date'}),
             'duration_to': forms.DateInput(attrs={'type': 'date'}),
         }
-    
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'duration_from':'Duration of Training From:',
+            'duration_to':'Duration of Training To:',
+            'topic_location':'Topic, Location of Training',
+                
+            'budget_spent_details':'Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB'
+          }
+            
     def __init__(self, *args, **kwargs):
         super(DomesticMeetingForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -740,7 +855,17 @@ class OrganisingSeminarForm(forms.ModelForm):
             'duration_from': forms.DateInput(attrs={'type': 'date'}),
             'duration_to': forms.DateInput(attrs={'type': 'date'}),
         }
-    
+        
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'duration_from':'Duration of Training From:',
+            'duration_to':'Duration of Training To:',
+            'topic_location':'Topic, Location of Training',
+                
+            'budget_spent_details':'Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB'
+          }
+          
     def __init__(self, *args, **kwargs):
         super(OrganisingSeminarForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -769,7 +894,18 @@ class WoolSurveyForm(forms.ModelForm):
             'duration_from': forms.DateInput(attrs={'type': 'date'}),
             'duration_to': forms.DateInput(attrs={'type': 'date'}),
         }
-    
+        
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'survey_location':'Location of Survey',
+            'survey_outcome':'Outcome of Survey',
+           
+                
+            'budget_spent_details':'Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB'
+          }
+          
+        
     def __init__(self, *args, **kwargs):
         super(WoolSurveyForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -798,7 +934,16 @@ class WoolTestingLabForm(forms.ModelForm):
             'duration_from': forms.DateInput(attrs={'type': 'date'}),
             'duration_to': forms.DateInput(attrs={'type': 'date'}),
         }
-    
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'duration_from':'Duration of Training From:',
+            'duration_to':'Duration of Training To:',
+            'training_details':'Training Details at WDTC',
+                
+            'budget_spent_details':'Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB'
+          }
+        
     def __init__(self, *args, **kwargs):
         super(WoolTestingLabForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -827,7 +972,15 @@ class PublicityMonitoringForm(forms.ModelForm):
             'duration_from': forms.DateInput(attrs={'type': 'date'}),
             'duration_to': forms.DateInput(attrs={'type': 'date'}),
         }
-    
+        
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            
+                
+            'budget_spent_details':'Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB'
+          }
+        
     def __init__(self, *args, **kwargs):
         super(PublicityMonitoringForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -854,7 +1007,17 @@ class PWDS_PashminaRevolvingFundForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
-    
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'fixed_purchase_price':'Fixed Purchase Price of Pashmina wool (Mention grade-wise prices if required, in ₹):',
+            'organization_name':'Organization Name which approved the purchase price:',
+            'description_sheep_breeders':'Description of Sheep Breeders and their respective society/SHG/Group:',
+            'total_profit':'Total Profit, Percentage of budget spent, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB:'
+                
+                
+            
+          }
     def __init__(self, *args, **kwargs):
         super(PWDS_PashminaRevolvingFundForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -881,7 +1044,16 @@ class PWDS_PashminaCFCForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
-    
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'machinery_description':'Total Machinery Required, Description and Updates of the same:',
+            'pashmina_wool_processed':'Total Quantity Pashmina Wool processed (in kg./kilos)',
+            'processing_charge':'Total Processing Charge of Facility',
+            'budget_spent_percentage':'Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB'
+                
+            
+          }
     def __init__(self, *args, **kwargs):
         super(PWDS_PashminaCFCForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -908,6 +1080,14 @@ class ShelterShedConstructionForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
+        
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'budget_spent_percentage':'Total Profit, Percentage of budget spent, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB:',
+            'number_of_sheds_location':'Number of Sheds and their Location:'
+            
+          }
     
     def __init__(self, *args, **kwargs):
         super(ShelterShedConstructionForm, self).__init__(*args, **kwargs)
@@ -934,6 +1114,15 @@ class PortableTentDistForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
+        
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'budget_spent_percentage':'Total Profit, Percentage of budget spent, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB:',
+            'number_of_tents':'Number of Tents:',
+            'accessories_details':'Details of Accessorries:'
+            
+          }
     
     def __init__(self, *args, **kwargs):
         super(PortableTentDistForm, self).__init__(*args, **kwargs)
@@ -960,7 +1149,15 @@ class PredatorProofLightsDistForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
-    
+        
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'budget_spent_percentage':'Total Profit, Percentage of budget spent, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB:',
+            'number_of_led_lights':'Number of LED Lights:',
+            
+            
+          }
     def __init__(self, *args, **kwargs):
         super(PredatorProofLightsDistForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -986,7 +1183,15 @@ class TestingEquipmentForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
-    
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'budget_spent_percentage':'Total Profit, Percentage of budget spent, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB:',
+            'status_of_testing_laboratory':'Status of Testing Laboratory:',
+            'number_of_tests_done':'No. of Tests Done:'
+            
+            
+          }
     def __init__(self, *args, **kwargs):
         super(TestingEquipmentForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
@@ -1012,6 +1217,14 @@ class ShowroomDevelopmentForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'budget_spent_percentage':'Total Profit, Percentage of budget spent, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB:',
+            'location_and_size_of_showroom':'Location & Size of Showroom:'
+            
+            
+          }
     
     def __init__(self, *args, **kwargs):
         super(ShowroomDevelopmentForm, self).__init__(*args, **kwargs)
@@ -1038,6 +1251,14 @@ class FodderLandDevelopmentForm(forms.ModelForm):
             'proposal_unique_id': forms.HiddenInput(),
             'financial_year': forms.HiddenInput(),
         }
+        
+        labels = {
+            'total_quarterly_budget_spent': 'Total Quarterly Budget Spent (in Lakhs):',
+            'quarterly_allocated_budget': 'Total Quarterly Allocated Budget (in Lakhs):',
+            'budget_spent_percentage':'Total Profit, Percentage of budget spent, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB:',
+            'location_of_fodder_land':'Location of Fodder Land:'
+            
+          }
     
     def __init__(self, *args, **kwargs):
         super(FodderLandDevelopmentForm, self).__init__(*args, **kwargs)

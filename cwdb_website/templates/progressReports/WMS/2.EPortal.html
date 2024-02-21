@@ -1,12 +1,12 @@
 {% extends 'base_dashboard.html' %}
 {%load static %}
-<!DOCTYPE html>
-<html lang="en">
+
+  {%block title %}CWDB: E Portal Progress Report{% endblock %}
   {% block content%}
-<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> CWDB: E Portal Progress Report</title>
+    
     <style>
       body {
         font-family: Helvetica, sans-serif;
@@ -202,10 +202,7 @@
           <form method="post" enctype="multipart/form-data">
             <div id="goalsDiv"></div>
 
-            <p>
-              <label for="id_year">Financial Year:</label>
-              <select name="quarterly_allocated_budget" step="0.01" required="" id="id_year" onchange="handleDropdownChange()">
-            </p>
+            
 
             {% csrf_token %}
             {{ form.as_p }}
@@ -410,4 +407,3 @@
     </script>
 </body>
 {% endblock %}
-</html>

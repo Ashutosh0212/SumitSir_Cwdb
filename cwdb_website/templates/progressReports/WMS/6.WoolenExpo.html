@@ -1,4 +1,6 @@
+{% extends 'base_dashboard.html' %}
 {%load static %}
+{%block content%}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -201,10 +203,7 @@
     <form method="post" enctype="multipart/form-data">
       <div id="goalsDiv"></div>
 
-      <p>
-        <label for="id_year">Financial Year:</label>
-        <select name="quarterly_allocated_budget" step="0.01" required="" id="id_year" onchange="handleDropdownChange()">
-      </p>
+    
 
       {% csrf_token %}
       {{ form.as_p }}
@@ -414,3 +413,4 @@
 </body>
 
 </html>
+{% endblock %}
