@@ -67,7 +67,8 @@ class Proposal(models.Model):
     project_report = models.FileField(upload_to='project_reports/',blank=True, null=True)
     covering_letter = models.FileField(upload_to='covering_letters/',blank=True, null=True)
     unique_id = models.CharField(max_length=100, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField()
+    approved_at=models.DateTimeField(null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True) # This field will automatically update whenever the model is saved
     total_duration = models.IntegerField(blank=True, null=True)
     goals = models.JSONField(default=dict)

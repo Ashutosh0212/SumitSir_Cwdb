@@ -3281,6 +3281,7 @@ def submit_approval(request, proposal_id):
             proposal.reminder_quarter = get_current_quarter()
             proposal.reminder_financial_year=get_financial_year()
             proposal.reminder_sent = False
+            proposal.approved_at=timezone.now()
             proposal.save()
             # Notify the user about the status change
             send_status_change_notification(proposal.user, proposal.unique_id, proposal.status,proposal.project_sanction_letter)
