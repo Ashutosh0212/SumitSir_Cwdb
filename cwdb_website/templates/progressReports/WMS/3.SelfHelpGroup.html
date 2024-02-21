@@ -70,10 +70,12 @@
       margin-left: 40%;
       margin-right: 40%;
       display: flex;
+      /* border: 8px solid red; */
       align-items: center;
     }
 
     button{
+      /* display: block; */
       margin: 3px;
       padding: 10px 20px;
       background-color: #007bff;
@@ -110,12 +112,15 @@
     .content {
       display: flex;
       align-items: center;
+      /* justify-content: center; */
       margin-bottom: 50px;
+      /* border: solid #ff0000; */
     }
 
     .content h1{
       align-items: center;
       margin-left: 10%;
+      /* border: solid #ff0000; */
     }
 
     .content img {
@@ -123,6 +128,51 @@
       height: auto;
       margin-left: 150px;
     }
+
+    .list-items .item{
+    display: flex;
+    align-items: center;
+    list-style: none;
+    height: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 0 15px;
+    border-radius: 8px;
+    }
+    
+    .list-items .item:hover{
+        background-color: #e7edfe;
+    }
+    .item .item-text{
+        font-size: 16px;
+        font-weight: 400;
+        color: #333;
+    }
+    .item .checkbox{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 16px;
+        width: 16px;
+        border-radius: 4px;
+        margin-right: 12px;
+        border: 1.5px solid #c0c0c0;
+        transition: all 0.3s ease-in-out;
+    }
+    .item.checked .checkbox{
+        background-color: #4070f4;
+        border-color: #4070f4;
+    }
+    .checkbox .check-icon{
+        color: #fff;
+        font-size: 11px;
+        transform: scale(0);
+        transition: all 0.2s ease-in-out;
+    }
+    .item.checked .check-icon{
+        transform: scale(1);
+    }
+
 
     @media (max-width: 768px) {
         .content {
@@ -152,6 +202,11 @@
     
     <form method="post" enctype="multipart/form-data">
       <div id="goalsDiv"></div>
+
+      <p>
+        <label for="id_year">Financial Year:</label>
+        <select name="quarterly_allocated_budget" step="0.01" required="" id="id_year" onchange="handleDropdownChange()">
+      </p>      
       {% csrf_token %}
       {{ form.as_p }}
 
@@ -192,6 +247,23 @@
   </div>
 
   <script>
+    // Add this function to generate options for selecting years from approvedAt year to current year
+    function populateYearDropdown() {
+      print("dewd");
+      var yearDropdown = document.getElementById("id_year");
+      var approvedAtDate = new Date("{{ approved_at.isoformat }}");
+      var currentYear = new Date().getFullYear();
+      for (var year = approvedAtDate.getFullYear(); year <= currentYear; year++) {
+        var option = document.createElement("option");
+        option.value = year;
+        option.text = year;
+        yearDropdown.appendChild(option);
+      }
+    }
+  
+    // Function to calculate the number of quarters spent between selectedQuarter (which has values such as 'Q1' till 'Q4')
+    // the yeaer should be taken as the current year
+    // and difference betwen selectedQuarter and approvedAtDate
     function calculateQuartersSpent(selectedQuarter) {
       // Define quarters in terms of months
       var quarters = {
@@ -202,25 +274,25 @@
       };
   
       // Create the Date object
-      var createdAtDate = new Date("{{ created_at.isoformat }}")
+      var approvedAtDate = new Date("{{ approved_at.isoformat }}")
   
       // Get the current date
       var currentDate = new Date();
       var currentYear = currentDate.getFullYear();
   
-      // Get quarter and year from createdAtDate
-      var createdAtQuarter = Math.floor((createdAtDate.getMonth() + 3) / 3);
-      // console.log(createdAtQuarter) 
+      // Get quarter and year from approvedAtDate
+      var approvedAtQuarter = Math.floor((approvedAtDate.getMonth() + 3) / 3);
+      // console.log(approvedAtQuarter) 
   
       var currentQuarter = quarters[selectedQuarter];
-      var createdAtYear = createdAtDate.getFullYear(); // Get year
-      if (selectedQuarter[1] < createdAtQuarter) {
+      var approvedAtYear = approvedAtDate.getFullYear(); // Get year
+      if (selectedQuarter[1] < approvedAtQuarter) {
           currentYear++;
       } 
   
-      var quartersSpent = (currentYear - createdAtYear) * 4 + currentQuarter - createdAtQuarter;
+      var quartersSpent = (currentYear - approvedAtYear) * 4 + currentQuarter - approvedAtQuarter;
       // console.log("quartersSpent:", quartersSpent);
-      // console.log(currentQuarter, createdAtQuarter, currentYear, createdAtYear, createdAtQuarter);
+      // console.log(currentQuarter, approvedAtQuarter, currentYear, approvedAtYear, approvedAtQuarter);
   
       return quartersSpent;
     }
@@ -228,8 +300,16 @@
   
     function toggleCheckboxValue(checkbox) {
     // Split the checkbox value to extract the goal text and completion status
+    // var checkboxValueParts = checkbox.value.slice(0,-1), checkbox.value.slice(-1);
+    // var goalText = checkboxValueParts[0];
+    // var completionStatus = checkboxValueParts[1];
+  
+    // var goalText = checkbox.value.slice(0, -1);
     var completionStatus = checkbox.value.charAt(checkbox.value.length-2);
   
+    // console.log(goalText, completionStatus, checkbox.value.slice[-2,-1]);
+    // console.log(completionStatus)
+    // Toggle the completion status
     var newCompletionStatus = completionStatus === "0" ? "1" : "0";
   
     // Update the checkbox value with the new completion status
@@ -242,9 +322,16 @@
     function handleDropdownChange() {
       var selectedQuarterDropdown = document.getElementById("id_quarter");
       var selectedQuarter = selectedQuarterDropdown.options[selectedQuarterDropdown.selectedIndex].value;
+      var selectedYear = document.getElementById("id_year").value;
   
       // Calculate the number of quarters spent
-      var quartersSpent = calculateQuartersSpent(selectedQuarter);
+      // Calculate the difference between selected year and approvedAt year
+      var approvedAtDate = new Date("{{ approved_at.isoformat }}");
+      var approvedAtYear = approvedAtDate.getFullYear();
+      var yearsDifference = selectedYear - approvedAtYear;
+  
+      // Calculate the number of quarters spent
+      var quartersSpent = yearsDifference * 4 + calculateQuartersSpent(selectedQuarter);
       // console.log(quartersSpent);
   
       // Get the goals array passed from the backend
@@ -262,6 +349,8 @@
         var ulItem = document.createElement("ul");
         ulItem.className = "list-items";
         for (var i = 0; i < quartersSpent && i < goalsget[0].length; i++) {
+        // console.log("Quarter " + (i + 1));
+        // console.log(Object.keys(goals[0][i]).length)
           var h2banao = document.createElement("h4");
           h2banao.textContent = "Quarter" + (i+1);
           ulItem.appendChild(h2banao);
@@ -284,6 +373,25 @@
                   label.textContent = goalsget[0][i]['goal_' + (j + 1)].text;
                   listItem.append(label);
   
+                  //replace from
+                  // var spanElement = document.createElement("span");
+                  // spanElement.classList.add("checkbox"); // Add your desired class name
+  
+                  // var iconElement = document.createElement("i");
+                  // iconElement.classList.add("fa-solid", "fa-check", "check-icon"); // Add Font Awesome classes
+                  // spanElement.appendChild(iconElement);
+                  // listItem.append(spanElement);
+                  //replace to
+  
+                  // spanElement = document.createElement("span");
+                  // spanElement.classList.add("item-text");
+                  // spanElement.textContent = goals[0][i]['goal_' + (j+1)].text;
+                  // listItem.append(spanElement);
+  
+                  // var checkbox = document.createElement("input");
+                  // checkbox.type = "checkbox";
+                  // listItem.appendChild(checkbox);
+                  // listItem.appendChild(document.createTextNode(goals[0][i]['goal_' + (j+1)].text));
                   ulItem.appendChild(listItem); // Changed from goalsList to goalsDiv
               }
           }
@@ -301,6 +409,7 @@
         var checkboxes = document.querySelectorAll('.checkbox');
       checkboxes.forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
+          // console.log("laga diya");
           toggleCheckboxValue(checkbox);
         });
       });
@@ -308,10 +417,15 @@
   
     // Add event listener to the dropdown for value change
     document.getElementById("id_quarter").addEventListener("change", handleDropdownChange);
+    // document.getElementById("id_year").addEventListener("change", handleDropdownChange);
+  
+    populateYearDropdown();
   
     // Initial call to handleDropdownChange function to perform calculations and print goals for the initial value of the dropdown
     handleDropdownChange();
   </script>
-</body>
-
-</html>
+    
+  
+  </body>
+  
+  </html>
