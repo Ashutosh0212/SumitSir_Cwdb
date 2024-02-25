@@ -55,13 +55,13 @@ class Proposal(models.Model):
     mode_of_selection = models.TextField()
     component_wise_cost = models.FileField(upload_to='project_costs/',blank=True, null=True)
     component_wise_duration = models.FileField(upload_to='durations/',blank=True, null=True)
-    location_of_project = models.CharField(max_length=100)
+    location_of_project = models.CharField(max_length=500)
     associated_agency = models.TextField()
     bank_details = models.TextField()
     nodal_officer_details = models.TextField()
     other_info = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
-    total_fund_allocated = models.DecimalField(max_digits=20, decimal_places=2,blank=True,null=True)
+    total_fund_allocated = models.DecimalField(max_digits=50, decimal_places=2,blank=True,null=True)
     project_sanction_letter = models.FileField(upload_to='sanction_letters/',null=True)
     Approved_by=models.CharField(max_length=50,null=True,blank=True)
     project_report = models.FileField(upload_to='project_reports/',blank=True, null=True)
@@ -74,7 +74,7 @@ class Proposal(models.Model):
     goals = models.JSONField(default=dict)
     #for progress report reminder
     reminder_financial_year = models.CharField(max_length=10,choices=generate_financial_year_choices(), blank=True, null=True)
-    reminder_quarter = models.CharField(max_length=5,choices=QUARTER_CHOICES, blank=True, null=True)
+    reminder_quarter = models.CharField(max_length=10,choices=QUARTER_CHOICES, blank=True, null=True)
     # reminder_sent = models.BooleanField(default=False)
     
     def __str__(self):
@@ -135,6 +135,18 @@ class FundDistribution(models.Model):
 
     def __str__(self):
         return f'{self.financial_year}'
+    
+class AdministrativeExpenditure(models.Model):
+    admin_exp = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Admin Exp (in lakhs)", default=0)
+    quarter = models.CharField(max_length=9, choices=QUARTER_CHOICES)
+    financial_year = models.CharField(max_length=9, choices=generate_financial_year_choices())
+
+    def __str__(self):
+        return f"{self.quarter} - {self.financial_year}"
+
+    
+    
+    
 
 class Index_Notification(models.Model):
     message = models.TextField()

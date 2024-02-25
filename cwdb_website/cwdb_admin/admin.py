@@ -13,3 +13,13 @@ class IndexNotificationAdmin(admin.ModelAdmin):
         obj.save()
 
 admin.site.register(Index_Notification, IndexNotificationAdmin)
+
+from django.contrib import admin
+from .models import AdministrativeExpenditure
+
+class AdminExpAdmin(admin.ModelAdmin):
+    list_display = ('quarter', 'financial_year', 'admin_exp')
+    list_filter = ('quarter', 'financial_year')
+    search_fields = ('quarter', 'financial_year')
+
+admin.site.register(AdministrativeExpenditure, AdminExpAdmin)

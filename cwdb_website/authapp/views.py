@@ -269,8 +269,8 @@ def index(request):
     
     #fetch data according to form 
     #quarter expenditure and sanctioned data
-    form = quarterly_schemes_form(request.GET)
-    form1=allocation_form(request.GET)
+    form = quarterly_schemes_form(request.GET or None)
+    form1=allocation_form(request.GET or None)
     # print(f"Current Financial Year: {current_financial_year}")
     if form1.is_valid():
         year = form1.cleaned_data.get('financial_year')
@@ -3406,8 +3406,19 @@ from django.db import models
 
 from django.shortcuts import render
 from .models import FundDistribution, ExpenditureData
+from cwdb_admin.models import AdministrativeExpenditure
 from .forms import scheme_filterform
 from django.db.models import Sum
+
+from django.db.models import Sum
+
+def get_admin_expense_for_year(year):
+    admin_expenses = (
+        AdministrativeExpenditure.objects
+        .filter(financial_year=year)
+        .aggregate(total_expense=Sum('admin_exp'))
+    )
+    return admin_expenses['total_expense'] or 0
 
 
 
@@ -3449,15 +3460,15 @@ def iwdp_view(request):
         # Initialize data list
             fund_data = []
             for entry in expenditure_data_grouped:
-                admin_exp = FundDistribution.objects.filter(financial_year=entry['year']).values('admin_exp').first()
+                admin_exp=get_admin_expense_for_year(entry['year'])
                 data_entry = {
                 'wms': entry['wms_expenditure'] or 0,
                 'wps': entry['wps_expenditure'] or 0,
                 'hrdpa': entry['hrdpa_expenditure'] or 0,
                 'pwds': entry['pwds_expenditure'] or 0,
-                'admin_exp': admin_exp['admin_exp'] if admin_exp else 0,  # Fetch admin_exp from FundDistribution model, 
+                'admin_exp': admin_exp,  # Fetch admin_exp from FundDistribution model, 
                 'financial_year': entry['year'],
-                'iwdp': entry['iwdp_expenditure']+admin_exp['admin_exp'] or 0,#also 
+                'iwdp': entry['iwdp_expenditure']+admin_exp,#also 
             }
                 fund_data.append(data_entry)
         elif fund_type=='Fund Sanctioned':
@@ -3742,17 +3753,40 @@ def hrdpa_scheme_view(request):
     
 def admin_exp_view(request):
     form = scheme_filterform(request.GET)
+    financial_years = None
+    fund_data = None
+    admin_expense = None
+    
     if form.is_valid():
         financial_year = form.cleaned_data.get('financial_year')
-        fund_allocated=FundDistribution.objects.values('admin_exp', 'financial_year')
+        financial_years = set()
+
+        # Get financial years from FundDistribution model
+        fund_years = FundDistribution.objects.values_list('financial_year', flat=True).distinct()
+        financial_years.update(fund_years)
+
+        # Get financial years from AdministrativeExpenditure model
+        admin_exp_years = AdministrativeExpenditure.objects.values_list('financial_year', flat=True).distinct()
+        financial_years.update(admin_exp_years)
+
+        # Fetch admin_exp from FundDistribution model for each financial year
+        fund_data = FundDistribution.objects.values('financial_year').annotate(admin_expense=Sum('admin_exp'))
+
+        # Calculate the total administrative expenses from AdministrativeExpenditure model for each financial year
+        admin_expense = AdministrativeExpenditure.objects.values('financial_year').annotate(total_expense=Sum('admin_exp'))
+
+       
         if financial_year:
-            fund_allocated=FundDistribution.objects.filter(financial_year=financial_year).values( 'admin_exp', 'financial_year')
+            fund_data=fund_data.filter(financial_year=financial_year)
+            admin_expense=admin_expense.filter(financial_year=financial_year)
+            financial_years=financial_year
         
         context = {
-            'form': form,
-            'financial_year': financial_year,
-            'fund_data': fund_allocated,
-        }
+        'form': form,
+        'financial_years': financial_years,
+        'fund_data': fund_data,
+        'admin_expense': admin_expense,
+    }
 
         return render(request, 'main/HomePage/admin_exp.html', context)
     

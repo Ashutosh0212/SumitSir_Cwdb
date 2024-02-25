@@ -22,26 +22,23 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            
-                            <th>Administrative Expenditure Fund
-                            </th>
-                            
                             <th>Financial Year</th>
+                            <th>Fund Distribution Admin Expense</th>
+                            <th>Administrative Expenditure</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% if fund_data %}
-                            {% for data in fund_data %}
-                                <tr>
-                                    
-                                    <td>{{ data.admin_exp }}</td>
-                                    
-                                    <td>{{ data.financial_year }}</td>
-                                </tr>
-                            {% endfor %}
+                        {% for year in financial_years %}
+                        <tr>
+                            <td>{{ year }}</td>
+                            <td>{{ fund_data|dict_get:year|default_if_none:"0" }}</td>
+                            <td>{{ admin_expense|dict_get:year|default_if_none:"0" }}</td>
+                        </tr>
+                    {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="2">No data found</td>
+                                <td colspan="3">No data found</td>
                             </tr>
                         {% endif %}
                     </tbody>
