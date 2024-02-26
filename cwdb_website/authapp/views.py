@@ -3753,40 +3753,66 @@ def hrdpa_scheme_view(request):
     
 def admin_exp_view(request):
     form = scheme_filterform(request.GET)
-    financial_years = None
-    fund_data = None
-    admin_expense = None
     
     if form.is_valid():
         financial_year = form.cleaned_data.get('financial_year')
-        financial_years = set()
-
-        # Get financial years from FundDistribution model
-        fund_years = FundDistribution.objects.values_list('financial_year', flat=True).distinct()
-        financial_years.update(fund_years)
-
-        # Get financial years from AdministrativeExpenditure model
-        admin_exp_years = AdministrativeExpenditure.objects.values_list('financial_year', flat=True).distinct()
-        financial_years.update(admin_exp_years)
-
-        # Fetch admin_exp from FundDistribution model for each financial year
-        fund_data = FundDistribution.objects.values('financial_year').annotate(admin_expense=Sum('admin_exp'))
-
-        # Calculate the total administrative expenses from AdministrativeExpenditure model for each financial year
-        admin_expense = AdministrativeExpenditure.objects.values('financial_year').annotate(total_expense=Sum('admin_exp'))
-
-       
+        fund_type=form.cleaned_data.get('select_type')
+        fund_allocated=FundDistribution.objects.values('wms', 'wps', 'hrdpa', 'pwds', 'admin_exp', 'financial_year')
         if financial_year:
-            fund_data=fund_data.filter(financial_year=financial_year)
-            admin_expense=admin_expense.filter(financial_year=financial_year)
-            financial_years=financial_year
+            fund_allocated=FundDistribution.objects.filter(financial_year=financial_year).values('wms', 'wps', 'hrdpa', 'pwds', 'admin_exp', 'financial_year')
+        
+        if fund_type=='Fund Allocated' or fund_type=='Fund Sanctioned':
+            fund_data=fund_allocated
+            for data in fund_data:
+                data['iwdp'] = data['wms'] + data['wps'] + data['hrdpa'] + data['pwds'] + data['admin_exp']
+
+            
+        elif fund_type=='Expenditure':
+            expenditure_data = ExpenditureData.objects.all()
+            if financial_year:
+                expenditure_data = expenditure_data.filter(year=financial_year)
+
+            expenditure_data_grouped = expenditure_data.values('year').annotate(
+            wms_expenditure=Sum('quarterly_budget_spent', filter=models.Q(scheme='WMS')),
+            wps_expenditure=Sum('quarterly_budget_spent', filter=models.Q(scheme='WPS')),
+            hrdpa_expenditure=Sum('quarterly_budget_spent', filter=models.Q(scheme='HRDPA')),
+            pwds_expenditure=Sum('quarterly_budget_spent', filter=models.Q(scheme='PWDS')),
+        )
+
+        # Calculate IWDP expenditure for each year
+            for entry in expenditure_data_grouped:
+                entry['iwdp_expenditure'] = (
+                entry['wms_expenditure'] or 0) + (
+                entry['wps_expenditure'] or 0) + (
+                entry['hrdpa_expenditure'] or 0) + (
+                entry['pwds_expenditure'] or 0)
+                
+        # Initialize data list
+            fund_data = []
+            for entry in expenditure_data_grouped:
+                admin_exp=get_admin_expense_for_year(entry['year'])
+                data_entry = {
+                'wms': entry['wms_expenditure'] or 0,
+                'wps': entry['wps_expenditure'] or 0,
+                'hrdpa': entry['hrdpa_expenditure'] or 0,
+                'pwds': entry['pwds_expenditure'] or 0,
+                'admin_exp': admin_exp,  # Fetch admin_exp from FundDistribution model, 
+                'financial_year': entry['year'],
+                'iwdp': entry['iwdp_expenditure']+admin_exp,#also 
+            }
+                fund_data.append(data_entry)
+        
+        else:
+            fund_data = FundDistribution.objects.none()
+
         
         context = {
-        'form': form,
-        'financial_years': financial_years,
-        'fund_data': fund_data,
-        'admin_expense': admin_expense,
-    }
+                'form1':form,
+                'financial_year': financial_year,
+                'fund_data':fund_data,
+               
+                
+            }
 
         return render(request, 'main/HomePage/admin_exp.html', context)
     

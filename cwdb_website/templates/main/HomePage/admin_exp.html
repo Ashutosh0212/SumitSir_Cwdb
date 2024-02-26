@@ -10,35 +10,44 @@
         <div class="card-body">
             <form method="get" action="{% url 'authapp:admin_exp_view' %}">
                 <div class="row">
-                    <div class="input-group">
-                        <h6>{{ form.financial_year }}</h6>
-                        <div style="margin-right: 10px;"></div>
-                        <button type="submit" class="btn btn-primary" style="font-size: 12px; padding: 5px 10px;">Apply Filters</button>
-                    </div>
+                    
+                        <div class="input-group">
+                            <h6>{{ form1.select_type }}</h6>
+                            <div style="margin-right: 10px;"></div>
+                            <h6>{{ form1.financial_year }}</h6>
+                            <div style="margin-right: 10px;"></div>
+                            <button type="submit" class="btn btn-primary" style="font-size: 12px; padding: 5px 10px;">Apply Filters</button>
+
+                        </div>
+
                 </div>
+                
             </form>
 
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                            
+                            <th>Administrative Expense
+                            </th>
+                            
                             <th>Financial Year</th>
-                            <th>Fund Distribution Admin Expense</th>
-                            <th>Administrative Expenditure</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% if fund_data %}
-                        {% for year in financial_years %}
-                        <tr>
-                            <td>{{ year }}</td>
-                            <td>{{ fund_data|dict_get:year|default_if_none:"0" }}</td>
-                            <td>{{ admin_expense|dict_get:year|default_if_none:"0" }}</td>
-                        </tr>
-                    {% endfor %}
+                            {% for data in fund_data %}
+                                <tr>
+                                    
+                                    <td>{{ data.admin_exp }}</td>
+                                    
+                                    <td>{{ data.financial_year }}</td>
+                                </tr>
+                            {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="3">No data found</td>
+                                <td colspan="2">No data found</td>
                             </tr>
                         {% endif %}
                     </tbody>
