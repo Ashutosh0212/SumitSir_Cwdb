@@ -9,3 +9,11 @@ def get_by_proposal_id(expenditure_data, proposal_id):
         return expenditure_data.get(proposal_unique_id=proposal_id)
     except ExpenditureData.DoesNotExist:
         return None
+
+from django import template
+
+register = template.Library()
+
+@register.filter
+def dict_get(dictionary, key):
+    return dictionary.get(key, 0)

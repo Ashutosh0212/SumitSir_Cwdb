@@ -10,12 +10,18 @@
         <div class="card-body">
             <form method="get" action="{% url 'authapp:admin_exp_view' %}">
                 <div class="row">
-                    <div class="input-group">
-                        <h6>{{ form.financial_year }}</h6>
-                        <div style="margin-right: 10px;"></div>
-                        <button type="submit" class="btn btn-primary" style="font-size: 12px; padding: 5px 10px;">Apply Filters</button>
-                    </div>
+                    
+                        <div class="input-group">
+                            <h6>{{ form1.select_type }}</h6>
+                            <div style="margin-right: 10px;"></div>
+                            <h6>{{ form1.financial_year }}</h6>
+                            <div style="margin-right: 10px;"></div>
+                            <button type="submit" class="btn btn-primary" style="font-size: 12px; padding: 5px 10px;">Apply Filters</button>
+
+                        </div>
+
                 </div>
+                
             </form>
 
             <div class="table-responsive">
@@ -23,7 +29,7 @@
                     <thead>
                         <tr>
                             
-                            <th>Administrative Expenditure Fund
+                            <th>Administrative Expense
                             </th>
                             
                             <th>Financial Year</th>

@@ -354,25 +354,7 @@
                 label.textContent = goalsget[0][i]['goal_' + (j + 1)].text;
                 listItem.append(label);
 
-                //replace from
-                // var spanElement = document.createElement("span");
-                // spanElement.classList.add("checkbox"); // Add your desired class name
-
-                // var iconElement = document.createElement("i");
-                // iconElement.classList.add("fa-solid", "fa-check", "check-icon"); // Add Font Awesome classes
-                // spanElement.appendChild(iconElement);
-                // listItem.append(spanElement);
-                //replace to
-
-                // spanElement = document.createElement("span");
-                // spanElement.classList.add("item-text");
-                // spanElement.textContent = goals[0][i]['goal_' + (j+1)].text;
-                // listItem.append(spanElement);
-
-                // var checkbox = document.createElement("input");
-                // checkbox.type = "checkbox";
-                // listItem.appendChild(checkbox);
-                // listItem.appendChild(document.createTextNode(goals[0][i]['goal_' + (j+1)].text));
+                
                 ulItem.appendChild(listItem); // Changed from goalsList to goalsDiv
             }
         }
