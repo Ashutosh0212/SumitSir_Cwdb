@@ -603,7 +603,7 @@ class RD(models.Model):
     )
     financial_year = models.CharField(max_length=9)
     quarterly_allocated_budget = models.DecimalField(max_digits=10, decimal_places=2)
-    name_project = models.TextField()
+    name_project = models.CharField(max_length=100)
     outcome_project = models.TextField()
     commercialisation_details = models.TextField()
     costing_details = models.TextField()

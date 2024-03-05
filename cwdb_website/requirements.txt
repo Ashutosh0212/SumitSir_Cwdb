@@ -21,3 +21,5 @@ psycopg2-binary==2.9.9
 apscheduler==3.10.4
 djangorestframework==3.14.0
 requests==2.31.0
+django-recaptcha==4.0.0
+django_forms_bootstrap==3.1.0

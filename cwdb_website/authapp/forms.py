@@ -771,6 +771,8 @@ class HRDShearingMachineTrainingForm(forms.ModelForm):
 
 from django import forms
 from .models import RD
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 
 class RDForm(forms.ModelForm):
     class Meta:
@@ -789,20 +791,14 @@ class RDForm(forms.ModelForm):
             'costing_details':'Costing Details along with the Incoming Process Details of the Developed Product',
             'budget_spent_details':'Percentage of Budget Spent (Monthly & total allocation), Total Profit, Interest Gained, Non-utlized Fund (if any), and Total amount to be credited back to CWDB'
           }
+
     def __init__(self, *args, **kwargs):
         super(RDForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        proposal_unique_id = cleaned_data.get('proposal_unique_id')
-        quarter = cleaned_data.get('quarter')
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-group'  # Add Bootstrap form class
+        self.helper.add_input(Submit('submit', 'Submit', css_class='btn btn-primary'))  # Add Submit button with Bootstrap styling
 
-        # Check if the form for this quarter and proposal_unique_id already exists
-        if RD.objects.filter(proposal_unique_id=proposal_unique_id, quarter=quarter).exists():
-            raise forms.ValidationError('A form for this quarter already exists.')
-        
-        return cleaned_data
 
 from django import forms
 from .models import DomesticMeeting
