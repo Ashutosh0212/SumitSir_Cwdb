@@ -5,3 +5,4 @@ class TokenGenerator(PasswordResetTokenGenerator):
         return str(user.pk) + str(timestamp) + str(user.is_active)
 
 account_activation_token = TokenGenerator()
+
