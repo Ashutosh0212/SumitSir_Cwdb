@@ -795,9 +795,9 @@ class RDForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RDForm, self).__init__(*args, **kwargs)
         self.fields['quarter'].choices = [('', 'Select a Quarter')] + list(self.fields['quarter'].choices)[1:]
-        self.helper = FormHelper()
-        self.helper.form_class = 'form-group'  # Add Bootstrap form class
-        self.helper.add_input(Submit('submit', 'Submit', css_class='btn btn-primary'))  # Add Submit button with Bootstrap styling
+        # self.helper = FormHelper()
+        # self.helper.form_class = 'form-group'  # Add Bootstrap form class
+        # self.helper.add_input(Submit('submit', 'Submit', css_class='btn btn-primary'))  # Add Submit button with Bootstrap styling
 
 
 from django import forms

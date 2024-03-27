@@ -34,7 +34,7 @@ from .forms import ProposalApprovalForm
 
 class ProposalAdmin(admin.ModelAdmin):
     list_display = ('project_id', 'project_scheme', 'user', 'created_at','status_change','progress_report_link','submit_installment_sanction_letter','submit_Inspection_letter','Summary_Report_Generation')
-    list_filter = ('status', 'user')
+    list_filter = ('status', 'user','project_scheme','scheme_component')
     search_fields = ('project_scheme', 'user__username')
     # list_editable = ('status',)
     readonly_fields = ('total_fund_allocated', 'project_sanction_letter')
