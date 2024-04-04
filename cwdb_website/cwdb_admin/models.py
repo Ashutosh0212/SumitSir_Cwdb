@@ -40,7 +40,7 @@ class Proposal(models.Model):
     name_and_address = models.TextField()
     implementingAgencyState = models.CharField(max_length=100, blank=True, null=True)
     project_scheme = models.CharField(max_length=20)
-    scheme_component = models.CharField(max_length=100,null=False,blank=False)
+    scheme_component = models.CharField(max_length=200,null=False,blank=False)
     nature_of_applicant = models.CharField(max_length=50)
     other_nature = models.CharField(max_length=50, blank=True, null=True)
     # name_of_scheme = models.CharField(max_length=100)
