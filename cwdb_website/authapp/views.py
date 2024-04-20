@@ -1196,6 +1196,128 @@ def send_progress_report_reminders():
             proposal.save()
 
 
+import os
+import json
+from datetime import datetime, timedelta
+from django.apps import apps
+from django.core.serializers import serialize
+
+def dump_folderwise_backup():
+    try:
+        # Get the current datetime
+        current_datetime = datetime.now()
+
+        # Get the datetime of 7 days ago
+        past_datetime = current_datetime - timedelta(days=7)
+
+        # Backup data of all models modified in the past 7 days
+        for model in apps.get_models():
+            if model._meta.abstract:
+                continue
+
+            if 'updated_at' in [field.name for field in model._meta.fields]:
+                queryset = model.objects.filter(updated_at__gte=past_datetime)
+            else:
+                queryset = model.objects.all()
+
+            if queryset.exists():
+                # Create a folder for the model if it doesn't exist
+                model_folder = os.path.join("backup", "folder-wise-backup", model._meta.object_name)
+                if not os.path.exists(model_folder):
+                    os.makedirs(model_folder)
+
+                # Serialize and save backup data for each instance
+                for instance in queryset:
+                    instance_data = serialize('json', [instance])
+                    instance_data = json.loads(instance_data)[0]
+                    instance_id = instance_data['pk']
+                    instance_filename = f"{instance_id}_{current_datetime.strftime('%Y-%m-%d_%H-%M-%S')}.json"
+                    instance_path = os.path.join(model_folder, instance_filename)
+                    with open(instance_path, 'w') as f:
+                        json.dump(instance_data['fields'], f)
+
+        print("Folderwise backup done.")
+
+    except Exception as e:
+        # Handle exceptions such as network errors, timeouts, etc.
+        raise RuntimeError(f'Error dumping backup: {str(e)}')
+
+def dump_whole_backup():
+    try:
+        # Get the current datetime
+        current_datetime = datetime.now()
+
+        # Get the datetime of 7 days ago
+        past_datetime = current_datetime - timedelta(days=7)
+
+        # Format the datetime as a string
+        datetime_str = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
+
+        # Define the filename with the datetime
+        filename = f"backup_{datetime_str}.json"
+
+        # Define the backup folder
+        backup_folder = os.path.join("backup", "whole-backup")
+
+        # Create the backup folder if it doesn't exist
+        if not os.path.exists(backup_folder):
+            os.makedirs(backup_folder)
+
+        # Define backup path
+        backup_path = os.path.join(backup_folder, filename)
+
+        # Backup data of all models modified in the past 7 days
+        backup_data = {}
+        for model in apps.get_models():
+            if model._meta.abstract:
+                continue
+
+            # print(model._meta.object_name)
+            # try:
+            if 'updated_at' in [field.name for field in model._meta.fields]:
+                queryset = model.objects.filter(updated_at__gte=past_datetime)
+                # prin
+            # except AttributeError:
+            else:
+                # If the model doesn't have an 'updated_at' attribute, backup all data
+                queryset = model.objects.all()
+
+            if queryset.exists():
+                # Print model fields as a table
+                print(f"Model: {model._meta.object_name}")
+                print("Field Name".ljust(30), "Type".ljust(20), "Nullable")
+                print("-" * 70)
+                for field in model._meta.fields:
+                    print(field.name.ljust(30), str(field.__class__.__name__).ljust(20), str(field.null).ljust(8))
+                print()
+
+                # Print model content
+                print("Model Content:")
+                for obj in queryset:
+                    print(obj.__dict__)
+                    print()
+
+                # # there's an issue with using TabularInline outside of the Django admin interface.
+                # inline_admin = TabularInline(model, model._admin_site)
+                # inline_admin.model = model
+                # inline_admin.get_queryset(request=None)
+                # print(inline_admin.get_fields(request=None))
+
+                data = json.loads(serialize('json', queryset))
+                backup_data[model._meta.object_name] = data
+
+        # Save backup data to a JSON file
+        with open(backup_path, 'w') as f:
+            json.dump(backup_data, f)
+
+        print(f"Whole Backup successfully created: {backup_path}")
+
+    except Exception as e:
+        # Handle exceptions such as network errors, timeouts, etc.
+        raise RuntimeError(f'Error dumping backup: {str(e)}')
+
+
+
 import json
 from datetime import datetime, timedelta
 from django.apps import apps
