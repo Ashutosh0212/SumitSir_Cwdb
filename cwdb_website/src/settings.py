@@ -98,21 +98,21 @@ WSGI_APPLICATION = 'src.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cwdb_data',
-        'USER': 'cwdb',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        # 'HOST': '172.31.1.84', #iitj ip 
-        'PORT': '5432',
-    },
-    'test': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'test_db.sqlite3',  # Path to the test database
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'cwdb_data',
+#         'USER': 'cwdb',
+#         'PASSWORD': '1234',
+#         'HOST': 'localhost',
+#         # 'HOST': '172.31.1.84', #iitj ip 
+#         'PORT': '5432',
+#     },
+#     'test': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'test_db.sqlite3',  # Path to the test database
+#     }
+# }
 
 # DATABASES = {
 #     'default': {
@@ -126,6 +126,21 @@ DATABASES = {
 #     }
 # }
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'postgres.cnw2ke66i0cm.ap-south-1.rds.amazonaws.com',
+        # 'HOST': '172.31.1.84', #iitj ip 
+        'PORT': '5432',
+    },
+    'test': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'test_db.sqlite3',  # Path to the test database
+    }
+}
 
 
 
