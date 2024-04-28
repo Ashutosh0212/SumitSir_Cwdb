@@ -6,7 +6,7 @@ GIT_REPO_URL="https://github.com/dasanivishu/CWDB.git"
 #GIT_REPO_URL="https://<your_username>:<your_PAT>@github.com/codewithmuh/django-aws-ec2-autoscaling.git"
 
 # Replace {YOUR_PROJECT_MAIN_DIR_NAME} with your actual project directory name
-PROJECT_MAIN_DIR_NAME="CWDB/cwdb_website"
+PROJECT_MAIN_DIR_NAME="CWDB/cwdb_website/cwdb_website"
 
 # Clone repository
 git clone "$GIT_REPO_URL" "/home/ubuntu/$PROJECT_MAIN_DIR_NAME"

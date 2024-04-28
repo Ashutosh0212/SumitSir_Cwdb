@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-PROJECT_MAIN_DIR_NAME="CWDB/cwdb_website"
+PROJECT_MAIN_DIR_NAME="CWDB/cwdb_website/cwdb_website"
 # Validate variables
 if [ -z "$PROJECT_MAIN_DIR_NAME" ]; then
     echo "Error: PROJECT_MAIN_DIR_NAME is not set. Please set it to your project directory name." >&2
