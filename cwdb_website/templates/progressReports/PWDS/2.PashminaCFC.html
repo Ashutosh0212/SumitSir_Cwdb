@@ -204,6 +204,11 @@
     <form method="post" enctype="multipart/form-data">
       <div id="goalsDiv"></div>
 
+          <p>
+            <label for="id_year">ear:</label>
+            <input type="number" name="year" required="" id="id_year">
+          </p>
+
 
       {% csrf_token %}
       {{ form.as_p }}
