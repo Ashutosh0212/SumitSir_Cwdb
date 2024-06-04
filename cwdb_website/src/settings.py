@@ -98,21 +98,21 @@ WSGI_APPLICATION = 'src.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'cwdb_data',
-#         'USER': 'cwdb',
-#         'PASSWORD': '1234',
-#         'HOST': 'localhost',
-#         # 'HOST': '172.31.1.84', #iitj ip 
-#         'PORT': '5432',
-#     },
-#     'test': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'test_db.sqlite3',  # Path to the test database
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'cwdb_data',
+        'USER': 'cwdb',
+        'PASSWORD': '1234',
+        'HOST': 'localhost',
+        # 'HOST': '172.31.1.84', #iitj ip 
+        'PORT': '5432',
+    },
+    'test': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'test_db.sqlite3',  # Path to the test database
+    }
+}
 
 # DATABASES = {
 #     'default': {
@@ -126,21 +126,21 @@ WSGI_APPLICATION = 'src.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'postgres.cnw2ke66i0cm.ap-south-1.rds.amazonaws.com',
-        # 'HOST': '172.31.1.84', #iitj ip 
-        'PORT': '5432',
-    },
-    'test': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'test_db.sqlite3',  # Path to the test database
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         'HOST': 'postgres.cnw2ke66i0cm.ap-south-1.rds.amazonaws.com',
+#         # 'HOST': '172.31.1.84', #iitj ip 
+#         'PORT': '5432',
+#     },
+#     'test': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'test_db.sqlite3',  # Path to the test database
+#     }
+# }
 
 
 
@@ -169,7 +169,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -204,8 +204,8 @@ EMAIL_HOST = 'smtp.gmail.com'  # Replace with your SMTP server
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_FROM='m22cs015@iitj.ac.in'
-EMAIL_HOST_USER = 'vishaldasani1999@gmail.com'  # Replace with your email address
-EMAIL_HOST_PASSWORD = 'xzvu vjpz kxtr monb'  # Replace with your email password
+EMAIL_HOST_USER = 'donotreplywoolboard@gmail.com'  # Replace with your email address
+EMAIL_HOST_PASSWORD = 'zyqo hemn kjta rbaq'  # Replace with your email password
 
 
 # for media upload
