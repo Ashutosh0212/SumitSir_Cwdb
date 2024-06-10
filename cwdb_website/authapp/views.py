@@ -1251,10 +1251,10 @@ def dump_whole_backup():
         past_datetime = current_datetime - timedelta(days=7)
 
         # Format the datetime as a string
-        datetime_str = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
+        # datetime_str = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
 
         # Define the filename with the datetime
-        filename = f"backup_{datetime_str}.json"
+        filename = f"backup.json"
 
         # Define the backup folder
         backup_folder = os.path.join("backup", "whole-backup")
