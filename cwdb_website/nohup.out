@@ -361,3 +361,19 @@ Progress report reminders sent successfully
 [2024-06-12 09:18:14 +0000] [98140] [INFO] Listening at: http://0.0.0.0:8000 (98140)
 [2024-06-12 09:18:14 +0000] [98140] [INFO] Using worker: sync
 [2024-06-12 09:18:14 +0000] [98141] [INFO] Booting worker with pid: 98141
+[2024-06-12 09:50:03 +0000] [98140] [INFO] Handling signal: term
+[2024-06-12 15:20:03 +0530] [98141] [INFO] Worker exiting (pid: 98141)
+[Errno 2] No such file or directory: '/home/ubuntu/CWDB/cwdb_website/staticfiles/css/index/nucleo-icons.css'
+[Errno 2] No such file or directory: '/home/ubuntu/CWDB/cwdb_website/staticfiles/javascript/indexjs/plugins/smooth-scrollbar.min.js'
+[Errno 2] No such file or directory: '/home/ubuntu/CWDB/cwdb_website/staticfiles/css/index/material-dashboard.css?v=3.1.0'
+[Errno 2] No such file or directory: '/home/ubuntu/CWDB/cwdb_website/staticfiles/css/index/nucleo-icons.css'
+[Errno 2] No such file or directory: '/home/ubuntu/CWDB/cwdb_website/staticfiles/css/index/material-dashboard.css?v=3.1.0'
+[Errno 2] No such file or directory: '/home/ubuntu/CWDB/cwdb_website/staticfiles/javascript/indexjs/plugins/smooth-scrollbar.min.js'
+[Errno 2] No such file or directory: '/home/ubuntu/CWDB/cwdb_website/staticfiles/css/index/material-dashboard.css?v=3.1.0'
+[Errno 2] No such file or directory: '/home/ubuntu/CWDB/cwdb_website/staticfiles/css/index/nucleo-icons.css'
+[Errno 2] No such file or directory: '/home/ubuntu/CWDB/cwdb_website/staticfiles/javascript/indexjs/plugins/smooth-scrollbar.min.js'
+[2024-06-12 09:50:04 +0000] [98140] [INFO] Shutting down: Master
+[2024-06-12 09:51:17 +0000] [98426] [INFO] Starting gunicorn 21.2.0
+[2024-06-12 09:51:17 +0000] [98426] [INFO] Listening at: http://0.0.0.0:8000 (98426)
+[2024-06-12 09:51:17 +0000] [98426] [INFO] Using worker: sync
+[2024-06-12 09:51:17 +0000] [98427] [INFO] Booting worker with pid: 98427

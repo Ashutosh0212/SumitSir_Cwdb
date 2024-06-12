@@ -13,8 +13,9 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'src.settings')
 
-from dj_static import Cling
+from dj_static import Cling,MediaCling
+
 
 application = get_wsgi_application()
-application = Cling(application)
+application = Cling(MediaCling(application))
 
