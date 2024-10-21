@@ -145,7 +145,7 @@ WSGI_APPLICATION = 'src.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cwdb',  # Replace with your actual database name (e.g., 'cwdb')
+        'NAME': 'your_database_name',  # Replace with your actual database name (e.g., 'cwdb')
         'USER': 'postgres',             # Your RDS master username
         'PASSWORD': 'cwdb1234',        # Your RDS master password
         'HOST': 'database-1.crykg6ayymiu.eu-north-1.rds.amazonaws.com',  # Your RDS endpoint
